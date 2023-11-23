@@ -338,7 +338,8 @@ a:link{
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">My Tasks</h1>
+                        <h1 class="h3 mb-0 text-gray-800">My Tasks</h1> 
+                        <button class="btn btn-primary"data-toggle="modal" data-target="#taskModal">Create New Task</button>
                         
                     </div>
 
@@ -393,7 +394,13 @@ a:link{
                     <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
                         PENDING TASKS</div>
                     <div class="h5 mb-0 font-weight-bold text-dark">
-                    {{ \App\Task::where(['office' => Auth::user()->office])->where(['createdby' => Auth::user()->name])->where(['status' => 'pending'])->count() }}
+                    {{ \App\Task::where(['office' => Auth::user()->office])
+             ->where(function ($query) {
+                 $query->where(['createdby' => Auth::user()->name])
+                       ->orWhere(['supervisor' => Auth::user()->name]);
+             })
+             ->where(['status' => 'pending'])
+             ->count() }}
                     </div>
                 </div>
                 <div class="col-auto">
@@ -496,15 +503,22 @@ a:link{
 
                             @endif
 
-                            <!-- Project Card Example -->
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Add New Tasks</h6>
-                                </div>
-                                <div class="card-body">
+                            
 
 
-                                    <form action="{{route('tasks.submit')}}"method="POST"enctype="multipart/form-data">
+                            
+
+<div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="taskModalLabel">Create A New Task</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form action="{{route('tasks.submit')}}"method="POST"enctype="multipart/form-data">
                                         @csrf
 
                                         <div class="form-group">
@@ -529,12 +543,12 @@ a:link{
                                     <h6 class="m-0 font-weight-bold text-primary mb-4">Task Classification</h6>
 
 
-                                    <div class="form-group row">
+                                    <div class="form-group row ">
                                         <div class="col-md-6">
                                             <label for="category">Task Category</label>
-                                                <select onchange="getType();"name="category"class="form-control taskcategory" id=""required>
-                                                    <option value="">Select Task Category (For Personal /For Client)</option>
-                                                    <option value="client">For Client</option>
+                                                <select onchange="getType();" name="category"class="form-control taskcategory" id=""required>
+                                                    <option value="">Select Task Category (For Personal /Assigned to Staff)</option>
+                                                    <!-- <option value="client">For Client</option> -->
                                                     <option value="personal">Personal</option>
                                                     <option value="staff">Staff</option>
                                                 </select>
@@ -551,7 +565,7 @@ a:link{
                                                 </select>
                                         </div>
 
-                                        <div class="col-md-6 staffdiv notshow">
+                                        <div class="col-md-6 notshow staffdiv">
                                             <label for="staffs">Staffs(Leave Blank Tasks not for staff)</label>
                                                 <select name="staff"class="form-control" id="">
                                                     <option value="">Select Staffs</option>
@@ -565,7 +579,7 @@ a:link{
                                             
                                     </div>
 
-                                    
+                                   
 
                                     <hr>
                                     <div class="card-header m-auto py-3">
@@ -576,10 +590,10 @@ a:link{
                                             <label for="supervisor">Supervised By</label>
                                             <select name="supervisor" id=""class="form-control"required>
                                                 <option value="">Select Name of Supervisor</option>
-                                                
-
+                                                <option value="{{Auth::user()->name}}">{{Auth::user()->name}} - Myself</option>
+                                            
                                                 @foreach($supervisor as $super)
-                                                    <option value="{{Auth::user()->name}}">{{Auth::user()->name}} - Myself</option>
+                                                    
                                                     <option value="{{$super->name}}">{{$super->name}}</option>
                                                 @endforeach
 
@@ -596,28 +610,27 @@ a:link{
                                         <textarea name="description" id=""placeholder="Task Description"class="form-control" cols="10" rows="5"required></textarea>
                                     </div>
 
-                                </div>
 
-                                <div class="form-group">
+                                    <hr>
+
+                                    <div class="form-group">
                                         <label for="file">Attachements (Optional)</label> <br>
                             
                                         <input type="file"name="fileattachment"placeholder="Enter Attachments">
                                     </div>
+
+                                </div>
 
                                     <div class="form-group">
                                         <button class="text-center btn btn-success">Create Task</button>
                                     </div>
                               
                                     </form>
-                                              <!-- DataTales Example -->
-
-                                        
-                   
-
-                                            
-                
-                                </div>
-                            </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
 
                             
 
@@ -638,16 +651,103 @@ a:link{
             </div>
             <!-- End of Main Content -->
 
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; <a href="https://quickoffice.online">QuickOffice</a> 2020</span>
-                        <span>Developed by <a href="https://wallsandgates.com.ng">WallsandGates Limited</a></span>
-                    </div>
-                </div>
-            </footer>
-            <!-- End of Footer -->
+
+            <div class="row m-auto table-responsive">
+
+<table class="table table-sm table-borderless table-hover">
+    <thead class="bg-primary text-light">
+<tr>
+<th>Title</th>
+<th>Start</th>
+<th>End</th>
+
+<th>Supervisor</th>
+<th>Assigned </th>
+<th>Attachment</th>
+<th>Status</th>
+<th>Actions</th>
+
+
+</tr>
+</thead>
+
+<tbody style="color:black;font-size:13px;z-index:100;">
+
+@foreach($task as $work)
+<tr>
+<td>{{$work->title}}</td>
+<td>{{$work->start}}</td>
+<td>{{$work->end}}</td>
+<td>
+    @if($work->supervisor == Auth::user()->name)
+        <p> Me</p>
+
+        @else
+
+        <p> {{$work->supervisor}} </p>
+
+    @endif
+</td>
+<td>
+    @if($work->category == "personal" && $work->createdby == Auth::user()->name)
+    <p class="badge badge-primary text-light badge-sm"> Personal </p>
+
+    @else
+    <p> {{$work->createdby}}</p>
+    @endif
+</td>
+<td>
+    @if($work->attachment == NULL)
+        None
+    @else
+
+        <a href="{{$work->attachment}}"target="_blank"><i class="fa fa-download"> </i></a>
+    
+
+    @endif
+</td>
+<td>
+    @if($work->status  == "pending")
+        <p class="badge badge-warning text-dark badge-sm">{{$work->status}} </p>
+    
+        @elseif($work->status  == "completed")
+        <p class="badge badge-success text-light badge-sm">{{$work->status}} </p>
+  
+
+    @else
+    <p class="badge badge-danger text-light badge-sm">{{$work->status}} </p>
+
+    @endif
+</td>
+
+@if($work->supervisor == Auth::user()->name)
+<td>
+    <i data-id="{{$work->id}}"data-toggle="modal" data-target="#viewModal"class="fa fa-eye mr-2 text-primary viewmodal"></i>|<i data-id="{{$work->id}}"data-toggle="modal" data-target="#editModal"class="fa fa-edit mr-2 text-warning editmodal"></i>|<i data-id="{{$work->id}}"data-toggle="modal" data-target="#deleteModal"class="fa fa-trash mr-2 text-danger deletemodal"></i>
+</td>
+    
+@else
+
+<td>
+    <i data-id="{{$work->id}}"data-toggle="modal" data-target="#viewModal"class="fa fa-eye mr-2 text-primary viewmodal"></i>|<i data-id="{{$work->id}}"data-toggle="modal" data-target="#editModal"class="fa fa-edit mr-2 text-warning editmodal"></i>
+</td>
+
+@endif
+
+
+
+</tr>
+
+
+@endforeach
+
+</tbody>
+
+</table>
+
+    
+</div>
+
+           
 
         </div>
         <!-- End of Content Wrapper -->
@@ -711,8 +811,8 @@ a:link{
                         <div class="table-responsive">
                             
                         
-                            <table class="table table-striped">
-                                <tbody>
+                            <table class="table table-hover table-sm table-borderless">
+                                <tbody style="color:black;font-size:13px;">
                                     <tr>
                                         <td>Title</td>
                                         <td class="task_title">name</td>
@@ -736,21 +836,30 @@ a:link{
                                         <td class="task_category" >branch</td>
                                     </tr>
 
-                                    <tr>
-                                        <td>Client</td>
-                                        <td class="task_client" >branch</td>
-                                    </tr>
-                                   
+                                    
+
                                   
 
                                     <tr>
                                         <td>Description</td>
-                                        <td class="task_description" >branch</td>
+                                        <td class="task_description"></td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td>Supervised by</td>
+                                        <td class="task_supervisor"></td>
                                     </tr>
 
                                     <tr>
-                                        <td>Supervised By</td>
-                                        <td class="task_supervised">branch</td>
+                                        <td>Assigned to</td>
+                                        <td class="task_assigned"></td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td>Status</td>
+                                        <td class="task_status"></td>
                                     </tr>
 
                                     
@@ -766,7 +875,6 @@ a:link{
             </div>
         </div>
     </div>
-
 
 
 
@@ -881,9 +989,11 @@ a:link{
             task_start = document.querySelector('.task_start')
             task_end = document.querySelector('.task_end')
             task_category = document.querySelector('.task_category')
-            task_client = document.querySelector('.task_client')
             task_description = document.querySelector('.task_description')
-            task_supervised = document.querySelector('.task_supervised')
+            task_supervisor = document.querySelector('.task_supervisor');
+            task_assigned = document.querySelector('.task_assigned');
+            task_status = document.querySelector('.task_status');
+
           
 
             try {
@@ -894,9 +1004,10 @@ a:link{
                     task_start.innerText  = data.start
                     task_end.innerText  = data.end
                     task_category.innerText  = data.category
-                    task_client.innerText =data.client
                     task_description.innerText  = data.description
-                    task_supervised.innerText = data.supervisor
+                    task_supervisor.innerText = data.supervisor
+                    task_assigned.innerText = data.createdby
+                    task_status.innerText = data.status;
                     
                    
                 })

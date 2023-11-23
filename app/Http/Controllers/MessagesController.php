@@ -130,10 +130,19 @@ class messagesController extends Controller
             if ($file->getSize() < 150000000) {
                 if (in_array($file->getClientOriginalExtension(), $allowed)) {
                     // get attachment name
-                    $attachment_title = $file->getClientOriginalName();
-                    // upload attachment and store the new name
-                    $attachment = Str::uuid() . "." . $file->getClientOriginalExtension();
-                    $file->storeAs("public/" . config('chatify.attachments.folder'), $attachment);
+
+
+                    // $attachment_title = $file->getClientOriginalName();
+                    // // upload attachment and store the new name
+                    // $attachment = Str::uuid() . "." . $file->getClientOriginalExtension();
+                    // $file->storeAs("public/" . config('chatify.attachments.folder'), $attachment);
+
+                    $attachment = cloudinary()->uploadFile($request->file('file')->getRealPath())->getSecurePath();
+
+                    
+
+
+
                 } else {
                     $error_msg = "File extension not allowed!";
                 }
@@ -151,7 +160,7 @@ class messagesController extends Controller
                 'from_id' => Auth::user()->id,
                 'to_id' => $request['id'],
                 'body' => trim(htmlentities($request['message'])),
-                'attachment' => ($attachment) ? $attachment . ',' . $attachment_title : null,
+                'attachment' => ($attachment) ? $attachment : null,
             ]);
 
             // fetch message to send it with the response

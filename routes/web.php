@@ -447,6 +447,8 @@ Route::get('/account/hint','Office\AccountController@accounthinthide')->name('ac
 
 Route::get('/','pagesController@index')->name('index'); //the index page
 
+//Route::get('/LaurenParker/login','Auth\LoginController@showofficelogin')->name('index');
+
 
 //this is a test page
 Route::get('/test','pagesController@test')->name('testpage'); //this is the test page

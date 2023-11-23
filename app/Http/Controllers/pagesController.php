@@ -28,46 +28,93 @@ class pagesController extends Controller
 {
     //index page   https://paystack.com/pay/az04o6ayd7
     public function index(){
+        $name="LaurenParker";
+        $office_check=Office::where('office_name',$name)->exists();
+        //$office_check=Office::where('office_name',$office)->where('active','true')->where('status','success')->exists();
 
-       
+        if($office_check){ //where offfice exists
+            $active_office=Office::where('office_name',$name)->where('active','true')->where('status','success')->exists();
+            $free_expired=Office::where('type','free')->where('office_name',$name)->where('active','false')->exists();
 
-        $office=Office::where('plan','!=','lifeplan')->get();
+            $subscribed_expired=Office::where('type','subscribed')->where('active','false')->exists();
 
-      //  $freesub=Office::where('type','free')->get();
+                if($active_office){ //when office subscription is active
+                    $company=Office::where('office_name',$name)->firstOrFail();
+                    return view('office.login',compact('company'));
+                 }
 
-     
-      $current = Carbon::now()->format('Y-m-d H:i:s'); //get the current day date("Y-m-d H:i:s")
-     
-      $minudays=Carbon::parse($current)->subDays(14)->format('Y-m-d'); //minus 14days from the current day
+                 elseif($free_expired){
+                     $company=Office::where('office_name',$name)->where('active','false')->firstOrFail();
+                     return view('office.tosubscribe',compact('company'));
+                 }
 
-      $currentdate=Carbon::parse($current);
+                 elseif($subscribed_expired){
+                     $company=Office::where('office_name',$name)->where('type','subscribed')->where('active','false')->firstOrFail();
+                     return view('office.resubscription',compact('company'));
 
+                 }
 
-//get office where created_at is lesser than  current day - 14 days and update the active to be false
+               
+                 /*
+                 elseif($free_office_with_expired_trial){ //when office is free plan and trial date expired and active false
+                    $company=Office::where('office_name',$name)->firstOrFail();
+                    return view('office.tosubscribe',compact('company'));
+                 }
 
-        $freeexpired=Office::where('type','free')->where('created_at','<',$minudays)->update([
-            'active'=>'false'
-        ]);
-
-   //checking for expired subscribed office,, these are office where paid (which is the next payment date)
-   // is lesser than today
-        $subscribedexpiredoffice=Office::where('plan','Starter')
-        ->orwhere('plan','Basic')
-        ->orwhere('plan','Professional')
-        ->orwhere('plan','Business')
-        ->orwhere('plan','Enterprise')->get();
-
-       
-        foreach($subscribedexpiredoffice as $sub){
-          if($sub->paid < $currentdate){
-             $expiredoffice=Office::where('id',$sub->id)->update([
-
-                'active'=>'false'
-             ]);
+                else{
+                    $company=Office::where('office_name',$name)->firstOrFail();
+                    return view('office.resubscription',compact('company'));
+                }
+                */
+            
+         } //end of when office exists
 
 
-          }
+
+        else{  //where the office does not exists
+            return redirect('/')->with('error','Company not found');
+            
         }
+
+       
+
+//         $office=Office::where('plan','!=','lifeplan')->get();
+
+//       //  $freesub=Office::where('type','free')->get();
+
+     
+//       $current = Carbon::now()->format('Y-m-d H:i:s'); //get the current day date("Y-m-d H:i:s")
+     
+//       $minudays=Carbon::parse($current)->subDays(14)->format('Y-m-d'); //minus 14days from the current day
+
+//       $currentdate=Carbon::parse($current);
+
+
+// //get office where created_at is lesser than  current day - 14 days and update the active to be false
+
+//         $freeexpired=Office::where('type','free')->where('created_at','<',$minudays)->update([
+//             'active'=>'false'
+//         ]);
+
+//    //checking for expired subscribed office,, these are office where paid (which is the next payment date)
+//    // is lesser than today
+//         $subscribedexpiredoffice=Office::where('plan','Starter')
+//         ->orwhere('plan','Basic')
+//         ->orwhere('plan','Professional')
+//         ->orwhere('plan','Business')
+//         ->orwhere('plan','Enterprise')->get();
+
+       
+//         foreach($subscribedexpiredoffice as $sub){
+//           if($sub->paid < $currentdate){
+//              $expiredoffice=Office::where('id',$sub->id)->update([
+
+//                 'active'=>'false'
+//              ]);
+
+
+//           }
+//         }
       
 
 
@@ -76,7 +123,7 @@ class pagesController extends Controller
       
    
         
-        return view('realindex');
+//         return view('realindex');
    
     }
 
@@ -153,13 +200,17 @@ class pagesController extends Controller
        if($request->staff){
 
             if($request->hasfile('fileattachment')){  //if file is selected
-                $attachment=$request->file('fileattachment');
+                // $attachment=$request->file('fileattachment');
                 
-                $myattachment=$attachment->getClientOriginalName();
+                // $myattachment=$attachment->getClientOriginalName();
                 
-                $finalname=Auth::user()->office.'-'.$myattachment;
+                // $finalname=Auth::user()->office.'-'.$myattachment;
     
-                $attachment->move('taskattachment',$finalname);
+                // $attachment->move('taskattachment',$finalname);
+
+                $uploadedFileUrl = cloudinary()->uploadFile($request->file('fileattachment')->getRealPath())->getSecurePath();
+
+              
 
                 $task=new Task;
                 $task->title=$request->title;
@@ -172,7 +223,7 @@ class pagesController extends Controller
                 $task->office=Auth::user()->office;
                 $task->createdby=$request->staff; //created by will be the staff you wanted to create task for ,,, instead of you
                 $task->status='pending';
-                $task->attachment=$finalname;
+                $task->attachment=$uploadedFileUrl;
     
                 $task->save();
     
@@ -285,13 +336,8 @@ class pagesController extends Controller
 
         else{ /// if no staff
             if($request->hasfile('fileattachment')){
-                $attachment=$request->file('fileattachment');
                 
-                $myattachment=$attachment->getClientOriginalName();
-                
-                $finalname=Auth::user()->office.'-'.$myattachment;
-    
-                $attachment->move('taskattachment',$finalname);
+                $uploadedFileUrl = cloudinary()->uploadFile($request->file('fileattachment')->getRealPath())->getSecurePath();
                 
                 $task=new Task;
                 $task->title=$request->title;
@@ -304,7 +350,7 @@ class pagesController extends Controller
                 $task->office=Auth::user()->office;
                 $task->createdby=Auth::user()->name;
                 $task->status='pending';
-                $task->attachment=$finalname;
+                $task->attachment=$uploadedFileUrl;
                   
     
                 $task->save();
@@ -351,7 +397,11 @@ class pagesController extends Controller
             'description'=>'required',
         ]);
 
+        $randomNumber = mt_rand(1000000000000, 9999999999999);
+
+
         $now_datetime = date("Y-m-d H:i:s", strtotime('+1 hours'));
+
         $counted=Meeting::where('office',Auth::user()->office)->where('creator',Auth::user()->name)->count();
        
 
@@ -374,6 +424,8 @@ class pagesController extends Controller
             $meeting->description=$request->description;
             $meeting->creator=Auth::user()->name;
             $meeting->office=Auth::user()->office;
+
+            $meeting->link = "https://meet.jit.si/laurenparker/$randomNumber";
 
             $meeting->save();
 

@@ -360,7 +360,8 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">My Tasks</h1>
+                        <h1 class="h3 mb-0 text-gray-800">My Tasks</h1> 
+                        <button class="btn btn-primary"data-toggle="modal" data-target="#taskModal">Create New Task</button>
                         
                     </div>
 
@@ -414,7 +415,13 @@
                     <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
                         PENDING TASKS</div>
                     <div class="h5 mb-0 font-weight-bold text-dark">
-                    {{ \App\Task::where(['office' => Auth::user()->office])->where(['createdby' => Auth::user()->name])->where(['status' => 'pending'])->count() }}
+                    {{ \App\Task::where(['office' => Auth::user()->office])
+             ->where(function ($query) {
+                 $query->where(['createdby' => Auth::user()->name])
+                       ->orWhere(['supervisor' => Auth::user()->name]);
+             })
+             ->where(['status' => 'pending'])
+             ->count() }}
                     </div>
                 </div>
                 <div class="col-auto">
@@ -485,46 +492,18 @@
 
 <!-- Content Row -->
 
-                   
-                    <!-- Content Row -->
-                    <div class="row">
 
-
-                      
-                        <!-- Content Column -->
-                        <div class="col-lg-8  m-auto mb-4">
-                            @if(session('error'))
-                                <div class="alert alert-danger text-center">
-                                    <p>{{session('error')}}</p>
-                                </div>
-                            @endif
-
-                            @if(session('msg'))
-                                <div class="alert alert-success text-center">
-                                    <p>{{session('msg')}}</p>
-                                </div>
-                            @endif
-
-                            @if ($errors->any())
-                            <div class="alert alert-danger text-center">
-                            <ul>
-                            @foreach ($errors->all() as $error)
-                            <li style="list-style:none">{{ $error }}</li>
-                            @endforeach
-                            </ul>
-                            </div>
-
-                            @endif
-
-                            <!-- Project Card Example -->
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Add New Tasks</h6>
-                                </div>
-                                <div class="card-body">
-
-
-                                <form action="{{route('tasks.submit')}}"method="POST"enctype="multipart/form-data">
+<div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="taskModalLabel">Create A New Task</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form action="{{route('tasks.submit')}}"method="POST"enctype="multipart/form-data">
                                         @csrf
 
                                         <div class="form-group">
@@ -553,8 +532,8 @@
                                         <div class="col-md-6">
                                             <label for="category">Task Category</label>
                                                 <select onchange="getType();" name="category"class="form-control taskcategory" id=""required>
-                                                    <option value="">Select Task Category (For Personal /For Client)</option>
-                                                    <option value="client">For Client</option>
+                                                    <option value="">Select Task Category (For Personal /Assigned to Staff)</option>
+                                                    <!-- <option value="client">For Client</option> -->
                                                     <option value="personal">Personal</option>
                                                     <option value="staff">Staff</option>
                                                 </select>
@@ -632,15 +611,46 @@
                                     </div>
                               
                                     </form>
-                                              <!-- DataTales Example -->
+      </div>
+      
+    </div>
+  </div>
+</div>
 
-                                        
+
                    
+                    <!-- Content Row -->
+                    <div class="row">
 
-                                            
-                
+
+                      
+                        <!-- Content Column -->
+                        <div class="col-lg-8  m-auto mb-4">
+                            @if(session('error'))
+                                <div class="alert alert-danger text-center">
+                                    <p>{{session('error')}}</p>
                                 </div>
+                            @endif
+
+                            @if(session('msg'))
+                                <div class="alert alert-success text-center">
+                                    <p>{{session('msg')}}</p>
+                                </div>
+                            @endif
+
+                            @if ($errors->any())
+                            <div class="alert alert-danger text-center">
+                            <ul>
+                            @foreach ($errors->all() as $error)
+                            <li style="list-style:none">{{ $error }}</li>
+                            @endforeach
+                            </ul>
                             </div>
+
+                            @endif
+
+                            <!-- Project Card Example -->
+                            
 
                             
 
@@ -663,7 +673,90 @@
 
 
 
-                <div class="row">
+                <div class="row m-auto table-responsive">
+
+                <table class="table table-sm table-borderless table-hover">
+                    <thead class="bg-primary text-light">
+    <tr>
+        <th>Title</th>
+        <th>Start</th>
+        <th>End</th>
+        
+        <th>Supervisor</th>
+        <th>Assigned </th>
+        <th>Attachment</th>
+        <th>Status</th>
+        <th>Actions</th>
+   
+      
+    </tr>
+  </thead>
+
+  <tbody style="color:black;font-size:13px;z-index:100;">
+
+            @foreach($task as $work)
+            <tr>
+                <td>{{$work->title}}</td>
+                <td>{{$work->start}}</td>
+                <td>{{$work->end}}</td>
+                <td>{{Auth::user()->name == $work->supervisor ? "Me" : $work-supervisor}}</td>
+                
+                <td> 
+                @if($work->category == "personal" && $work->createdby == Auth::user()->name)
+    <p class="badge badge-primary text-light badge-sm"> Personal </p>
+
+    @else
+    <p> {{$work->createdby}}</p>
+    @endif        
+            </td>
+
+                <td>
+                    @if($work->attachment == NULL)
+                        None
+                    @else
+
+                        <a href="{{$work->attachment}}"target="_blank"><i class="fa fa-download"> </i></a>
+                    
+
+                    @endif
+                </td>
+                <td>
+                    @if($work->status  == "pending")
+                        <p class="badge badge-warning text-dark badge-sm">{{$work->status}} </p>
+                    
+                        @elseif($work->status  == "completed")
+                        <p class="badge badge-success text-light badge-sm">{{$work->status}} </p>
+                  
+
+                    @else
+                    <p class="badge badge-danger text-light badge-sm">{{$work->status}} </p>
+
+                    @endif
+                </td>
+
+                @if($work->supervisor == Auth::user()->name)
+                <td>
+                    <i data-id="{{$work->id}}"data-toggle="modal" data-target="#viewModal"class="fa fa-eye mr-2 text-primary viewmodal"></i>|<i data-id="{{$work->id}}"data-toggle="modal" data-target="#editModal"class="fa fa-edit mr-2 text-warning editmodal"></i>|<i data-id="{{$work->id}}"data-toggle="modal" data-target="#deleteModal"class="fa fa-trash mr-2 text-danger deletemodal"></i>
+                </td>
+                    
+                @else
+
+                <td>
+                    <i data-id="{{$work->id}}"data-toggle="modal" data-target="#viewModal"class="fa fa-eye mr-2 text-primary viewmodal"></i>|<i data-id="{{$work->id}}"data-toggle="modal" data-target="#editModal"class="fa fa-edit mr-2 text-warning editmodal"></i>
+                </td>
+
+                @endif
+                
+
+
+            </tr>
+
+
+            @endforeach
+
+</tbody>
+  
+</table>
                
                     
                 </div>
@@ -744,8 +837,8 @@
                         <div class="table-responsive">
                             
                         
-                            <table class="table table-striped">
-                                <tbody>
+                            <table class="table table-hover table-sm table-borderless">
+                                <tbody style="color:black;font-size:13px;">
                                     <tr>
                                         <td>Title</td>
                                         <td class="task_title">name</td>
@@ -769,16 +862,30 @@
                                         <td class="task_category" >branch</td>
                                     </tr>
 
-                                    <tr>
-                                        <td>Client</td>
-                                        <td class="task_client" >branch</td>
-                                    </tr>
+                                    
 
                                   
 
                                     <tr>
                                         <td>Description</td>
-                                        <td class="task_description" >branch</td>
+                                        <td class="task_description"></td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td>Supervised by</td>
+                                        <td class="task_supervisor"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Assigned to</td>
+                                        <td class="task_assigned"></td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td>Status</td>
+                                        <td class="task_status"></td>
                                     </tr>
 
                                     
@@ -866,7 +973,7 @@
                         {{method_field('DELETE')}}
 
                         <input type="hidden"name="id"class="task_id_delete form-control">
-                        <button class="btn btn-danger">Delete Branch</button>
+                        <button class="btn btn-danger ml-3">Delete Branch</button>
                     </form>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
@@ -904,13 +1011,20 @@
 
 <script >
         function getTask(url , id){
+          
+            
             let task_title, task_start, task_end, task_category, task_client, task_description
             task_title= document.querySelector('.task_title')
             task_start = document.querySelector('.task_start')
             task_end = document.querySelector('.task_end')
             task_category = document.querySelector('.task_category')
-            task_client = document.querySelector('.task_client')
             task_description = document.querySelector('.task_description')
+            task_supervisor = document.querySelector('.task_supervisor');
+            task_assigned = document.querySelector('.task_assigned');
+            task_status = document.querySelector('.task_status');
+
+
+            
           
 
             try {
@@ -921,8 +1035,12 @@
                     task_start.innerText  = data.start
                     task_end.innerText  = data.end
                     task_category.innerText  = data.category
-                    task_client.innerText =data.client
+                  
                     task_description.innerText  = data.description
+                    task_supervisor.innerText = data.supervisor
+                    task_assigned.innerText = data.createdby
+                    task_status.innerText = data.status;
+
                     
                    
                 })
@@ -951,7 +1069,6 @@ viewModalBtns.forEach(function(viewModalBtn){
         alert(error)
     }
     </script>
-
 
 
 

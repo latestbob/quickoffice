@@ -401,110 +401,99 @@
                                     <h6 class="m-0 font-weight-bold text-primary">My {{$task}} Tasks</h6>
                 </div>
 
-                <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead class="text-center">
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Start Date</th>
-                                            <th>End Date</th>
-                                            <th>Category</th>
-                                            <th>Client</th>
-                                            <th>Status</th>
-                                            <th>Attachment</th>
-                                            <th>Action</th>
-                                            
-                                            
-                                        </tr>
-                                    </thead>
-
-                                    @php
-                        $date= date("Y-m-d H:i:s", strtotime('+1 hours'));
-                       
-                       
-                        
-                   @endphp
-
-                                    
-                                    <tbody class="text-center">
-                                        @foreach($taskss as $tasks)
-                                        <tr>
-                                            <td>{{$tasks->title}}</td>
-                                            <td>{{$tasks->start}}</td>
-                                            <td>{{$tasks->end}}</td>
-                                            <td>{{$tasks->category}}</td>
-                                            <td>{{$tasks->client}}</td>
-                                            <td>
-                                              
-
-                                                @if($task=='pending')
-                                                <p class="badge badge-warning text-dark">pending</p>
-
-                                                @elseif($task=='completed')
-                                                <p class="badge badge-success text-dark">Completed</p>
-
-                                                @elseif($task=='overdue')
-                                                <p class="badge badge-danger text-light">Overdue</p>
-                                                @endif
-
-                                             
-                                                
-                                            </td>
-                                            <td>
-                                            
-                                                @if($tasks->attachment !=null)
-                                                    <a href="{{route('download.task.attachment',$tasks->id)}}"><badge class="badge badge-info"><i class="fa fa-download"style="font-size:20px;"></i></badge></a>
-                                                @endif
-                                            </td>
-
-                                            @if($task != 'supervised')
-                                            <td><a href="#" data-id="{{$tasks->id}}" class="viewmodal btn-sm btn-info"data-toggle="modal" data-target="#viewModal">View</a><a href="#" data-id="{{$tasks->id}}" class="editmodal btn-sm btn-warning text-dark"data-toggle="modal" data-target="#editModal">Update Status</a><a href="#" data-id="{{$tasks->id}}" class="deletemodal btn-sm btn-danger"data-toggle="modal" data-target="#deleteModal">Delete</a></td>
-
-                                            @else
-                                            <td><a href="#" data-id="{{$tasks->id}}" class="viewmodal btn-sm btn-info"data-toggle="modal" data-target="#viewModal">View</a><a href="#" data-id="{{$tasks->id}}" class="editmodal btn-sm btn-warning text-dark"data-toggle="modal" data-target="#editModal">Update Status</a></td>
-                                            @endif
-                                            
-                                            
-                                        </tr>
-
-                                        @endforeach
-                                       
-                                    </tbody>
-                                    <tfoot class="text-center">
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Start Date</th>
-                                            <th>End Date</th>
-                                            <th>Category</th>
-                                            <th>Client</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                            
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
+               
 
 
-                    <!--This section for construction-->
+                <div class="container m-auto table-responsive">
+
+<table class="table table-sm table-borderless table-hover">
+    <thead class="bg-primary text-light">
+<tr>
+<th>Title</th>
+<th>Start</th>
+<th>End</th>
+
+<th>Supervisor</th>
+<th>Assigned </th>
+<th>Attachment</th>
+<th>Status</th>
+<th>Actions</th>
+
+
+</tr>
+</thead>
+
+<tbody style="color:black;font-size:13px;z-index:100;">
+
+@foreach($taskss as $work)
+<tr>
+<td>{{$work->title}}</td>
+<td>{{$work->start}}</td>
+<td>{{$work->end}}</td>
+<td>{{Auth::user()->name == $work->supervisor ? "Me" : $work-supervisor}}</td>
+<td>{{$work->createdby}}</td>
+<td>
+    @if($work->attachment == NULL)
+        None
+    @else
+
+        <a href="{{$work->attachment}}"target="_blank"><i class="fa fa-download"> </i></a>
+    
+
+    @endif
+</td>
+<td>
+    @if($work->status  == "pending")
+        <p class="badge badge-warning text-dark badge-sm">{{$work->status}} </p>
+    
+        @elseif($work->status  == "completed")
+        <p class="badge badge-success text-light badge-sm">{{$work->status}} </p>
+  
+
+    @else
+    <p class="badge badge-danger text-light badge-sm">{{$work->status}} </p>
+
+    @endif
+</td>
+
+@if($work->supervisor == Auth::user()->name)
+<td>
+    <i data-id="{{$work->id}}"data-toggle="modal" data-target="#viewModal"class="fa fa-eye mr-2 text-primary viewmodal"></i>|<i data-id="{{$work->id}}"data-toggle="modal" data-target="#editModal"class="fa fa-edit mr-2 text-warning editmodal"></i>|<i data-id="{{$work->id}}"data-toggle="modal" data-target="#deleteModal"class="fa fa-trash mr-2 text-danger deletemodal"></i>
+</td>
+    
+@else
+
+<td>
+    <i data-id="{{$work->id}}"data-toggle="modal" data-target="#viewModal"class="fa fa-eye mr-2 text-primary viewmodal"></i>|<i data-id="{{$work->id}}"data-toggle="modal" data-target="#editModal"class="fa fa-edit mr-2 text-warning editmodal"></i>
+</td>
+
+@endif
+
+
+
+</tr>
+
+
+@endforeach
+
+</tbody>
+
+</table>
+
+    
+</div>
+
+
+                    
+
+
+
+
+
                     </div>
-                <!-- /.container-fluid -->
+                
 
-
-
-              
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; <a href="https://quickoffice.online">QuickOffice</a> 2020</span>
-                        <span>Developed by <a href="https://wallsandgates.com.ng">WallsandGates Limited</a></span>
-                    </div>
-                </div>
-            </footer>
-            <!-- End of Footer -->
+            
 
         </div>
         <!-- End of Content Wrapper -->
@@ -568,8 +557,8 @@
                         <div class="table-responsive">
                             
                         
-                            <table class="table table-striped">
-                                <tbody>
+                            <table class="table table-hover table-sm table-borderless">
+                                <tbody style="color:black;font-size:13px;">
                                     <tr>
                                         <td>Title</td>
                                         <td class="task_title">name</td>
@@ -593,16 +582,30 @@
                                         <td class="task_category" >branch</td>
                                     </tr>
 
-                                    <tr>
-                                        <td>Client</td>
-                                        <td class="task_client" >branch</td>
-                                    </tr>
+                                    
 
                                   
 
                                     <tr>
                                         <td>Description</td>
-                                        <td class="task_description" >branch</td>
+                                        <td class="task_description"></td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td>Supervised by</td>
+                                        <td class="task_supervisor"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Assigned to</td>
+                                        <td class="task_assigned"></td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td>Status</td>
+                                        <td class="task_status"></td>
                                     </tr>
 
                                     
@@ -690,7 +693,7 @@
                         {{method_field('DELETE')}}
 
                         <input type="hidden"name="id"class="task_id_delete form-control">
-                        <button class="btn btn-danger">Delete Branch</button>
+                        <button class="btn btn-danger ml-3">Delete Branch</button>
                     </form>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
@@ -728,13 +731,16 @@
 
 <script >
         function getTask(url , id){
+            
             let task_title, task_start, task_end, task_category, task_client, task_description
             task_title= document.querySelector('.task_title')
             task_start = document.querySelector('.task_start')
             task_end = document.querySelector('.task_end')
             task_category = document.querySelector('.task_category')
-            task_client = document.querySelector('.task_client')
             task_description = document.querySelector('.task_description')
+            task_supervisor = document.querySelector('.task_supervisor');
+            task_assigned = document.querySelector('.task_assigned');
+            task_status = document.querySelector('.task_status');
           
 
             try {
@@ -745,8 +751,11 @@
                     task_start.innerText  = data.start
                     task_end.innerText  = data.end
                     task_category.innerText  = data.category
-                    task_client.innerText =data.client
+                    
                     task_description.innerText  = data.description
+                    task_supervisor.innerText = data.supervisor
+                    task_assigned.innerText = data.createdby
+                    task_status.innerText = data.status;
                     
                    
                 })

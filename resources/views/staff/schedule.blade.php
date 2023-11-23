@@ -342,223 +342,171 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
+                   
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Schedule Meetings </h1>
+                        <h1 class="h3 mb-0 text-gray-800">Schedule A Virtual Meeting</h1> 
+                        <button class="viewmodal btn btn-primary"data-toggle="modal" data-target="#viewModal">Schedule a Meeting</button>
                         
                     </div>
 
                    
                     <!-- Content Row -->
+                   
+
+                    <!-- here -->
+
+                                 
+
+                    @if($meets->count() > 0)
+
                     <div class="row">
 
-                        <!-- Content Column -->
-                        <div class="col-lg-7 mb-4">
+<!-- Content Column -->
 
-                            <!-- Project Card Example -->
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Schedule a Meeting</h6>
-                                </div>
-                                <div class="card-body">
 
-                                @if(session('msgg'))
-                                    <div class="alert alert-success text-center">
-                                        <p>{{session('msgg')}}</p>
-                                    </div>
-                                @endif
-                                              <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        
-                        <div class="card-body">
-                            @if(session('error'))
+    <!-- Project Card Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Upcoming Virtual Meeting</h6>
+        </div>
+        <div class="card-body">
+        
 
-                                <div class="alert alert-danger text-center">
-                                    <p>{{session('error')}}</p>
-                                </div>
+        @if(session('msgg'))
+            <div class="alert alert-success text-center">
+                <p>{{session('msgg')}}</p>
+            </div>
+        @endif
+                      <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+
+<div class="card-body">
+    @if(session('error'))
+
+        <div class="alert alert-danger text-center">
+            <p>{{session('error')}}</p>
+        </div>
+    @endif
+
+
+
+
+<div class="table-responsive">
+        <table class="table table-hovered table-borderless table-sm" id="dataTable" width="100%" cellspacing="0">
+            <thead class="bg-primary text-light">
+                <tr>
+                    <th>Title</th>
+                    
+                    <th>Starting</th>
+                    <th>Participant</th>
+                    <th>Host</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                    
+                </tr>
+            </thead>
+            
+            <tbody style="color:black;font-size:13px;z-index:100;">
+              
+                @foreach($meets as $meet)
+                    <tr>
+                        <td>{{$meet->title}}</td>
+                        <td>{{$meet->start}}</td>
+                        <td>
+                            @if($meet->participant == Auth::user()->name)
+
+                                <p>Me</p>
+                                @else
+
+                                <p>{{$meet->participant}}</p>
+
+
                             @endif
+                        </td>
+                        <td>
 
-                        <a href="#" class="viewmodal btn btn-success"data-toggle="modal" data-target="#viewModal">Create a Meeting</a>
+                        @if($meet->creator == Auth::user()->name)
 
+                                <p>Me</p>
+                                @else
 
-                        <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Participant</th>
-                                            <th>Starting</th>
-                                            <th>Description</th>
-                                            <th>Action</th>
-                                            
-                                        </tr>
-                                    </thead>
-                                    
-                                    <tbody>
-                                      
-                                        @foreach($meets as $meet)
-                                            <tr>
-                                                <td>{{$meet->title}}</td>
-                                                <td>{{$meet->participant}}</td>
-                                                <td>{{$meet->start}}</td>
-                                                <td>{{$meet->description}}</td>
-                                                <td>
-                                                @php
-                                                    date_default_timezone_set('Africa/Lagos');
-                                                    $date = date('Y-m-d H:i:s');
-                                                    @endphp
-
-                                                    @if($date>$meet->start)
-                                                        @if($meet->accept != 'declined')
-                                                        <a href=""class="btn btn-sm btn-success start"data-id="{{$meet->id}}">Meeting Started</a>
-
-                                                        @else 
-                                                        <a href=""class="btn btn-sm btn-warning"style="color:black;">Meeting Declined</a>
-                                                        @endif 
-                                                       
-                                                       
-
-                                                   
-
-                                                    @else
-                                                       <a href=""class="btn btn-sm btn-primary"disabled>Not Started</a>
-                                                    
-                                                    @endif
-                                                     
-                                                    
-                                                    
-                                                    
-                                                    <form action="{{route('delete.meeting',$meet->id)}}"method="POST">
-                                                        @csrf 
-                                                        {{method_field('DELETE')}}
-
-                                                        <button class="btn btn-sm btn-danger">Delete</button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                       
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Participant</th>
-                                            <th>Starting</th>
-                                            <th>Description</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                           
-                        </div>
-                    </div>
-
-                
-                                </div>
-                            </div>
-
-                         </div>
-                         <!-- Color System -->
-
-                        <div class="col-lg-5 mb-4">
-
-                            <!-- Illustrations -->
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Meeting Scheduled with me</h6>
-                                </div>
-                                <div class="card-body">
-                                    @if(session('msg'))
-                                        <div class="alert alert-success text-center">
-                                            <p>{{session('msg')}}</p>
-                                        </div>
-                                    @endif
+                                <p>{{$meet->creator}}</p>
 
 
-                                    <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Scheduled by</th>
-                                            <th>Starting</th>
-                                         
-                                            <th>Action</th>
-                                            
-                                        </tr>
-                                    </thead>
-                                    
-                                    <tbody>
-                                      
-                                        @foreach($withme as $meet)
+                                @endif
+                        </td>
+                       
+                        <td>{{$meet->description}}</td>
+                        <td>
 
-                                        @if($meet->accept != 'declined')
-                                            <tr>
-                                                <td>{{$meet->title}}</td>
-                                                <td>{{$meet->creator}}</td>
-                                                <td>{{$meet->start}}</td>
-                                         
-                                                <td>
-                                                @php
-                                                    date_default_timezone_set('Africa/Lagos');
-                                                    $date = date('Y-m-d H:i:s');
-                                                    @endphp
+                            @php
+                            date_default_timezone_set('Africa/Lagos');
+                            $date = date('Y-m-d H:i:s');
 
-                                                    @if($date>$meet->start)
-                                                       <a href=""class=" btn btn-sm btn-success join"data-id="{{$meet->id}}">Join Meeting</a>
-                                                       
+                            
+                            
+                            @endphp
 
-                                                   
+                            <form action="{{route('delete.meeting',$meet->id)}}"method="POST">
 
-                                                    @else
-                                                       <a href="#"class="btn btn-sm btn-primary"disabled>Not Started</a>
-                                                    
-                                                    @endif
-                                                     
-                                                    
-                                                    
-                                                    
-                                                    
-                                                    
-                                                    <form action="{{route('decline.meeting',$meet->id)}}"method="POST">
-                                                        @csrf 
-                                                        {{method_field('PUT')}}
-
-                                                        <button class="btn btn-sm btn-danger text-center">Decline</button>
-
-                                                    </form>
-                                                </td>
-                                            </tr> 
-                                        @endif
-                                        @endforeach
-                                       
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Scheduled by</th>
-                                            <th>Starting</th>
-                                          
-                                            <th>Action</th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
+                            @if($date>$meet->start)
 
 
-                                 
+                                @if($meet->accept != 'declined')
+                                <a href="{{$meet->link}}"target="_blank"class="btn btn-success btn-sm">Join</a>
 
-                                  
-                                   
-                                 
-                                </div>
-                            </div>
+                                @else
+                                <a href=""class="btn btn-sm btn-warning"style="color:black;">Meeting Declined</a>
 
-                            <!-- Approach -->
-                           
+                                @endif 
+                              
 
-                        </div>
-                    </div>
+                            
+
+                            @else
+                            <a href="#"class="btn btn-sm btn-primary"disabled>Not Started</a>
+                            
+                            @endif
+                            
+                            
+                            
+                                @csrf 
+                                {{method_field('DELETE')}}
+
+                                @if(Auth::user()->name == $meet->creator)
+
+                                <button class=""style="background:white;border:none;"><i class="fa fa-trash text-danger"></i></button>
+
+                                @endif
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+               
+            </tbody>
+           
+        </table>
+    </div>
+
+
+
+
+    
+    
+
+</div>
+
+                        @else
+
+                        
+                      
+                        
+                        
+                    
+
+                       
+
+                    @endif
 
                 </div>
                 <!-- /.container-fluid -->
@@ -578,16 +526,7 @@
 
 
 
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; <a href="https://quickoffice.online">QuickOffice</a> 2020</span>
-                        <span>Developed by <a href="https://wallsandgates.com.ng">WallsandGates Limited</a></span>
-                    </div>
-                </div>
-            </footer>
-            <!-- End of Footer -->
+     
 
         </div>
         <!-- End of Content Wrapper -->

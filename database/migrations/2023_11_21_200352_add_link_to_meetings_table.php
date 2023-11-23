@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddHintToUsersTable extends Migration
+class AddLinkToMeetingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class AddHintToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('hint')->nullable();
+        Schema::table('meetings', function (Blueprint $table) {
+            //
+            $table->string("link")->nullable();
         });
     }
 
@@ -25,9 +26,10 @@ class AddHintToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('hint');
-           
+        Schema::table('meetings', function (Blueprint $table) {
+            //
+
+            $table->dropColumn("link");
         });
     }
 }

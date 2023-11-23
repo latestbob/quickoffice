@@ -2,6 +2,7 @@
 @if($viewType == 'default')
     @if($from_id != $to_id)
     <div class="message-card" data-id="{{ $id }}">
+   
         <p>{!! ($message == null && $attachment != null && @$attachment[2] != 'file') ? $attachment[1] : nl2br($message) !!}
             <sub title="{{ $fullTime }}">{{ $time }}</sub>
             {{-- If attachment is a file --}}
@@ -17,6 +18,9 @@
         <div class="message-card">
             <div class="image-file chat-image" style="width: 250px; height: 150px;background-image: url('{{ asset('storage/'.config('chatify.attachments.folder').'/'.$attachment[0]) }}')">
             </div>
+
+            <!-- <div class="image-file chat-image" style="width: 250px; height: 150px;background-image: url('{{ asset('storage/'.config('chatify.attachments.folder').'/'.$attachment[0]) }}')">
+            </div> -->
         </div>
     </div>
     @endif

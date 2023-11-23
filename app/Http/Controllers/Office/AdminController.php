@@ -19,6 +19,7 @@ use App\Task;
 use App\Events;
 use App\Jobs\Meetings;
 use App\Office;
+use Carbon\Carbon;
 class AdminController extends Controller
 {
     public function __construct()
@@ -121,10 +122,18 @@ class AdminController extends Controller
     public function schedule(){
 
         $members=User::where('office',Auth::user()->office)->where('name','!=',Auth::user()->name)->get();
-        $meets=Meeting::where('office',Auth::user()->office)->where('creator',Auth::user()->name)->get();
-        $withme=Meeting::where('office',Auth::user()->office)->where('participant',Auth::user()->name)->get();
+        
 
-        return view('admin.schedule',compact('meets','members','withme'));
+
+        $meets = Meeting::where(function ($query) {
+            $query->where('participant', Auth::user()->name)
+                  ->orWhere('creator', Auth::user()->name);
+        })
+        ->where('office', Auth::user()->office)
+        ->get();
+
+
+        return view('admin.schedule',compact('meets','members'));
     }
 
     //admin schedule create meeting
@@ -168,10 +177,17 @@ class AdminController extends Controller
 
     public function tasks(){
 
+        $task = Task::where(function ($query) {
+            $query->where('createdby', Auth::user()->name)
+                  ->orWhere('supervisor', Auth::user()->name);
+        })
+        ->where('office', Auth::user()->office)
+        ->get();
+
         $client=User::where('office',Auth::user()->office)->where('position','client')->get();
 
-        $supervisor=User::where('office',Auth::user()->office)->where('position','admin')->where('name','!=',Auth::user()->name)->get();
-        $task=Task::where('office',Auth::user()->office)->where('createdby',Auth::user()->name)->get();
+        $supervisor=User::where('office',Auth::user()->office)->where('name','!=',Auth::user()->name)->get();
+        //$task=Task::where('office',Auth::user()->office)->where('createdby',Auth::user()->name)->get();
         $staff=User::where('office',Auth::user()->office)->where('position','!=','admin')->where('position','!=','client')->where('name','!=',Auth::user()->name)->get();
         return view('admin.tasks',compact('client','supervisor','task','staff'));
     }
@@ -832,7 +848,15 @@ class AdminController extends Controller
         if($task=="pending"){
             //dd('the task is pending');
 
-            $taskss =Task::where(['office' => Auth::user()->office])->where(['createdby' => Auth::user()->name])->where(['status' => 'pending'])->get();
+            //$taskss =Task::where(['office' => Auth::user()->office])->where(['createdby' => Auth::user()->name])->where(['status' => 'pending'])->get();
+
+            $taskss = Task::where(function ($query) {
+                $query->where('createdby', Auth::user()->name)
+                      ->orWhere('supervisor', Auth::user()->name);
+            })
+            ->where('office', Auth::user()->office)
+            ->where('status','pending')
+            ->get();
 
             return view('admin.viewtasktype',compact('taskss','task'));
         }
@@ -843,7 +867,20 @@ class AdminController extends Controller
         }
 
         elseif($task=="overdue"){
-            $date = date("Y-m-d H:i:s", strtotime('+1 hours'));
+            // $date = date("Y-m-d H:i:s", strtotime('+1 hours'));
+            // dd($date);
+
+            $currentDateTime = Carbon::now();
+
+            // Set the timezone to Lagos/Nigeria
+            $currentDateTime->setTimezone('Africa/Lagos');
+
+            // Format the date and time as per your requirement
+            $date = $currentDateTime->format('Y-m-d H:i:s');
+
+           
+
+
           $taskss=Task::where(['office' => Auth::user()->office])->where(['createdby' => Auth::user()->name])->where(['status' => 'pending'])->where('end' ,'<', $date)
           ->orwhere(['office' => Auth::user()->office])->where(['supervisor' => Auth::user()->name])->where(['status' => 'pending'])->where('end' ,'<', $date)->get();
           return view('admin.viewtasktype',compact('taskss','task'));

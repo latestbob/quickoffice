@@ -11,7 +11,7 @@
             {{-- center side --}}
             <td>
                 <p data-id="{{ 'user_'.Auth::user()->id }}">Saved Messages <span>You</span></p>
-                <span>Save messages secretly</span>
+                <!-- <span>Save messages secretly</span> -->
             </td>
         </tr>
     </table>

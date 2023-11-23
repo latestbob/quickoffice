@@ -357,8 +357,14 @@
                     </div>
 
                    
-                      <!-- Content Row -->
-                      <div class="row">
+        
+
+
+
+
+
+                <!-- Content Row -->
+                <div class="row">
 
 <!-- Earnings (Monthly) Card Example ////////////////////////////////////////////////////////////////// -->
 <div class="col-xl-3  text-light col-md-6 mb-4">
@@ -407,7 +413,13 @@
                     <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
                         PENDING TASKS</div>
                     <div class="h5 mb-0 font-weight-bold text-dark">
-                    {{ \App\Task::where(['office' => Auth::user()->office])->where(['createdby' => Auth::user()->name])->where(['status' => 'pending'])->count() }}
+                    {{ \App\Task::where(['office' => Auth::user()->office])
+             ->where(function ($query) {
+                 $query->where(['createdby' => Auth::user()->name])
+                       ->orWhere(['supervisor' => Auth::user()->name]);
+             })
+             ->where(['status' => 'pending'])
+             ->count() }}
                     </div>
                 </div>
                 <div class="col-auto">
@@ -480,172 +492,10 @@
 
                     <!-- Content Row -->
                     
-                    <div class="row">
-
-                        <!-- Area Chart -->
-                       
-                        <div class="col-xl-8 col-lg-7">
-                        @if(\App\Task::where('office',Auth::user()->office)->where('createdby',Auth::user()->name)->exists())
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Latest Tasks</h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        
-                                    </div>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    
-                                   
-
-                                        <div class="table-responsive">
-                                           <table class="table table-striped">
-                                           <thead>
-                                                <th>Title</th>
-                                                <th>Client</th>
-                                                <th>Status</th>
-                                                <td>Ending</td>
-
-                                            </thead>
-
-                                            <tbody>
-                                               @foreach($task as $tasks)
-                                                    <tr>
-                                                        <td>{{$tasks->title}}</td>
-                                                        <td>{{$tasks->client}}</td>
-
-                                                      
-                                                        <td>  
-                                                        @if($tasks->status=="pending")
-                                                            <p class="text-center badge badge-warning">{{$tasks->status}}</p>
-
-                                                            @elseif($tasks->status=="completed")
-                                                            <p class="text-center badge badge-success">{{$tasks->status}}</p>
-
-                                                            @elseif($tasks->status=="")
-                                                        @endif
-                                                        </td>
-                                                        <td>{{$tasks->end}}</td>
-                                                        
-                                                        <!--date("d-M", strtotime($tasks->end)) change date to month day -->
-                                                    </tr>
-                                               @endforeach
-
-                                               
-                                            </tbody>
-                                            
-                                           </table>
-                                          <div class="m-auto text-center">
-                                            <a href="{{route('admin.tasks')}}" class="btn btn-sm btn-info text-white">View More</a>
-                                          </div>
-                                        </div>
-                                  
-                                </div>
-                            </div>
-                            @endif
-                        </div>
-                        
-                        <!-- Pie Chart -->
-                        <div class="col-xl-4 col-lg-5">
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Upcoming Events</h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        
-                                    </div>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    
-                                    @if(\App\Events::where('office',Auth::user()->office)->exists())
-                                        <div class="table-responsive">
-                                            <table class="table table-striped">
-                                            @foreach($event as $events)
-
-                                            
-                                                <tr>
-                                                    <td>{{$events->title}}</td>
-                                                    <td>{{$events->start}}</td>
-                                                </tr>
-                                            
-                                            @endforeach
-                                            </table>
-
-                                            <div class="m-auto text-center">
-                                            <a href="{{route('admin.calender')}}" class="btn btn-sm btn-info text-white">View More</a>
-                                            </div>
-
-
-                                        </div>
-
-                                    @endif
-                                   
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                  
 
                     <!-- Content Row -->
-                    <div class="row">
-
-                        <!-- Content Column -->
-                        <div class="col-lg-8 mb-4">
-                        @if(\App\Meeting::where('office',Auth::user()->office)->where('participant',Auth::user()->name)->exists())
-                            <!-- Project Card Example -->
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Meetings Schedule with me</h6>
-                                </div>
-                                <div class="card-body">
-                                    
-                                    <div class="table-responsive">
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <th>Title</th>
-                                                <th>Start</th>
-                                                <th>Creator</th>
-                                                <th>Starting</th>
-                                                
-                                            </thead>
-
-                                            <tbody>
-                                                @foreach($meeting as $meetings)
-                                                    <tr>
-                                                        <td>{{$meetings->title}}</td>
-                                                        <td>{{$meetings->start}}</td>
-                                                        <td>{{$meetings->creator}}</td>
-                                                        <td>{{$meeting->start}}</td>
-                                                     
-                                                    </tr>
-
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-
-                                        <div class="m-auto text-center">
-                                            <a href="{{route('admin.schedule')}}" class="btn btn-sm btn-info text-white">View More</a>
-                                            </div>
-
-                                    </div>
-                                </div>
-                            </div>
-
-                           </div>
-                       @endif
-                        
-                    </div>
+                  
 
                 </div>
                 <!-- /.container-fluid -->
@@ -653,16 +503,7 @@
             </div>
             <!-- End of Main Content -->
 
-        <div class=""style="min-height:200px;"></div>
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white"style="">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; <a href="https://quickoffice.online">QuickOffice</a> 2020</span>
-                        <span>Developed by <a href="https://wallsandgates.com.ng">WallsandGates Limited</a></span>
-                    </div>
-                </div>
-            </footer>
+        
             <!-- End of Footer -->
 
         </div>

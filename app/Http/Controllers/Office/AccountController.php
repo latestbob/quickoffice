@@ -46,21 +46,27 @@ class AccountController extends Controller
     //account schedule page
     public function schedule(){
         $members=User::where('office',Auth::user()->office)->where('name','!=',Auth::user()->name)->get();
-        $meets=Meeting::where('office',Auth::user()->office)->where('creator',Auth::user()->name)->get();
-
-        //meeting scheduled with me
-
-        $withme=Meeting::where('office',Auth::user()->office)->where('participant',Auth::user()->name)->get();
-
+       
+       // $members=User::where('office',Auth::user()->office)->where('name','!=',Auth::user()->name)->get();
         
-        return view('account.schedule',compact('members','meets','withme'));
+
+
+        $meets = Meeting::where(function ($query) {
+            $query->where('participant', Auth::user()->name)
+                  ->orWhere('creator', Auth::user()->name);
+        })
+        ->where('office', Auth::user()->office)
+        ->get();
+
+
+        return view('admin.schedule',compact('meets','members'));
     }
     // account task page
 
     public function tasks(){
         $client=User::where('office',Auth::user()->office)->where('position','client')->get();
 
-        $supervisor=User::where('office',Auth::user()->office)->where('position','admin')->where('name','!=',Auth::user()->name)->get();
+        $supervisor=User::where('office',Auth::user()->office)->where('name','!=',Auth::user()->name)->get();
         $task=Task::where('office',Auth::user()->office)->where('createdby',Auth::user()->name)->get();
         $staff=User::where('office',Auth::user()->office)->where('position','!=','admin')->where('position','!=','client')->where('name','!=',Auth::user()->name)->get();
         return view('account.tasks',compact('client','supervisor','task','staff'));

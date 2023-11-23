@@ -25,7 +25,7 @@ class ChatController extends Controller
      * @return void
      */
 
-    public static $allowed_images = array('png','jpg','jpeg','gif');
+    public static $allowed_images = array('png','jpg','jpeg','gif','svg');
     public static $allowed_files  = array('zip','rar','txt','pptx','docx','pdf');
 
 
@@ -161,10 +161,19 @@ class ChatController extends Controller
             if ($file->getSize() < 150000000) {
                 if (in_array($file->getClientOriginalExtension(), $allowed)) {
                     // get attachment name
-                    $attachment_title = $file->getClientOriginalName();
+
+                    $attachment_title = cloudinary()->uploadFile($request->file('file')->getRealPath())->getSecurePath();
+
+
+                    // $attachment_title = $file->getClientOriginalName();
                     // upload attachment and store the new name
-                    $attachment = Str::uuid() . "." . $file->getClientOriginalExtension();
-                    $file->storeAs("public/" . config('chatify.attachments.folder'), $attachment);
+                    
+                    // $attachment = Str::uuid() . "." . $file->getClientOriginalExtension();
+                    // $file->storeAs("public/" . config('chatify.attachments.folder'), $attachment);
+
+
+                   
+
                 } else {
                     $error_msg = "File extension not allowed!";
                 }
