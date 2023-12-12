@@ -133,6 +133,15 @@
 
 
 
+                <!-- Nav Item - Leave  -->
+                <li class="nav-item">
+                <a id="step-eight"class="nav-link" href="{{route('leavepage')}}">
+                <i class="fas fa-calendar"></i>
+                    <span>Leave Management</span></a>
+            </li>
+
+
+
             
 
 

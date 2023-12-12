@@ -24,6 +24,9 @@ use App\Jobs\Subscription;
 use App\Jobs\Taskforstaff;
 use App\Jobs\Meetings;
 use App\Jobs\Declinemeetings;
+
+use App\Leave;
+
 class pagesController extends Controller
 {
     //index page   https://paystack.com/pay/az04o6ayd7
@@ -393,9 +396,14 @@ class pagesController extends Controller
             'title'=>'required',
             'start'=>'required',
            
-            'participant'=>'required',
+            // 'participant'=>'required',
             'description'=>'required',
+            'participants' =>'required' 
         ]);
+
+       
+
+        // dd($request->participants);
 
         $randomNumber = mt_rand(1000000000000, 9999999999999);
 
@@ -415,56 +423,69 @@ class pagesController extends Controller
         }
         
         else{
+
+
+
+            foreach($request->participants as $part){
+
+                $meeting=new Meeting;
+                $meeting->title=$request->title;
+                $meeting->start=$request->start;
+                $meeting->end=$request->end;
+                $meeting->participant=$part;
+                $meeting->description=$request->description;
+                $meeting->creator=Auth::user()->name;
+                $meeting->office=Auth::user()->office;
+                $meeting->ref = strval($randomNumber);
+    
+                $meeting->link = "https://meet.jit.si/laurenparker/$randomNumber";
+    
+                $meeting->save();
+
+                $meetings=[
+                    'data'=>'A meeting was scheduled with you',
+                    'createdby'=>Auth::user()->name,
+                    
+                  
+                    'title'=>$request->title,
+                    'start'=>$request->start,
+                    'end'=>$request->end
+                    
+                ];
+
+
+                $id=User::where('name',$part)->value('id');
+
             
-            $meeting=new Meeting;
-            $meeting->title=$request->title;
-            $meeting->start=$request->start;
-            $meeting->end=$request->end;
-            $meeting->participant=$request->participant;
-            $meeting->description=$request->description;
-            $meeting->creator=Auth::user()->name;
-            $meeting->office=Auth::user()->office;
+                 User::find($id)->notify(new MeetingNotification($meetings));
 
-            $meeting->link = "https://meet.jit.si/laurenparker/$randomNumber";
-
-            $meeting->save();
-
-            $meetings=[
-                'data'=>'A meeting was scheduled with you',
-                'createdby'=>Auth::user()->name,
-                
-              
-                'title'=>$request->title,
-                'start'=>$request->start,
-                'end'=>$request->end
-                
-            ];
-
-            
+                 $participantmail=User::where('office',Auth::user()->office)->where('name',$part)->value('email');
+                 //send meeting schedule mail to participants
 
 
-        $id=User::where('name',$request->participant)->value('id');
+
+                 $meetingschedule=[
+                    'office'=>Auth::user()->office,
+                    'createdby'=>Auth::user()->name,
+                    'creatormail'=>Auth::user()->email,
+                    'participantmail'=>$participantmail,
+                    'title'=>$request->title,
+                    'start'=>$request->start,
+                    'end'=>$request->end,
+                    'description'=>$request->description
+                ];
+                dispatch(new Meetings($meetingschedule));
+
+            }
+
+
+
+
 
             
-           User::find($id)->notify(new MeetingNotification($meetings));
+           
+        return back()->with('msgg','Meeting was created successfully');
 
-           $participantmail=User::where('office',Auth::user()->office)->where('name',$request->participant)->value('email');
-           //send meeting schedule mail to participants
-
-           $meetingschedule=[
-               'office'=>Auth::user()->office,
-               'createdby'=>Auth::user()->name,
-               'creatormail'=>Auth::user()->email,
-               'participantmail'=>$participantmail,
-               'title'=>$request->title,
-               'start'=>$request->start,
-               'end'=>$request->end,
-               'description'=>$request->description
-           ];
-           dispatch(new Meetings($meetingschedule));
-
-
-            return back()->with('msgg','Meeting was created successfully');
         }
     }
 
@@ -519,7 +540,7 @@ class pagesController extends Controller
     //delete meeting 
 
     public function deletemeeting($id){
-        $meeting=Meeting::where('id',$id)->where('office',Auth::user()->office)->where('creator',Auth::user()->name)->delete();
+        $meeting=Meeting::where('ref',$id)->where('office',Auth::user()->office)->where('creator',Auth::user()->name)->delete();
         return back()->with('msgg','Meeting deleted successfully');
 
         
@@ -1844,6 +1865,94 @@ public function stepups(Request $request){
     ]);
     dd($request->all());
 }
+
+
+
+// leave management
+
+
+public function leave(){
+    $leave = Leave::where("email",Auth::user()->email)->get();
+
+    return view("leave",compact('leave'));
+}
+
+
+
+//apply leave
+
+public function applyleave(Request $request){
+
+    
+    $min = 100000000;
+    $max = 999999999;
+
+    $randomNumber = rand($min, $max);
+
+    $ref = strval($randomNumber);
+
+
+    $start = $request->start; // Replace with your date]
+    $end = $request->end;
+
+    // Parse the original date using Carbon
+    $carbonStartDate = Carbon::parse($start);
+    $carbonEndDate = Carbon::parse($end);
+    
+    // Format the date in "dd/mm/yyyy" format
+    $formattedDateStart = $carbonStartDate->format('d/m/Y');
+    $formattedDateEnd = $carbonEndDate->format('d/m/Y');
+
+
+
+    $startDate = Carbon::createFromFormat('d/m/Y', $formattedDateStart);
+$endDate = Carbon::createFromFormat('d/m/Y', $formattedDateEnd);
+
+// Check if the start date date is greater than the end date
+if ($startDate->gt($endDate)) {
+    // Swap the dates if necessary
+
+    return back()->with('error',"End date must be greater than Start date");
+   
+    
+}
+else{
+    $leave = new Leave;
+ 
+
+    $leave->fullname = $request->fullname;
+    $leave->email = $request->email;
+    $leave->position = $request->position;
+    $leave->emergency_contact = $request->emergency_contact;
+    $leave->type = $request->type;
+    $leave->applicable_days = $request->applicable_days;
+    $leave->requested_days = $request->requested_days;
+    $leave->start = $formattedDateStart;
+    $leave->end = $formattedDateEnd;
+    $leave->status="pending";
+    $leave->ref= $ref;
+    $leave->year = date('Y');
+
+    $leave->save();
+
+    // send email here to admin,hr here
+
+    // 
+
+    return back()->with('msg',"Your leave application was submitted successfully");
+
+
+}
+
+
+   
+
+
+}
+
+
+
+
 
 }
 

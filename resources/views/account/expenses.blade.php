@@ -10,7 +10,7 @@
     <meta name="author" content="">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{Auth::user()->office}} Account - Settings</title>
+    <title>{{Auth::user()->office}} Account - Expense Approval</title>
 
     <!-- Custom fonts for this template-->
     <link href="{{asset('vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
@@ -21,12 +21,11 @@
     <!-- Custom styles for this template-->
     <link href="{{asset('css/sb-admin-2.css')}}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.css" />
-  
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.css" integrity="sha512-oe8OpYjBaDWPt2VmSFR+qYOdnTjeV9QPLJUeqZyprDEQvQLJ9C5PCFclxwNuvb/GQgQngdCXzKSFltuHD3eCxA==" crossorigin="anonymous" />
 <style>
-    a:link{
-        text-decoration:none;
-    }
+a:link{
+    text-decoration:none;
+}
 </style>
 </head>
 
@@ -43,15 +42,15 @@
                
                 <div class="sidebar-brand-text mx-3 font-weight-bolder">{{Auth::user()->office}} 
                     <br>
-                    <h6 class="text-center">ACOUNTANT</h6>
+                    <h6 class="text-center">Accountant</h6>
                 </div>
             </a>
 
-             <!-- Divider -->
-             <hr class="sidebar-divider my-0">
+                <!-- Divider -->
+            <hr class="sidebar-divider my-0">
 
 <!-- Nav Item - Dashboard -->
-<li class="nav-item">
+<li class="nav-item ">
  <a class="nav-link" href="{{route('account.home')}}">
      <i class="fas fa-fw fa-tachometer-alt"></i>
      <span>Dashboard</span></a>
@@ -88,11 +87,30 @@
 
 <!-- Nav Item - Account -->
 
-<li class="nav-item ">
+<li class="nav-item active">
 <a class="nav-link" href="{{route('account.accounts')}}">
 <i class="fas fa-money-check"></i>
 <span>Account</span></a>
 </li>
+
+
+<li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+                    aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Accounting Features</span>
+                </a>
+                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        
+                        <a class="collapse-item" href="{{route('account.invoice')}}">Invoices</a>
+                        <a class="collapse-item" href="{{route('account.expenses')}}">Expense Approval</a>
+                        <!-- <a class="collapse-item" href="utilities-animation.html">Animations</a>
+                        <a class="collapse-item" href="utilities-other.html">Other</a> -->
+                    </div>
+                </div>
+            </li>
 
 
 <!-- Divider -->
@@ -154,8 +172,6 @@
 <!-- Divider -->
 <hr class="sidebar-divider">
 
-
-
  <!-- Nav Item - Leave  -->
  <li class="nav-item">
                 <a id="step-eight"class="nav-link" href="{{route('leavepage')}}">
@@ -163,10 +179,6 @@
                     <span>Leave Management</span></a>
             </li>
 
-            
-
-
-           
 
             
 
@@ -234,8 +246,8 @@
                             </div>
                         </li>
 
-                             <!-- Nav Item - Alerts -->
-                             <li class="nav-item dropdown no-arrow mx-1">
+                                     <!-- Nav Item - Alerts -->
+                        <li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-bell fa-fw"></i>
@@ -308,6 +320,7 @@
                                             
                                           @endforeach
                                        
+                               
                                 
                                 <a class="dropdown-item text-center small text-gray-500" href="{{route('markasread')}}">Mark All as Read</a>
                             </div>
@@ -324,6 +337,7 @@
                             <!-- Dropdown - Messages -->
                            
                         </li>
+
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
@@ -337,7 +351,7 @@
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="{{route('account.profile.page')}}">
+                              ]<a class="dropdown-item" href="{{route('account.profile.page')}}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
@@ -367,110 +381,176 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Profile Settings</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Expense Approvals</h1> 
+                        <button class="btn btn-primary"data-toggle="modal" data-target="#exampleModal">Create New Expense</button>
                         
                     </div>
 
-                   
-                    <!-- Content Row -->
-                    <div class="row">
-
-                        <!-- Content Column -->
-                        <div class="col-lg-8 m-auto mb-4">
-
-                            <!-- Project Card Example -->
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Update Details</h6>
+     
+                            @if(session('msg'))
+                                <div class="alert alert-success text-center">
+                                    <p>{{session('msg')}}</p>
                                 </div>
-                                <div class="card-body">
-
-                                @if(session('msgg'))
-                                    <div class="alert alert-success text-center">
-                                        <p>{{session('msgg')}}</p>
-                                    </div>
-                                @endif
-
-                                @if ($errors->any())
-                                <div class="alert alert-danger text-center">
-                                <ul>
-                                @foreach ($errors->all() as $error)
-                                <li style="list-style:none">{{ $error }}</li>
-                                @endforeach
-                                </ul>
-                                </div>
-
-                                @endif
-
-
-                                <form action="{{route('account.setting.update')}}"method="POST">
-                        @csrf 
-                        {{method_field('PUT')}}
-
-                        <input type="hidden"name="id"value="{{Auth::user()->id}}"required>
-
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text"name="name"value="{{Auth::user()->name}}"class="form-control"required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input type="email"name="email"value="{{Auth::user()->email}}"class=" form-control"required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password"name="password"placeholder="Enter a new secured password"class=" form-control"required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="dob">Date Of Birth</label>
-                            <input type="date"name="dob"value="{{Auth::user()->dob}}"class="form-control"required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="phone">Phone</label>
-                            <input type="tel"name="phone"value="{{Auth::user()->phone}}"class="form-control"required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="branch">Branch</label>
-                            <select name="branch" id=""class="form-control"required>
-                                <option value="">Select Branch </option>
-
-                                @foreach($branch as $branchess)
-                                    <option value="{{$branchess->name}}">{{$branchess->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        
-
-                        
-                        <div class="form-group">
-                            <button class="btn btn-success text-center">Update Details</button>
-                        </div>
-                    </form>
-
-                        
-                                            
+                            @endif
+        
                 
-                                </div>
-                            </div>
+                
 
-                         </div>
-                         <!-- Color System -->
+                
 
-                       
+
+                    
+
+
+
+
+
+
                     </div>
-
-
-
-                        </div>
-                   </div>
-                </div>
                 <!-- /.container-fluid -->
+
+
+             
+        </div>
+    </div>
+
+
+
+
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Create New Expenses For Approval</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+
+            <form action=""method="POST">
+                @csrf
+
+
+                <div class="form-group">
+                    <label for="">Expense Title</label>
+
+                    <input type="text"name="title"class="form-control"placeholder="Expense Title">
+                </div>
+
+
+                <div class="form-group row">
+                                        <div class="col-md-6">
+                                        <label for="start">Category</label>
+                                            <select name="category" id=""class="form-control addexpensecategories">4
+                                            <option value="">Select Category</option>
+                                                <option value="Administrative Expenses">Administrative Expenses</option>
+
+                                         
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                              <label for="start">Add Category(If it doesn't exist) <a class="text-info font-weight-bold addcategory"data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Add </a> </label><br>
+                                        
+
+                                        <div class="collapse" id="collapseExample">
+                                          
+                                               
+                                                   <form class="myform">
+                                                    <div class="row">
+                                                        <div class="col-8">
+                                                             <input id="myinputcategory" type="text"class="form-control"name="title"placeholder="Enter Category Title"required>
+                                                        </div>
+
+                                                        <div class="col-4">
+                                                            <button id="mysubmit" class="btn btn-primary btn-sm">Add</button>
+                                                        </div>
+                                                    </div>
+
+                                                    </form>
+                                                    
+                                               
+                                           
+                                            </div>
+                                        </div>
+
+                                        
+                                            
+                                    </div>
+
+
+                                    <div class="form-group row">
+                                        <div class="col-md-6">
+                                            <label for="start">Date made</label>
+                                            <input type="date"name="date"placeholder="Enter date made"class="form-control"required>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label for="start">₦ Amount Paid</label>
+                                                <input type="number"name="amount"placeholder="Enter Amount in Naira"class="form-control"required>
+                                        </div>
+
+                                        
+                                            
+                                    </div>
+
+                                    <p class="font-weight bold">Add Items</p>
+
+                                    <div class="form-row">
+                                        <div class="col-5">
+                                            <input type="text"id="item_name"class="form-control"placeholder="Item Name">
+                                        </div>
+
+                                        <div class="col">
+                                            <input type="number"id="item_quantity"oninput="getTotal()"class="form-control"placeholder="Quanity">
+                                        </div>
+
+                                        <div class="col">
+                                            <input type="number"id="unit_price"oninput="getTotal()"class="form-control"placeholder="Unit Price">
+                                        </div>
+
+                                        <div class="col">
+                                            <input type="number"id="total_price"class="form-control"placeholder="Total"readonly>
+                                        </div>
+
+                                        <div class="col">
+                                            <button id="additem" class="btn btn-primary additem">Add Item</button>
+                                        </div>
+
+
+                                        
+
+
+                                    </div>
+
+                                    <div class="form-group">
+                                         <ul id="itemList"></ul>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="description">Description</label>
+
+                                        <textarea name="description" id=""placeholder="Description of Expenses"class="form-control" cols="10" rows="5"required></textarea>
+                                    </div>
+
+                          
+
+                                    <div class="form-group">
+                                        <button class="text-center btn btn-success">Add Expenses</button>
+                                    </div>
+
+            </form>
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 
             </div>
             <!-- End of Main Content -->
@@ -526,166 +606,7 @@
 
 
 
-         <!-- Edit Client Modal-->
-         <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog " role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">
-                       {{Auth::user()->office}} Client
-                    </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
 
-                    <form action="{{route('admin.client.edit.post')}}"method="POST">
-                        @csrf 
-                        {{method_field('PUT')}}
-
-                        <input type="hidden"name="id"class="client_id_edit"required>
-
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text"name="name"class="client_name_edit form-control"required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input type="email"name="email"class="client_email_edit form-control"required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password"name="password"class="client_password_edit form-control"required>
-                        </div>
-
-
-                      
-
-                        <div class="form-group">
-                            <label for="phone">Official Phone</label>
-                            <input type="tel"name="phone"class="client_phone_edit form-control"required>
-                        </div>
-
-                     
-
-                       
-
-                        <div class="form-group">
-                            <label for="description">Job Description</label>
-
-                           <input type="text"name="description"class="form-control client_description_edit"style="height:100px;"required>
-                        </div>
-
-                        <div class="form-group">
-                            <button class="btn btn-success text-center">Update Client Details</button>
-                        </div>
-                    </form>
-               
-                    
-                    </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                  
-                   
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
- <!-- Email Client Modal-->
- <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog " role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">
-                       {{Auth::user()->office}} Client
-                    </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-
-                    <form action="#"method="POST">
-                        @csrf 
-                       
-
-                        <input type="hidden"name="id"class="client_id_email"required>
-
-                     
-
-                        <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input type="email"name="email"class="client_email_email form-control"required>
-                        </div>
-
-                       
-
-                        <div class="form-group">
-                            <label for="attachment">Add Attachment</label>
-                            <input type="file"name="attachment"class=" form-control"required>
-                        </div>
-
-                     
-
-                       
-
-                        
-
-                        <div class="form-group">
-                            <button class="btn btn-success text-center">Email Client</button>
-                        </div>
-                    </form>
-               
-                    
-                    </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                  
-                   
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-     <!-- Delete Staff Modal-->
-     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to delete this Client?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Confirm you want to delete  <span class="branch_name_delete"></span></div>
-                <form action="{{route('admin.client.delete.post')}}"method="POST">
-                        @csrf 
-                        {{method_field('DELETE')}}
-
-                        <input type="hidden"name="id"class="branch_delete form-control">
-                        <button class="btn btn-danger">Delete Client</button>
-                    </form>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                  
-                  
-                </div>
-            </div>
-        </div>
-    </div>
-
- 
-   
 
 
     <!-- Bootstrap core JavaScript-->
@@ -710,156 +631,238 @@
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.js"></script>
 
 
+<!-- Add items -->
+
+<script>
+    var item_name  = document.getElementById('item_name');
+    var item_quantity = document.getElementById('item_quantity');
+    var unit_price = document.getElementById('unit_price');
+    var total_price = document.getElementById('total_price');
+
+    var addItemBtn = document.getElementById('additem');
+
+    function getTotal(){
+        var myquantity = item_quantity.value;
+        var myunitprice = unit_price.value;
+
+        var mytotal  = myquantity * myunitprice;
+
+        document.getElementById('total_price').value=mytotal;
 
 
-<script >
-
-//script for edit modal
-        function editBranch(url , id){
-            let  client_id, client_name,  client_email, client_password, client_phone, client_description;
-
-            client_id= document.querySelector('.client_id_edit')
-            client_name= document.querySelector('.client_name_edit')
-           
-            client_email = document.querySelector('.client_email_edit')
-            client_phone = document.querySelector('.client_phone_edit')
- 
-            client_password = document.querySelector('.client_password_edit')
-            client_description = document.querySelector('.client_description_edit')
-
-            try {
-                fetch(`${url}${id}`)
-                .then(res=> res.json())
-                .then(function(data){
-                    client_id.value  = data.id
-                    client_name.value  = data.name
-                    client_email.value  = data.email
-                    
-                    client_phone.value  = data.phone
-                    client_password.value  = data.password
-                    
-                    client_description.value  = data.description
-                })
-                .catch(function(err){
-                    console.log(err)
-                })
-        } catch (error) {
-        console.error(error)
     }
+
+    
+
+
+    addItemBtn.addEventListener('click',function(e){
+
+       
+        e.preventDefault();
+        var inputed_item_name = item_name.value;
+        var inputed_item_quantity = item_quantity.value;
+        var inputed_unit_price = unit_price.value;
+        var inputed_total_price  = total_price.value;
+
+    // check if necessary input are been field
+
+
+        
+
+    if(inputed_item_name == "" || inputed_item_quantity == "" || inputed_unit_price == "" || inputed_total_price == ""){
+        alert("An important field is empty");
+    }
+
+    else{
+        
+    }
+
+
+    });
+
+
+</script>
+
+
+
+<!--  -->
+
+
+
+
+
+
+<script>
+    var myInput = document.getElementById('myinputcategory');
+var myButton = document.getElementById('mysubmit');
+
+// Add click event listener to the button
+myButton.addEventListener('click', function(e) {
+    e.preventDefault();
+  // Get the content of the input
+  var inputContent = myInput.value;
+
+  $.ajaxSetup({
+headers: {
+'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 }
+});
 
 
-    function showId(e){
-        let _id = e.target.dataset.id
-        editBranch('/admin/client/edit/', _id)
+$.ajax({
+    type: "POST",
+    url: "/account/expense/category",
+    data: { addcategory:inputContent }, 
+    success: function() {
+        console.log('worked');
 
+        
+
+      
+        document.getElementById('myinputcategory').value="";
+        
+        toastr.success('Category was added successfully');
+        var select = document.querySelector(".addexpensecategories");
+        var option = document.createElement("option");
+                      option.text = inputContent;
+                      option.value = inputContent;
+                    
+                      select.append(option);
+  
+        
+        
+       
+        
+       
     }
+});
 
-    try {
-        let editModalBtns  = document.querySelectorAll('.editmodal');
 
-editModalBtns.forEach(function(editModalBtn){
-    editModalBtn.addEventListener('click' , showId)
-})
-    } catch (error) {
-        alert(error)
+  
+});
+</script>
+
+
+<script>
+
+
+
+     $('#myform').submit(function(e){
+        e.preventDefault();
+
+       
+        var title = $(this).find('input[name=title]').val();
+        
+       
+     console.log(title);
+
+    
+
+      
+      
+
+       var form_action = $('.formaddcategory').attr("action");
+
+    
+
+       $.ajaxSetup({
+headers: {
+'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+}
+});
+
+      $.ajax({
+    type: "POST",
+    url: form_action,
+    data: { addcategory:title }, 
+    success: function() {
+        console.log('worked');
+
+        
+
+      
+
+        
+        toastr.success('Category was added successfully');
+        var select = document.querySelector(".addexpensecategories");
+        var option = document.createElement("option");
+                      option.text = title;
+                      option.value = title;
+                    
+                      select.append(option);
+  
+        
+        
+       
+        
+       
     }
-    </script>
+});
 
-<script >
 
-//script for delete modal
-        function deleteStaff(url , id){
-            let branch_delete;
-            let branch_name_delete;
 
-            branch_delete = document.querySelector('.branch_delete')
-            branch_name_delete = document.querySelector('.branch_name_delete')
+
+    });
+
+
+  
+
+  
+</script>
+
+
+
+<script>
+    //this script is to get expenses category and populate them to the select input field
+
+    function getCategory(){
             
-
-            try {
-                fetch(`${url}${id}`)
-                .then(res=> res.json())
-                .then(function(data){
-                    branch_delete.value  = data.id
-                    branch_name_delete.innerText  = data.name
-                 
-                })
-                .catch(function(err){
-                    console.log(err)
-                })
-        } catch (error) {
-        console.error(error)
-    }
-}
-
-
-    function showId(e){
-        let _id = e.target.dataset.id
-        deleteStaff('/admin/client/delete/', _id)
-
-    }
-
-    try {
-        let deleteModalBtns  = document.querySelectorAll('.deletemodal');
-
-deleteModalBtns.forEach(function(deleteModalBtn){
-    deleteModalBtn.addEventListener('click' , showId)
-})
-    } catch (error) {
-        alert(error)
-    }
-    </script>
-
-
-
-<script >
-
-//script for email modal
-        function emailClient(url , id){
-            let  client_id, client_name,  client_email, client_password, client_phone, client_description;
-
-            client_id= document.querySelector('.client_id_email')
-         
-           
-            client_email = document.querySelector('.client_email_email')
-           
-
-            try {
-                fetch(`${url}${id}`)
-                .then(res=> res.json())
-                .then(function(data){
-                    client_id.value  = data.id
-                   
-                    client_email.value  = data.email
+        
+  
+  
+              try {
+                  fetch('http://localhost:8000/account/office/expense/category')
+                  .then(res=> res.json())
+                  .then(function(data){
+                     // console.log(data)
+                       //I want to get specific attribute of the data
+                       //i.e data.title etc ..but not working
+                     
+                  // console.log(data)
+                  var select = document.querySelector(".addexpensecategories");
+                  data.forEach(item=>{
+                     // console.log(item.title); //works now
+  
+                      var option = document.createElement("option");
+                      option.text = item.name;
+                      option.value = item.name;
                     
-                  
-                })
-                .catch(function(err){
-                    console.log(err)
-                })
-        } catch (error) {
-        console.error(error)
-    }
-}
+                      select.append(option);
+  
+                      
+                      //////////////////////////////////////
+  
+                      
+                  })
+                                  
+                  })
+                  .catch(function(err){
+                      console.log(err)
+                  })
+          } catch (error) {
+          console.error(error)
+      }
+  }
+
+  getCategory();
+ 
+
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ==" crossorigin="anonymous"></script>
 
 
-    function showId(e){
-        let _id = e.target.dataset.id
-        emailClient('/admin/client/email/', _id)
 
-    }
-
-    try {
-        let editModalBtns  = document.querySelectorAll('.emailmodal');
-
-editModalBtns.forEach(function(editModalBtn){
-    editModalBtn.addEventListener('click' , showId)
-})
-    } catch (error) {
-        alert(error)
-    }
-    </script>
 
 
 </body>

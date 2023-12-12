@@ -363,8 +363,10 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Report</h1>
-                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                        <a data-toggle="modal" data-target="#exampleModal" href="" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+
+                                
                     </div>
 
                    
@@ -384,7 +386,7 @@
                             <!-- Illustrations -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Weekly Job Reports</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Job Reports</h6>
                                 </div>
                                 <div class="card-body">
                                     @if(session('msg'))
@@ -397,7 +399,74 @@
                                             src="{{asset('img/undraw_posting_photo.svg')}}" alt="">
                                     </div>
                                    
-                                    <form action="{{route('reports.submit')}}"method="POST">
+                                   
+                                    
+                                    <div class="card-header mt-4 py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">All Registered Reports</h6>
+
+                                    <div class="table-responsive">
+                                    <table class="table table-hover table-borderless table-sm" id="dataTable" width="100%" cellspacing="0">
+                                    <thead style="">
+                                        <tr>
+                                            <th>Title</th>
+                                            
+                                            <th>Date</th>
+                                            <th>Office</th>
+                                            <th>Reporter</th>
+                                            <th>Action</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    
+                                    <tbody style="color:black;font-size:13px;">
+                                       @foreach($reports as $report)
+
+                                            <tr>
+                                                <td>{{$report->title}}</td>
+                                              
+                                                <td>{{$report->date}}</td>
+                                                <td>{{$report->office}}</td>
+                                                <td>{{$report->reporter}}</td>
+                                                <td><a href="{{route('admin.report.view',$report->id)}}"class="btn btn-success btn-sm">View</a><a href="{{route('admin.report.pdf',$report->id)}}"class="btn btn-info btn-sm"><i class="fa fa-download" aria-hidden="true"></i>Generate Report</a><a href="#"class="btn btn-danger btn-sm"><i class="fa fa-trash" aria-hidden="true"></i>Delete</a></td>
+                                                
+                                            </tr>
+                                       @endforeach
+                                       
+                                    </tbody>
+                                    
+                                </table>
+                            </div>
+                                </div>
+
+
+
+                                </div>
+                            </div>
+
+                           
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Create A New Report</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+
+      <form action="{{route('reports.submit')}}"method="POST">
                                         @csrf
 
                                         <div class="form-group">
@@ -419,76 +488,16 @@
 
                                         <button class="btn btn-info text-center">Submit</button>
 
-                                    </form> <div class="card-header mt-4 py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">All Registered Reports</h6>
-
-                                    <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Title</th>
-                                            
-                                            <th>Date</th>
-                                            <th>Office</th>
-                                            <th>Reporter</th>
-                                            <th>Action</th>
-                                            
-                                        </tr>
-                                    </thead>
+                                    </form> 
                                     
-                                    <tbody>
-                                       @foreach($reports as $report)
-
-                                            <tr>
-                                                <td>{{$report->title}}</td>
-                                              
-                                                <td>{{$report->date}}</td>
-                                                <td>{{$report->office}}</td>
-                                                <td>{{$report->reporter}}</td>
-                                                <td><a href="{{route('admin.report.view',$report->id)}}"class="btn btn-success">View</a><a href="{{route('admin.report.pdf',$report->id)}}"class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i>Generate Report</a><a href="#"class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i>Delete</a></td>
-                                                
-                                            </tr>
-                                       @endforeach
-                                       
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                        <th>Title</th>
-                                            
-                                            <th>Date</th>
-                                            <th>Office</th>
-                                            <th>Reporter</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                                </div>
-
-
-
-                                </div>
-                            </div>
-
-                           
-                        </div>
-                    </div>
-
-                </div>
-                <!-- /.container-fluid -->
-
-            </div>
-            <!-- End of Main Content -->
+      </div>
+     
+    </div>
+  </div>
+</div>
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; <a href="https://quickoffice.online">QuickOffice</a> 2020</span>
-                        <span>Developed by <a href="https://wallsandgates.com.ng">WallsandGates Limited</a></span>
-                    </div>
-                </div>
-            </footer>
+            
             <!-- End of Footer -->
 
         </div>

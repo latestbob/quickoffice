@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <p style='margin-top:0in;margin-right:0in;margin-bottom:8.0pt;margin-left:0in;line-height:107%;font-size:15px;font-family:"Calibri","sans-serif";text-align:right;'> <img src="<?php echo("https://quickoffice.online/logo/".\App\Office::where('office_name',Auth::user()->office)->value('logo'));  ?>" alt=""style="width:150px;height:100px;"><span style="font-size:32px;line-height:107%;color:#A6A6A6;">INVOICE</span></p>
+    <p style='margin-top:0in;margin-right:0in;margin-bottom:8.0pt;margin-left:0in;line-height:107%;font-size:15px;font-family:"Calibri","sans-serif";text-align:right;'> <img src="https://res.cloudinary.com/edifice-solutions/image/upload/v1699544268/logo_q7gn78.png" alt=""style="width:180px;height:80px;"><span style="font-size:22px;line-height:107%;color:#A6A6A6;">INVOICE</span></p>
 <p style='margin-top:0in;margin-right:0in;margin-bottom:8.0pt;margin-left:0in;line-height:107%;font-size:15px;font-family:"Calibri","sans-serif";'>&nbsp;</p>
 <p style='margin-top:0in;margin-right:0in;margin-bottom:8.0pt;margin-left:0in;line-height:107%;font-size:15px;font-family:"Calibri","sans-serif";'>&nbsp;</p>
 <p style='margin-top:0in;margin-right:0in;margin-bottom:.0001pt;margin-left:0in;line-height:107%;font-size:15px;font-family:"Calibri","sans-serif";'><span style='font-size:16px;line-height:107%;font-family:"Calibri Light","sans-serif";'>&nbsp;</span></p>
@@ -92,7 +92,7 @@
   padding: 8px;">VAT (%)</td>
             <td style="
   text-align: left;
-  padding: 8px;">{{$invoice->vat}}</td>
+  padding: 8px;">0</td>
         </tr>
 
         <tr>
@@ -110,7 +110,7 @@
   padding: 8px;"><b>TOTAL</b></td>
             <td style="
   text-align: left;
-  padding: 8px;"><B>N {{ number_format($invoice->total, 2) }}</B></td>
+  padding: 8px;"><B>N {{ number_format($invoice->subtotal, 2) }}</B></td>
         </tr>
    </tbody>
 
@@ -128,6 +128,6 @@
 <p style='margin-top:0in;margin-right:0in;margin-bottom:.0001pt;margin-left:0in;line-height:107%;font-size:15px;font-family:"Calibri","sans-serif";'><span style="font-size:16px;line-height:107%;">&nbsp;</span></p>
 
 <p style='margin-top:0in;margin-right:0in;margin-bottom:.0001pt;margin-left:0in;line-height:107%;font-size:15px;font-family:"Calibri","sans-serif";'><span style='font-size:11px;line-height:107%;font-family:"Calibri Light","sans-serif";'>&nbsp;</span></p>
-<p style='margin-top:0in;margin-right:0in;margin-bottom:.0001pt;margin-left:0in;line-height:107%;font-size:15px;font-family:"Calibri","sans-serif";'><span style='font-size:16px;line-height:107%;font-family:"Calibri Light","sans-serif";'>Thank you for your business.</span></p>
+<!-- <p style='margin-top:0in;margin-right:0in;margin-bottom:.0001pt;margin-left:0in;line-height:107%;font-size:15px;font-family:"Calibri","sans-serif";'><span style='font-size:16px;line-height:107%;font-family:"Calibri Light","sans-serif";'>Thank you for your business.</span></p> -->
 </body>
 </html>

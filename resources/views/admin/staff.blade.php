@@ -366,7 +366,9 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Staffs Page</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Staff Records</h1>
+
+                        <button class="btn btn-primary"data-toggle="modal" data-target="#exampleModal">Register A Staff</button>
                         
                     </div>
 
@@ -375,7 +377,7 @@
                     <div class="row">
 
                         <!-- Content Column -->
-                        <div class="col-lg-8 mb-4">
+                        <div class="col-lg-12 mb-4">
 
                             <!-- Project Card Example -->
                             <div class="card shadow mb-4">
@@ -390,13 +392,13 @@
                                     </div>
                                 @endif
                                               <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">All Registered Staffs</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">All Registered Staffs</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                <table class="table table-hover table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
                                             <th>Name</th>
@@ -408,7 +410,7 @@
                                         </tr>
                                     </thead>
                                     
-                                    <tbody>
+                                    <tbody style="color:black;font-size:13px;">
                                         @foreach($staff as $staffs)
                                         <tr>
                                             <td>{{$staffs->name}}</td>
@@ -430,15 +432,7 @@
                                         @endforeach
                                        
                                     </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Role</th>
-                                            <th>Branch</th>
-                                            <th>Contact</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </tfoot>
+                                    
                                 </table>
                             </div>
                         </div>
@@ -451,121 +445,7 @@
                          </div>
                          <!-- Color System -->
 
-                        <div class="col-lg-4 mb-4">
-
-                            <!-- Illustrations -->
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Add New Staff</h6>
-                                </div>
-                                <div class="card-body">
-                                    @if(session('msg'))
-                                        <div class="alert alert-success text-center">
-                                            <p>{{session('msg')}}</p>
-                                        </div>
-                                    @endif
-                                   
-
-                                   @if(session('error'))
-
-                                        <div class="alert alert-danger text-center">
-                                            <p>{{session('error')}}</p>
-                                        </div>
-                                   @endif 
-
-                                   @if ($errors->any())
-                                    <div class="alert alert-danger text-center">
-                                    <ul>
-                                    @foreach ($errors->all() as $error)
-                                    <li style="list-style:none">{{ $error }}</li>
-                                    @endforeach
-                                    </ul>
-                                    </div>
-
-                                    @endif
-                                  <form action="{{route('admin.createstaff')}}"method="POST">
-                                      @csrf
-
-                                            <div class="form-group">
-                                                <label for="name">Staff Full Name <span class="text-danger">*</span></label>
-                                                <input type="text"name="name"placeholder="Full Name"class="form-control"required>
-                                        </div>
-
-                                        <div class="form-group">
-                                                <label for="dob">Staff DOB <span class="text-danger">*</span></label>
-                                                <input type="date"name="dob"placeholder="Date of Birth"class="form-control"required>
-                                        </div>
-
-                                        <div class="form-group">
-                                                <label for="email">Staff Email Address <span class="text-danger">*</span></label>
-                                                <input type="email"name="email"placeholder="Email Address"class="form-control"required>
-                                        </div>
-
-                                        <div class="form-group">
-                                                <label for="password">Staff Password <span class="text-danger">*</span></label>
-                                                <input type="password"name="password"placeholder="Unique Password "class="form-control"required>
-                                        </div>
-
-                                        <div class="form-group">
-                                                <label for="password">Confirm Password <span class="text-danger">*</span></label>
-                                                <input type="password"name="password_confirmation"placeholder="Re- Enter Password "class="form-control"required>
-                                        </div>
-
-                                        
-
-                                        <div class="form-group">
-                                                <label for="phone">Phone <span class="text-danger">*</span></label>
-                                                <input type="tel"name="phone"placeholder="Contact Phone"class="form-control"required>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="gender">Gender</label><br>
-                                                <input type="radio"name="gender"value="male"class="col-md-6">MALE
-                                                <input type="radio"name="gender"value="female"class="col-md-6">FEMALE
-                                        </div>
-
-                                        <div class="form-group">
-                                                <label for="branch">Branch <span class="text-danger">*</span></label>
-                                            <select name="branch" id=""class="form-control"required>
-                                            <option value="">Select Branch</option>
-                                                    @foreach($branch as $branches)
-                                                        <option value="{{$branches->name}}">{{$branches->name}}</option>
-                                                    @endforeach
-                                            </select>
-                                        </div>
-
-
-                                        <div class="form-group">
-                                                <label for="department">Select Role <span class="text-danger">*</span></label>
-                                            <select name="position" id=""class="form-control"required>
-                                            <option value="">Select Role</option>
-                                            <option value="admin">Admin</option>
-                                            <option value="account">Account</option>
-                                            <option value="staff">Staff</option>
-                                                    
-                                            </select>
-                                        </div>
-
-
-                                        <div class="form-group">
-                                                <label for="description">Job Description</label>
-                                            <textarea name="description" id="" cols="10" rows="5"class="form-control"required></textarea>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <button class="btn btn-info text-center">Register</button>
-                                        </div>
-
-                                  </form>
-                                   
-                                 
-                                </div>
-                            </div>
-
-                            <!-- Approach -->
-                           
-
-                        </div>
+                   
                     </div>
 
                 </div>
@@ -696,6 +576,190 @@
             </div>
         </div>
     </div>
+
+
+
+    <!-- register modal box -->
+
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Registe New Staff</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <div class="col-lg-12 mb-4">
+
+<!-- Illustrations -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Add New Staff</h6>
+    </div>
+    <div class="card-body">
+        @if(session('msg'))
+            <div class="alert alert-success text-center">
+                <p>{{session('msg')}}</p>
+            </div>
+        @endif
+       
+
+       @if(session('error'))
+
+            <div class="alert alert-danger text-center">
+                <p>{{session('error')}}</p>
+            </div>
+       @endif 
+
+       @if ($errors->any())
+        <div class="alert alert-danger text-center">
+        <ul>
+        @foreach ($errors->all() as $error)
+        <li style="list-style:none">{{ $error }}</li>
+        @endforeach
+        </ul>
+        </div>
+
+        @endif
+      <form action="{{route('admin.createstaff')}}"method="POST">
+          @csrf
+
+          <div class="row">
+                <div class="col form-group">
+                        <label for="name">Staff Full Name <span class="text-danger">*</span></label>
+                        <input type="text"name="name"placeholder="Full Name"class="form-control"required>
+                </div>
+
+                <div class="col form-group">
+                    <label for="dob">Staff DOB <span class="text-danger">*</span></label>
+                    <input type="date"name="dob"placeholder="Date of Birth"class="form-control"required>
+                </div>
+              
+          </div>
+
+               
+          <div class="row">
+                <div class="col form-group">
+                            <label for="email">Staff Email Address <span class="text-danger">*</span></label>
+                            <input type="email"name="email"placeholder="Email Address"class="form-control"required>
+                </div>
+
+                <div class="col form-group">
+                    <label for="password">Staff Password <span class="text-danger">*</span></label>
+                    <input type="password"name="password"placeholder="Unique Password "class="form-control"required>
+                 </div>
+
+
+
+          </div>
+
+
+          <div class="row">
+
+                 <div class="col form-group">
+                    <label for="password">Confirm Password <span class="text-danger">*</span></label>
+                    <input type="password"name="password_confirmation"placeholder="Re- Enter Password "class="form-control"required>
+                </div>
+
+
+                <div class="col form-group">
+                    <label for="phone">Phone <span class="text-danger">*</span></label>
+                    <input type="tel"name="phone"placeholder="Contact Phone"class="form-control"required>
+                </div>
+
+
+
+          </div>
+
+            
+
+            
+
+            
+
+            
+
+            
+            <div class="row">
+                <div class="col form-group">
+                    <label for="gender">Gender</label><br>
+                        <input type="radio"name="gender"value="male"class="col-md-6">MALE
+                        <input type="radio"name="gender"value="female"class="col-md-6">FEMALE
+                </div>
+
+
+                <div class="col form-group">
+                    <label for="branch">Branch <span class="text-danger">*</span></label>
+                <select name="branch" id=""class="form-control"required>
+                <option value="">Select Branch</option>
+                            @foreach($branch as $branches)
+                                <option value="{{$branches->name}}">{{$branches->name}}</option>
+                            @endforeach
+                    </select>
+                </div>
+
+
+            </div>
+          
+
+           
+
+           
+            <div class="row">
+
+                    <div class="col form-group">
+                            <label for="department">Select Role <span class="text-danger">*</span></label>
+                        <select name="position" id=""class="form-control"required>
+                        <option value="">Select Role</option>
+                        <option value="admin">Admin</option>
+                        <option value="account">Account</option>
+                        <option value="staff">Staff</option>
+                                
+                        </select>
+                    </div>
+
+
+                    <div class="col form-group">
+                            <label for="description">Job Description</label>
+                             <textarea name="description" id="" cols="10" rows="5"class="form-control"required></textarea>
+                    </div>
+
+
+            </div>
+
+
+            
+
+
+            
+
+            <div class="form-group">
+                <button class="btn btn-info text-center">Register</button>
+            </div>
+
+      </form>
+       
+     
+    </div>
+</div>
+
+<!-- Approach -->
+
+
+</div>
+      </div>
+     
+    </div>
+  </div>
+</div>
+
+
+
+
+    <!-- end of register modal box -->
 
 
 

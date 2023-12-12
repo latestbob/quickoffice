@@ -848,5 +848,14 @@ class AccountController extends Controller
         
             return back();
         }
+
+
+
+
+        // ACCOUNT EXPENSE PAGE
+
+        public function accountexpenses(){
+            return view('account.expenses');
+        }
 }
 

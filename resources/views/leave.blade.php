@@ -8,8 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{Auth::user()->office}} Staff - Schedule</title>
+    <title>{{Auth::user()->office}} Leave Management</title>
 
     <!-- Custom fonts for this template-->
     <link href="{{asset('vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
@@ -19,10 +20,16 @@
 
     <!-- Custom styles for this template-->
     <link href="{{asset('css/sb-admin-2.css')}}" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.css" />
+  
 <style>
     a:link{
         text-decoration:none;
+    }
+
+    label{
+        font-size:14px;
+        color:black;
     }
 </style>
 </head>
@@ -40,12 +47,13 @@
                
                 <div class="sidebar-brand-text mx-3 font-weight-bolder">{{Auth::user()->office}} 
                     <br>
-                    <h6 class="text-center">STAFF</h6>
+                    <h6 class="text-center">Staff</h6>
                 </div>
             </a>
 
-              <!-- Divider -->
-              <hr class="sidebar-divider my-0">
+
+                                           <!-- Divider -->
+                                           <hr class="sidebar-divider my-0">
 
 <!-- Nav Item - Dashboard -->
 <li class="nav-item">
@@ -62,7 +70,7 @@
 
 <!-- Nav Item - Schedule -->
 
-<li class="nav-item active">
+<li class="nav-item">
     <a class="nav-link" href="{{route('staff.schedule')}}">
         <i class="fas fa-fw  fa-clock"></i>
         <span>Schedule</span></a>
@@ -86,7 +94,7 @@
       <!-- Nav Item - Message -->
 
 <li class="nav-item">
-<a class="nav-link" href="/chatify">
+    <a class="nav-link" href="/chatify">
         <i class="fas fa-fw  fa-envelope"></i>
         <span>Message</span></a>
 </li>
@@ -108,7 +116,7 @@
 
 
      <!-- Nav Item - Clients -->
-  <li class="nav-item">
+  <li class="nav-item ">
     <a class="nav-link" href="{{route('staff.clients')}}">
     <i class="fas fa-handshake"></i>
         <span>Client</span></a>
@@ -128,27 +136,15 @@
   <!-- Divider -->
   <hr class="sidebar-divider">
 
-
-   <!-- Nav Item - Leave  -->
-   <li class="nav-item">
+    <!-- Nav Item - Leave  -->
+    <li class="nav-item active">
                 <a id="step-eight"class="nav-link" href="{{route('leavepage')}}">
                 <i class="fas fa-calendar"></i>
                     <span>Leave Management</span></a>
             </li>
 
 
-            
-
-
-        
-
-
-
-            
-
-
            
-
             
 
             <!-- Sidebar Toggler (Sidebar) -->
@@ -230,7 +226,6 @@
                                     
                                 </h6>
 
-                              
                                 @foreach(auth::user()->unreadnotifications as $notify)
                                         
                                 @if($notify->type=="App\Notifications\MeetingNotification")
@@ -309,6 +304,7 @@
                             <!-- Dropdown - Messages -->
                            
                         </li>
+
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
@@ -351,191 +347,251 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                   
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Schedule A Virtual Meeting</h1> 
-                        <button class="viewmodal btn btn-primary"data-toggle="modal" data-target="#viewModal">Schedule a Meeting</button>
+                        <h1 class="h3 mb-0 text-gray-800">Leave Management</h1> 
+                        <button class="btn btn-primary"data-toggle="modal" data-target="#exampleModal">Apply For Leave</button>
                         
                     </div>
 
-                   
-                    <!-- Content Row -->
-                   
 
-                    <!-- here -->
+                    @if(session('error'))
 
-                                 
-
-                    @if($meets->count() > 0)
-
-                    <div class="row">
-
-<!-- Content Column -->
-
-
-    <!-- Project Card Example -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Upcoming Virtual Meeting</h6>
-        </div>
-        <div class="card-body">
-        
-
-        @if(session('msgg'))
-            <div class="alert alert-success text-center">
-                <p>{{session('msgg')}}</p>
-            </div>
-        @endif
-                      <!-- DataTales Example -->
-    <div class="card shadow mb-4">
-
-<div class="card-body">
-    @if(session('error'))
-
-        <div class="alert alert-danger text-center">
-            <p>{{session('error')}}</p>
-        </div>
-    @endif
-
-
-
-
-<div class="table-responsive">
-        <table class="table table-hovered table-borderless table-sm" id="dataTable" width="100%" cellspacing="0">
-            <thead class="bg-primary text-light">
-                <tr>
-                    <th>Title staff</th>
-                    
-                    <th>Starting</th>
-                    <th>Participant</th>
-                    <th>Host</th>
-                    <th>Description</th>
-                    <th>Action</th>
-                    
-                </tr>
-            </thead>
-            
-            <tbody style="color:black;font-size:13px;z-index:100;">
-              
-                @foreach($meets as $meet)
-                    <tr>
-                        <td>{{$meet->title}}</td>
-                        <td>{{$meet->start}}</td>
-                        <td>
-                            @if($meet->participant == Auth::user()->name)
-
-                                <p>Me</p>
-                                @else
-
-                                <p>{{$meet->participant}}</p>
-
-
-                            @endif
-                        </td>
-                        <td>
-
-                        @if($meet->creator == Auth::user()->name)
-
-                                <p>Me</p>
-                                @else
-
-                                <p>{{$meet->creator}}</p>
-
-
-                                @endif
-                        </td>
-                       
-                        <td>{{$meet->description}}</td>
-                        <td>
-
-                            @php
-                            date_default_timezone_set('Africa/Lagos');
-                            $date = date('Y-m-d H:i:s');
-
-                            
-                            
-                            @endphp
-
-                            <form action="{{route('delete.meeting',$meet->id)}}"method="POST">
-
-                            @if($date>$meet->start)
-
-
-                                @if($meet->accept != 'declined')
-                                <a href="{{$meet->link}}"target="_blank"class="btn btn-success btn-sm">Join</a>
-
-                                @else
-                                <a href=""class="btn btn-sm btn-warning"style="color:black;">Meeting Declined</a>
-
-                                @endif 
-                              
-
-                            
-
-                            @else
-                            <a href="#"class="btn btn-sm btn-primary"disabled>Not Started</a>
-                            
-                            @endif
-                            
-                            
-                            
-                                @csrf 
-                                {{method_field('DELETE')}}
-
-                                @if(Auth::user()->name == $meet->creator)
-
-                                <button class=""style="background:white;border:none;"><i class="fa fa-trash text-danger"></i></button>
-
-                                @endif
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-               
-            </tbody>
-           
-        </table>
-    </div>
-
-
-
-
-    
-    
-
+<div class="w-100 alert alert-danger text-center">
+    <p>{{session('error')}}</p>
 </div>
 
-                        @else
 
-                        
-                      
-                        
-                        
-                    
+@endif
 
+@if(session('msg'))
+
+<div class="w-100 alert alert-success text-center">
+<p>{{session('msg')}}</p>
+</div>
+
+
+@endif
+
+
+
+<!-- $table->string("fullname");
+            $table->string("email");
+            $table->string("position");
+            $table->string("emergency_contact");
+            $table->string("type");
+            $table->integer("applicable_days")->nullable();
+            $table->integer("requested_days");
+            $table->string("start");
+            $table->string("end");
+            $table->string("status")->nullable();
+            $table->string("comment")->nullable();
+            $table->string("approved_by")->nullable();
+            $table->string("year")->nullable();
+            $table->string("ref")->nullable(); -->
+
+
+
+                   
+                    <!-- Content Row -->
+                    <div class="row">
                        
+                    </div>
+ <div class="row m-auto table-responsive">
 
-                    @endif
+<table class="table table-sm table-borderless table-hover">
+    <thead class="bg-primary text-light">
+<tr>
+<th>Ref</th>
+<th>Fullname</th>
+<th>Email</th>
+<th>Position</th>
+<th>Emergency Contact</th>
+<th>Type </th>
+<th>Applicable Days</th>
+<th>Requested Days</th>
+<th>Start</th>
+<th>End</th>
+<th>Status</th>
+<th>Year</th>
+<th>Actions</th>
+
+
+</tr>
+</thead>
+
+<tbody style="color:black;font-size:13px;z-index:100;">
+
+    @foreach($leave as $leaves)
+
+        <tr>
+            <td>{{$leaves->ref}}</td>
+            <td>{{$leaves->fullname}}</td>
+            <td>{{$leaves->email}}</td>
+            <td>{{$leaves->position}}</td>
+            <td>{{$leaves->emergency_contact}}</td>
+
+            <td>{{$leaves->type}}</td>
+            <td>{{$leaves->applicable_days}}</td>
+            <td>{{$leaves->requested_days}}</td>
+            <td>{{$leaves->start}}</td>
+            <td>{{$leaves->end}}</td>
+            <td>
+                @if($leaves->status == 'pending')
+
+
+                <p class="badge badge-warning text-dark">{{$leaves->status}}</p>
+
+                @elseif($leaves->status == 'approved')
+
+                <p class="badge badge-success text-light">{{$leaves->status}}</p>
+
+                @else
+
+                <p class="badge badge-danger text-light">Disapproved</p>
+                @endif
+            </td>
+            <td>{{$leaves->year}}</td>
+            <td>Actions</td>
+            
+        </tr>
+
+
+    @endforeach
+
+
+</tbody>
+
+</table>
+
+    
+</div>
 
                 </div>
                 <!-- /.container-fluid -->
 
             </div>
             <!-- End of Main Content -->
+
+
+
+            <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New Leave Application</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+         <form action="{{route('applyleave')}}"method="POST">
+             @csrf
+
+
+             <h6 class="card card-heading bg-primary text-center py-1 rounded"style="color:white;">Staff Information</h6>
+
+
+             <div class="form-row my-3">
+                    <div class="col">
+                        <label for="">Full Name</label>
+                    <input type="text"name="fullname" class="form-control" placeholder="Full name"value="{{Auth::user()->name}}"required>
+                    </div>
+                    <div class="col">
+                    <label for="">Email</label>
+                    <input type="email" class="form-control"name="email"value="{{Auth::user()->email}}"required>
+                    </div>
+                </div>
+
+
+                <div class="form-row my-3">
+                <div class="col">
+                        <label for="">Position</label>
+                    <input type="text"name="position" class="form-control" placeholder="Full name"value="{{Auth::user()->description}}"required>
+                    </div>
+                    <div class="col">
+                    <label for="">Emergency Contact</label>
+                    <input type="tel" class="form-control"name="emergency_contact"placeholder="Your Emergency Contact"required>
+                    </div>
+                </div>
+
+                </div>
+
+
+                <h6 class="card card-heading bg-primary text-center py-1 rounded"style="color:white;">Leave Details</h6>
+
+
+
+             <div class="form-row my-3 px-3">
+                    <div class="col">
+                        <label for="">Leave type</label>
+                        <select name="type" class="form-control" id=""required>
+                            <option value="">Choose Type</option>
+                            <option value="Annual Leave">Annual Leave</option>
+                            <option value="Sick/Casual Leave">Sick/Casual Leave</option>
+                            <option value="Compassionate Leave">Compassionate Leave</option>
+                            <option value="Maternity Leave">Maternity Leave</option>
+                            <option value="Paternity Leave">Paternity Leave</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                    <label for="">No. of applicable leave days </label>
+                    <input type="number" class="form-control"name="applicable_days"required>
+                    </div>
+                </div>
+
+
+
+
+                <div class="form-row my-3 px-3">
+
+                <div class="col">
+                    <label for="">No. of days requested </label>
+                    <input type="number" class="form-control"name="requested_days"required>
+                    </div>
+                    <div class="col">
+
+                        <label for="">Start Date</label>
+                        <input type="date" class="form-control"name="start"required>
+                        
+                    </div>
+
+
+                    <div class="col">
+
+                        <label for="">End Date</label>
+                        <input type="date" class="form-control"name="end"required>
+                        
+                    </div>
+                    
+                </div>
+
+
+
+                <br>
+ 
+
+                <div class="text-center py-4">
+                    <button class="col-md-6 btn btn-primary text-light text-center">Submit Application</button>
+                </div>
+
+
+         
+
+
+         </form>
+
+           
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+            <!-- Footer -->
             
-
-            <!--Jitsi meet div-->
-
-            <div class="meet m-auto"id="meet">
-
-
-            </div>
-  
-
-
-
-
-     
+            <!-- End of Footer -->
 
         </div>
         <!-- End of Content Wrapper -->
@@ -575,83 +631,68 @@
 
 
 
-       <!-- ADD EXPENSES MODEL-->
-       <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+
+
+         <!-- Edit Client Modal-->
+         <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog " role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">
-                      Create a New Meeting
+                       {{Auth::user()->office}} Client
                     </h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body">
+
+                    <form action="{{route('admin.client.edit.post')}}"method="POST">
+                        @csrf 
+                        {{method_field('PUT')}}
+
+                        <input type="hidden"name="id"class="client_id_edit"required>
+
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text"name="name"class="client_name_edit form-control"required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email"name="email"class="client_email_edit form-control"required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password"name="password"class="client_password_edit form-control"required>
+                        </div>
+
+
+                      
+
+                        <div class="form-group">
+                            <label for="phone">Official Phone</label>
+                            <input type="tel"name="phone"class="client_phone_edit form-control"required>
+                        </div>
+
+                     
+
+                       
+
+                        <div class="form-group">
+                            <label for="description">Job Description</label>
+
+                           <input type="text"name="description"class="form-control client_description_edit"style="height:100px;"required>
+                        </div>
+
+                        <div class="form-group">
+                            <button class="btn btn-success text-center">Update Client Details</button>
+                        </div>
+                    </form>
+               
                     
-                <form action="{{route('create.meeting.schedule')}}"method="POST">
-                                        @csrf
-
-                                        <div class="form-group">
-                                            <label for="title">Meeting Title</label>
-                                            <input type="text"name="title"placeholder="Enter Meeting Title"class="form-control"required>
-                                        </div>
-                                        <div class="form-group row">
-                                        <div class="col-md-6">
-                                            <label for="start">Schedule Start</label>
-                                            <input type="datetime-local"name="start"placeholder="Enter Start time"class="form-control"required>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <label for="end">Schedule End</label>
-                                            <input type="datetime-local"name="end"placeholder="Enter Scheduled End time"class="form-control">
-                                        </div>
-
-                                        
-                                            
-                                    </div>
-
-                                    <hr>
-
-                                    <div class="form-group">
-                                        <label for="">Participant</label>
-                                        <select name="participant[]"class="form-control"multiple>
-
-                                            <option value="">Select from the list</option>
-                                            @foreach($members as $mem)
-
-                                                <option value="{{$mem->name}}">{{$mem->name}} - {{$mem->position}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                   
-
-
-                               
-
-                                  
-                                
-                                    
-
-
-                                    <hr>
-                                    <div class="form-group">
-                                        <label for="description">Description</label>
-
-                                        <textarea name="description" id=""placeholder="Short Description of Meeting"class="form-control" cols="10" rows="5"required></textarea>
-                                    </div>
-
-                                </div>
-
-                                    <div class="form-group">
-                                        <button class="text-center btn btn-success">Create Meeting</button>
-                                    </div>
-                              
-                                    </form>
-                   
-                        
                     </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
@@ -664,12 +705,95 @@
 
 
 
+ <!-- Email Client Modal-->
+ <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                       {{Auth::user()->office}} Client
+                    </h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
 
-        
+                    <form action="#"method="POST">
+                        @csrf 
+                       
+
+                        <input type="hidden"name="id"class="client_id_email"required>
+
+                     
+
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email"name="email"class="client_email_email form-control"required>
+                        </div>
+
+                       
+
+                        <div class="form-group">
+                            <label for="attachment">Add Attachment</label>
+                            <input type="file"name="attachment"class=" form-control"required>
+                        </div>
+
+                     
+
+                       
+
+                        
+
+                        <div class="form-group">
+                            <button class="btn btn-success text-center">Email Client</button>
+                        </div>
+                    </form>
+               
+                    
+                    </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                  
+                   
+                </div>
+            </div>
+        </div>
+    </div>
 
 
-    
+     <!-- Delete Staff Modal-->
+     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to delete this Client?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Confirm you want to delete  <span class="branch_name_delete"></span></div>
+                <form action="{{route('admin.client.delete.post')}}"method="POST">
+                        @csrf 
+                        {{method_field('DELETE')}}
+
+                        <input type="hidden"name="id"class="branch_delete form-control">
+                        <button class="btn btn-danger">Delete Client</button>
+                    </form>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                  
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+
+ 
    
+
 
     <!-- Bootstrap core JavaScript-->
     <script src="{{asset('vendor/jquery/jquery.min.js')}}"></script>
@@ -687,281 +811,13 @@
     <!-- Page level custom scripts -->
     <script src="{{asset('js/demo/chart-area-demo.js')}}"></script>
     <script src="{{asset('js/demo/chart-pie-demo.js')}}"></script>
-    <script src='https://meet.jit.si/external_api.js'></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script>
 
-    <script>
-
-        function getMeeting(url, id){
-            let meeting
-            try {
-                fetch(`${url}${id}`)
-                .then(res=> res.json())
-                .then(function(data){
-                    meeting=data.title
-
-                  //console.log($meeting)
-
-                  const domain = 'meet.jit.si';
-                const options = {
-                    userInfo: {
-                    email: 'edidiongbobson@gmail.com',
-                    displayName: data.participant
-                    },
-                    roomName:meeting,
-                    width: 1000,
-                    height: 900,
-                     parentNode: document.querySelector('#meet')
-
-                  
-
-                 };
-             const api = new JitsiMeetExternalAPI(domain, options)
-                   
-                })
-                .catch(function(err){
-                    console.log(err)
-                })
-
-            } catch (error) {
-        console.error(error)
-    }
-
-        }
-
-        function showId(e){
-            e.preventDefault();
-        let _id = e.target.dataset.id
-        getMeeting('/meeting/', _id)
-
-    }
-
-    try {
-        let viewModalBtns  = document.querySelectorAll('.join');
-
-viewModalBtns.forEach(function(viewModalBtn){
-    viewModalBtn.addEventListener('click' , showId)
-})
-    } catch (error) {
-        alert(error)
-    }
-    </script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.js"></script>
 
 
 
-<!--Start meeting script here --> 
-
-<script>
-
-function startMeeting(url, id){
-    let meeting
-    try {
-        fetch(`${url}${id}`)
-        .then(res=> res.json())
-        .then(function(data){
-            meeting=data.title
-
-          //console.log($meeting)
-
-          const domain = 'meet.jit.si';
-        const options = {
-            userInfo: {
-            email: 'edidiongbobson@gmail.com',
-            displayName: data.creator
-            },
-            roomName:meeting,
-            width: 1000,
-            height: 900,
-             parentNode: document.querySelector('#meet')
-
-          
-
-         };
-     const api = new JitsiMeetExternalAPI(domain, options)
-           
-        })
-        .catch(function(err){
-            console.log(err)
-        })
-
-    } catch (error) {
-console.error(error)
-}
-
-}
-
-function showId(e){
-    e.preventDefault();
-let _id = e.target.dataset.id
-startMeeting('/meeting/', _id)
-
-}
-
-try {
-let viewModalBtns  = document.querySelectorAll('.start');
-
-viewModalBtns.forEach(function(viewModalBtn){
-viewModalBtn.addEventListener('click' , showId)
-})
-} catch (error) {
-alert(error)
-}
-</script>
-
-
-
-    <script >
-        function getBranch(url , id){
-            let staff_name, staff_dob, staff_email, staff_phone, staff_branch, staff_role, staff_description;
-
-            staff_name= document.querySelector('.staff_name')
-            staff_dob = document.querySelector('.staff_dob')
-            staff_email = document.querySelector('.staff_email')
-            staff_phone = document.querySelector('.staff_phone')
-            staff_branch = document.querySelector('.staff_branch')
-            staff_role = document.querySelector('.staff_role')
-            staff_description = document.querySelector('.staff_description')
-
-            try {
-                fetch(`${url}${id}`)
-                .then(res=> res.json())
-                .then(function(data){
-                    staff_name.innerText  = data.name
-                    staff_email.innerText  = data.email
-                    staff_dob.innerText  = data.dob
-                    staff_phone.innerText  = data.phone
-                    staff_branch.innerText =data.branch
-                    staff_role.innerText  = data.position
-                    staff_description.innerText  = data.description
-                   
-                })
-                .catch(function(err){
-                    console.log(err)
-                })
-        } catch (error) {
-        console.error(error)
-    }
-}
-
-
-    function showId(e){
-        let _id = e.target.dataset.id
-        getBranch('/admin/staff/', _id)
-
-    }
-
-    try {
-        let viewModalBtns  = document.querySelectorAll('.viewmodal');
-
-viewModalBtns.forEach(function(viewModalBtn){
-    viewModalBtn.addEventListener('click' , showId)
-})
-    } catch (error) {
-        alert(error)
-    }
-    </script>
-
-
-<script >
-
-//script for edit modal
-        function editBranch(url , id){
-            let  staff_id, staff_name, staff_dob, staff_email, staff_phone, staff_branch, staff_role, staff_description;
-
-            staff_id= document.querySelector('.staff_id_edit')
-            staff_name= document.querySelector('.staff_name_edit')
-            staff_dob = document.querySelector('.staff_dob_edit')
-            staff_email = document.querySelector('.staff_email_edit')
-            staff_phone = document.querySelector('.staff_phone_edit')
- 
-            staff_role = document.querySelector('.staff_role_edit')
-            staff_description = document.querySelector('.staff_description_edit')
-
-            try {
-                fetch(`${url}${id}`)
-                .then(res=> res.json())
-                .then(function(data){
-                    staff_id.value  = data.id
-                    staff_name.value  = data.name
-                    staff_email.value  = data.email
-                    staff_dob.value  = data.dob
-                    staff_phone.value  = data.phone
-                    
-                    staff_role.innerText  = data.position
-                    staff_description.innerText  = data.description
-                })
-                .catch(function(err){
-                    console.log(err)
-                })
-        } catch (error) {
-        console.error(error)
-    }
-}
-
-
-    function showId(e){
-        let _id = e.target.dataset.id
-        editBranch('/admin/edit/staff/', _id)
-
-    }
-
-    try {
-        let editModalBtns  = document.querySelectorAll('.editmodal');
-
-editModalBtns.forEach(function(editModalBtn){
-    editModalBtn.addEventListener('click' , showId)
-})
-    } catch (error) {
-        alert(error)
-    }
-    </script>
-
-
-
-<script >
-
-//script for delete modal
-        function deleteStaff(url , id){
-            let branch_delete;
-            let branch_name_delete;
-
-            branch_delete = document.querySelector('.branch_delete')
-            branch_name_delete = document.querySelector('.branch_name_delete')
-            
-
-            try {
-                fetch(`${url}${id}`)
-                .then(res=> res.json())
-                .then(function(data){
-                    branch_delete.value  = data.id
-                    branch_name_delete.innerText  = data.name
-                 
-                })
-                .catch(function(err){
-                    console.log(err)
-                })
-        } catch (error) {
-        console.error(error)
-    }
-}
-
-
-    function showId(e){
-        let _id = e.target.dataset.id
-        deleteStaff('/admin/delete/staff/', _id)
-
-    }
-
-    try {
-        let deleteModalBtns  = document.querySelectorAll('.deletemodal');
-
-deleteModalBtns.forEach(function(deleteModalBtn){
-    deleteModalBtn.addEventListener('click' , showId)
-})
-    } catch (error) {
-        alert(error)
-    }
-    </script>
 
 
 

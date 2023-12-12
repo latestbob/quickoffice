@@ -57,7 +57,7 @@ class HomeController extends Controller
         ->get();
 
 
-        return view('admin.schedule',compact('meets','members'));
+        return view('staff.schedule',compact('meets','members'));
     }
 
     //tasks page for staff

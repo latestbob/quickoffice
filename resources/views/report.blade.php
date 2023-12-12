@@ -14,7 +14,7 @@
         <tr>
             <td style="width: 153.9pt;padding: 0in 5.4pt;vertical-align: top;">
             
-                <img src="<?php echo("https://quickoffice.online/logo/".\App\Office::where('office_name',Auth::user()->office)->value('logo'));  ?>" alt=""style="width:150px;height:100px;">
+                <img src="https://res.cloudinary.com/edifice-solutions/image/upload/v1699544268/logo_q7gn78.png" alt=""style="width:180px;height:80px;">
             </td>
             <td style="width: 324.9pt;padding: 0in 5.4pt;vertical-align: top;">
                 <p style='margin-top:0in;margin-right:0in;margin-bottom:.0001pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri","sans-serif";text-align:center;'><strong><span style="font-size:25px;text-transform:uppercase;">{{$report->office}}</span></strong></p>

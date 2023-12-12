@@ -129,8 +129,9 @@ class AdminController extends Controller
             $query->where('participant', Auth::user()->name)
                   ->orWhere('creator', Auth::user()->name);
         })
-        ->where('office', Auth::user()->office)
-        ->get();
+       
+        
+        ->distinct('ref')->get();
 
 
         return view('admin.schedule',compact('meets','members'));

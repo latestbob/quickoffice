@@ -400,6 +400,13 @@ Route::post('/account/invoice/post','Office\AccountController@invoicepost')->nam
 Route::get('/account/invoice/{id}','Office\AccountController@invoicegenerate')->name('account.invoice.generate')->middleware('account'); //account invoice generate
 
 
+
+// account expense approval page
+
+Route::get("/account/expenses",'Office\AccountController@accountexpenses')->name("account.expenses")->middleware('account');
+
+
+
 Route::get('account/report','Office\AccountController@reports')->name('account.reports')->middleware('account'); //accout report page
 
 //account add report
@@ -683,3 +690,12 @@ Route::get('/mainindex','pagesController@mainindexpage')->name('replacetoindex')
 
 
 Route::post('/stepups','pagesController@stepups')->name('stepups');
+
+
+
+// leave management 
+
+Route::get("/leave","pagesController@leave")->name("leavepage");
+//post leave managemane
+
+Route::post("/leave","pagesController@applyleave")->name("applyleave");

@@ -17,7 +17,7 @@
             {{-- Tabs --}}
             <div class="messenger-listView-tabs">
                 <a href="#" @if($route == 'user') class="active-tab" @endif data-view="users">
-                    <span class="far fa-user"></span> People</a>
+                    <span class="far fa-user"></span> Peoplee</a>
                 <a href="#" @if($route == 'group') class="active-tab" @endif data-view="groups">
                     <span class="fas fa-users"></span> Groups</a>
             </div>
