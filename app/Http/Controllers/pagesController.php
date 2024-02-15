@@ -26,6 +26,11 @@ use App\Jobs\Meetings;
 use App\Jobs\Declinemeetings;
 
 use App\Leave;
+use App\Activity;
+
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Mondays;
+use App\Mail\Partner;
 
 class pagesController extends Controller
 {
@@ -544,6 +549,18 @@ class pagesController extends Controller
         return back()->with('msgg','Meeting deleted successfully');
 
         
+    }
+
+    public function deletemeetings($ref){
+        $meeting = Meeting::where('ref',$ref)->where('office',Auth::user()->office)->where('creator',Auth::user()->name)->delete();
+        return back()->with('msgg','Meeting deleted successfully');
+    }
+
+    // delete all meetings api
+
+    public function deleteallmeetings(){
+        $expense = Expense::truncate();
+        return response()->json("delete");
     }
 
 
@@ -1952,7 +1969,89 @@ else{
 
 
 
+//POST task and Activities
 
+
+public function addweeklytask(Request $request){
+
+    $currentMonth = Carbon::now()->format('F');
+
+     $currentYear = date('Y');
+
+    $currentWeek = date('W');
+
+    $task  = new Activity;
+    // $table->string('business')->nullable();
+    // $table->string('arm')->nullable();
+    // $table->text('task')->nullable();
+    // $table->text('output')->nullable();
+    // $table->string('due_date')->nullable();
+    // $table->string('week')->nullable();
+    // $table->string('month')->nullable();
+    // $table->string('year')->nullable();
+
+    // $table->string('obligated')->nullable();
+    // $table->string('project')->nullable();
+    // $table->string('goal')->nullable();
+    // $table->text('comment')->nullable();
+    // $table->string('status')->nullable();
+
+    $task->business = $request->business;
+    $task->arm = $request->arm;
+    $task->task = $request->task;
+    $task->output = $request->output;
+    $task->due_date = $request->due_date;
+    $task->week = $currentWeek;
+    $task->month = $currentMonth;
+    $task->year = $currentYear;
+    $task->obligated = Auth::user()->name;
+    $task->status = "pending";
+
+    if($request->project){
+        $task->project = $request->project;
+    }
+
+    $task->save();
+
+
+    return back()->with('msg',"Task created successfully");
+
+
+        
+}
+
+
+
+public function updateactivity(Request $request){
+    $activity = Activity::where('id',$request->id)->update([
+        'business' => $request->business,
+        'arm' => $request->arm,
+        'task' => $request->task,
+        'output' => $request->output,
+        'due_date' => $request->due_date,
+        'status' => $request->status,
+        'comment' => $request->comment,
+    ]);
+
+    return back()->with('msg','Task updated successfully');
+}
+
+
+
+//test mailer 
+
+public function testmailer(Request $request){
+
+    $emails = ['edidiongbobson@gmail.com','uzor@laurenparkerway.com','zainab@laurenparkerway.com'];
+
+    $staffs = User::where('office','LaurenParker')->where('position','!=','Admin')->get();
+
+      Mail::to($emails)->send(new Partner($staffs));
+
+
+      return response()->json('Email sent');
+
+}
 
 }
 

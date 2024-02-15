@@ -35,169 +35,8 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-               
-                <div class="sidebar-brand-text mx-3 font-weight-bolder">{{Auth::user()->office}} 
-                    <br>
-                    <h6 class="text-center">Accountant</h6>
-                </div>
-            </a>
-
-                   <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-<!-- Nav Item - Dashboard -->
-<li class="nav-item active">
- <a id="step-two"class="nav-link" href="{{route('account.home')}}">
-     <i class="fas fa-fw fa-tachometer-alt"></i>
-     <span>Dashboard</span></a>
-</li>
-
-
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-<!-- Nav Item - Schedule -->
-
-<li class="nav-item">
- <a id="step-three"class="nav-link" href="{{route('account.schedule')}}">
-     <i class="fas fa-fw  fa-clock"></i>
-     <span>Schedule</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-<!-- Nav Item - Task -->
-
-<li class="nav-item">
- <a id="step-four"class="nav-link" href="{{route('account.tasks')}}">
-     <i class="fas fa-fw  fa-tasks"></i>
-     <span>Tasks+</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-<!-- Nav Item - Account -->
-
-<li class="nav-item">
-<a id="step-five"class="nav-link" href="{{route('account.accounts')}}">
-<i class="fas fa-money-check"></i>
-<span>Account</span></a>
-</li>
-
-<li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-                    aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-fw fa-wrench"></i>
-                    <span>Accounting Features</span>
-                </a>
-                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        
-                        <a class="collapse-item" href="{{route('account.invoice')}}">Invoices</a>
-                        <a class="collapse-item" href="{{route('account.expenses')}}">Expense Approval</a>
-                        <!-- <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                        <a class="collapse-item" href="utilities-other.html">Other</a> -->
-                    </div>
-                </div>
-            </li>
-
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-<li class="nav-item">
- <a id="step-six"class="nav-link" href="{{route('account.jobs')}}">
-     <i class="fas fa-fw  fa-briefcase"></i>
-     <span>Jobs+</span></a>
-</li>
-
-
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-   <!-- Nav Item - Message -->
-
-<li class="nav-item ">
- <a id="step-seven"class="nav-link" href="/chatify">
-     <i class="fas fa-fw  fa-envelope"></i>
-     <span>Message</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-   <!-- Nav Item - Report -->
-
-<li class="nav-item">
- <a id="step-eight"class="nav-link" href="{{route('account.reports')}}">
-     <i class="fas fa-fw  fa-file "></i>
-     <span>Report</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-  <!-- Nav Item - Clients -->
-<li class="nav-item">
- <a id="step-nine"class="nav-link" href="{{route('account.clients')}}">
- <i class="fas fa-handshake"></i>
-     <span>Client</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-  <!-- Nav Item - Calender -->
-  <li class="nav-item">
- <a id="step-ten"class="nav-link" href="{{route('account.events')}}">
- <i class="fas fa-calendar"></i>
-     <span>Events</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
- <!-- Nav Item - Leave  -->
- <li class="nav-item">
-                <a id="step-eight"class="nav-link" href="{{route('leavepage')}}">
-                <i class="fas fa-calendar"></i>
-                    <span>Leave Management</span></a>
-            </li>
-
-            
-
-          
-
-
-            
-
-
-           
-
-            
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-
-           
-
-        </ul>
+            @include('account.nav')
+        
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -367,10 +206,7 @@
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Settings
                                 </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Activity Log
-                                </a>
+                               
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item bg-danger text-light" href="{{route('logout')}}" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-light"></i>
@@ -390,18 +226,18 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                        @if(\App\User::where('office',Auth::user()->office)->where('name',Auth::user()->name)->value('hint') != 'false')
+                        <!-- @if(\App\User::where('office',Auth::user()->office)->where('name',Auth::user()->name)->value('hint') != 'false')
                         <a id="step-eleven"href="{{route('account.hint.hide')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"> Don't show me Hint again</a>
 
-                        @endif
+                        @endif -->
                     </div>
 
                     <!-- Content Row -->
-                    
+ 
                     <div class="row">
 
 <!-- Earnings (Monthly) Card Example ////////////////////////////////////////////////////////////////// -->
-<div class="col-xl-3  text-light col-md-6 mb-4">
+<div class="col-xl-4  text-light col-md-6 mb-4">
     <a href="{{route('account.viewspecific.task.type','overdue')}}">
     <div class="card bg-danger  shadow h-100 py-2">
         <div class="card-body">
@@ -410,21 +246,14 @@
                     <div class="text-xs font-weight-bold text-light text-uppercase mb-1">
                       OVER DUE TASKS</div>
                     <div class="h5 mb-0 font-weight-bold text-ligh">
-                   @php
-                        $date= date("Y-m-d H:i:s", strtotime('+1 hours'));
-                       
-                       
-                        
-                   @endphp
+                  
 
                
 
               
 
                    <div class="h5 mb-0 font-weight-bold "style="color:white;">
-                   {{ \App\Task::where(['office' => Auth::user()->office])->where(['createdby' => Auth::user()->name])->where(['status' => 'pending'])->where('end' ,'<', $date)->
-                    orwhere(['office' => Auth::user()->office])->where(['supervisor' => Auth::user()->name])->where(['status' => 'pending'])->where('end' ,'<', $date)
-                   ->count() }}
+                   {{ \App\Activity::where(['obligated' => Auth::user()->name])->where(['status' => 'overdue'])->count() }}
                     </div>
                     </div>
                 </div>
@@ -438,7 +267,7 @@
 </div>
 
 <!-- Earnings (Monthly) Card Example -->
-<div class="col-xl-3 col-md-6 mb-4">
+<div class="col-xl-4 col-md-6 mb-4">
    <a href="{{route('account.viewspecific.task.type','pending')}}">
    <div class="card bg-warning shadow h-100 py-2">
         <div class="card-body">
@@ -447,7 +276,7 @@
                     <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
                         PENDING TASKS</div>
                     <div class="h5 mb-0 font-weight-bold text-dark">
-                    {{ \App\Task::where(['office' => Auth::user()->office])->where(['createdby' => Auth::user()->name])->where(['status' => 'pending'])->count() }}
+                    {{ \App\Activity::where(['obligated' => Auth::user()->name])->where(['status' => 'pending'])->count() }}
                     </div>
                 </div>
                 <div class="col-auto">
@@ -460,7 +289,7 @@
 </div>
 
 <!-- Earnings (Monthly) Card Example -->
-<div class="col-xl-3 col-md-6 mb-4">
+<div class="col-xl-4 col-md-6 mb-4">
     <a href="{{route('account.viewspecific.task.type','completed')}}">
     <div class="card bg-success shadow h-100 py-2">
         <div class="card-body">
@@ -471,7 +300,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col-auto">
                             <div class="h5 mb-0 mr-3 font-weight-bold text-light">
-                            {{ \App\Task::where(['office' => Auth::user()->office])->where(['createdby' => Auth::user()->name])->where(['status' => 'completed'])->count() }}
+                            {{ \App\Activity::where(['obligated' => Auth::user()->name])->where(['status' => 'completed'])->count() }}
                             </div>
                         </div>
                         
@@ -487,31 +316,7 @@
 </div>
 
 <!-- Earnings (Monthly) Card Example -->
-<div class="col-xl-3 col-md-6 mb-4">
-    <a href="{{route('account.viewspecific.task.type','supervised')}}">
-    <div class="card bg-secondary shadow h-100 py-2">
-        <div class="card-body">
-            <div class="row no-gutters align-items-center">
-                <div class="col mr-2">
-                    <div class="text-xs font-weight-bold text-light text-uppercase mb-1">Supervised Tasks
-                    </div>
-                    <div class="row no-gutters align-items-center">
-                        <div class="col-auto">
-                            <div class="h5 mb-0 mr-3 font-weight-bold text-light">
-                            {{ \App\Task::where(['office' => Auth::user()->office])->where(['supervisor' => Auth::user()->name])->count() }}
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-                <div class="col-auto">
-                    <i class="fa fa-user fa-2x text-light" aria-hidden="true"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-    </a>
-</div>
+
 
 
 </div>
@@ -520,102 +325,7 @@
 
 
 
-            <!--Monthly expenses and receive payment--> 
-
-                <div class="row ">
-                    <!-- Earnings (Monthly) Card Example -->
-<div class="col-md-6 mb-4">
-    
-    <div class="card bg-success shadow h-100 py-2">
-        <div class="card-body">
-            <div class="row no-gutters align-items-center">
-            <a href="{{route('account.incomestatement')}}">
-                <div class="col mr-2">
-                    <div class="text-xs font-weight-bold text-light text-uppercase mb-1">Total Payment Recieved in the month of  {{date('M-Y')}}
-                    </div>
-                    <div class="row no-gutters align-items-center">
-                        <div class="col-auto">
-                            <div class="h5 mb-0 mr-3 font-weight-bold text-light">
-                                <!--Value Here --> 
-                               
-
-                                
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-
-                </a>
-                <div class="col-auto">
-                <p>
-                                                
-                                                <button class="btn  btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                                                    <i class ="fa fa-eye"style="font-size:30px;color:white;"></i>
-                                                </button>
-                                                </p>
-                                                <div class="collapse" id="collapseExample">
-                                                <div class="card card-body text-light bg-success">
-                                                    <h3>₦ {{\App\Receivedpay::where('office',Auth::user()->office)->where('accountant',Auth::user()->name)->where('month',date('M-Y'))->sum('amount')}}</h3>
-                                                  
-                                                </div>
-                                                </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-</div>
-
-
-<!-- Earnings (Monthly) Card Example -->
-<div class="col-md-6 mb-4">
-    
-    <div class="card bg-primary shadow h-100 py-2">
-        <div class="card-body">
-            <div class="row no-gutters align-items-center">
-            <a href="{{route('account.expenses.statement')}}">
-                <div class="col mr-2">
-                    <div class="text-xs font-weight-bold text-light text-uppercase mb-1">Total Expenses made in Months of  {{date('M-Y')}}
-                    </div>
-                    <div class="row no-gutters align-items-center">
-                        <div class="col-auto">
-                            <div class="h5 mb-0 mr-3 font-weight-bold text-light">
-
-                            
-                            <!--Value Here --> 
-                                
-                            </div>
-                        </div>
-              
-                    </div>
-                </div>
-                </a>
-                <div class="col-auto">
-                <p>
-                                                
-                                                <button class="btn  btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample">
-                                                    <i class ="fa fa-eye"style="font-size:30px;color:white;"></i>
-                                                </button>
-                                                </p>
-                                                <div class="collapse" id="collapseExample1">
-                                                <div class="card card-body text-light bg-primary">
-                                                    <h3>₦ {{\App\Expense::where('office',Auth::user()->office)->where('accountant',Auth::user()->name)->where('month',date('M-Y'))->sum('amount')}}</h3>
-                                                  
-                                                </div>
-                                                </div>
-                   
-                </div>
-            </div>
-        </div>
-    </div>
-    </a>
-</div>
-
-
-
-
-                </div>
+          
                     <!-- Content Row -->
 
                     <div class="row">
@@ -689,49 +399,7 @@
                         </div>
 
                         <!-- Pie Chart -->
-                        <div class="col-xl-4 col-lg-5">
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Upcoming Events</h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        
-                                    </div>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    
-                                    @if(\App\Events::where('office',Auth::user()->office)->exists())
-                                        <div class="table-responsive">
-                                            <table class="table table-striped">
-                                            @foreach($event as $events)
-
-                                            
-                                                <tr>
-                                                    <td>{{$events->title}}</td>
-                                                    <td>{{$events->start}}</td>
-                                                </tr>
-                                            
-                                            @endforeach
-                                            </table>
-
-                                            <div class="m-auto text-center">
-                                            <a href="{{route('account.events')}}" class="btn btn-sm btn-info text-white">View More</a>
-                                            </div>
-
-
-                                        </div>
-
-                                    @endif
-                                   
-                                </div>
-                            </div>
-                        </div>
+                       
                     </div>
 
                     <!-- Content Row -->
@@ -790,14 +458,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; <a href="https://quickoffice.online">QuickOffice</a> 2020</span>
-                        <span>Developed by <a href="https://wallsandgates.com.ng">WallsandGates Limited</a></span>
-                    </div>
-                </div>
-            </footer>
+           
             <!-- End of Footer -->
 
         </div>
@@ -856,7 +517,7 @@
 
 
     @if(\App\User::where('office',Auth::user()->office)->where('name',Auth::user()->name)->value('hint') != 'false')
-    <script>
+    <!-- <script>
         const intro=introJs();
         intro.setOptions({
             steps:[
@@ -943,7 +604,7 @@
 
 
       
-    </script>
+    </script> -->
     @endif
 
 </body>

@@ -40,6 +40,16 @@ Auth::routes([
     
   ]);
 
+  //////////////////////////////////Task/Activities///////////////////////////////////
+
+Route::post('/activity','pagesController@addweeklytask')->name('addweeklytask')->middleware('auth');
+
+//update activity
+
+Route::put('/activity','pagesController@updateactivity')->name('updateactivity')->middleware('auth');
+
+  //////////////////////////////////End of Task/Activities////////////////////////////
+
 /////////////////////////////////BASIC STAFFS /////////////////////////////////////////
 Route::get('/staff', 'HomeController@index')->name('home')->middleware('staff'); //other staffs home
 
@@ -112,8 +122,12 @@ Route::get('/staff/hint','HomeController@staffhinthide')->name('staff.hint.hide'
 
 
 
+Route::get('/staff/expenses','HomeController@staffexpenses')->name('staff.expenses')->middleware('staff');
+
+Route::get('/staff/expense/unique','HomeController@staffexpenseunique')->name('staff.expenses.unique')->middleware('auth');
 
 
+Route::post('/expense/reminder','HomeController@expensereminder')->name('expensereminder')->middleware('auth');
 
 
 
@@ -194,6 +208,8 @@ Route::delete('/admin/tasks/delete','Office\AdminController@taskdeletedelete')->
 
 Route::get('admin/account','Office\AdminController@account')->name('admin.account')->middleware('admin'); //admin account page
 
+Route::put('admin/account','Office\AdminController@expensestatus')->name('admin.account.expenses')->middleware('admin');
+
 Route::get('admin/message','Office\AdminController@message')->name('admin.message')->middleware('admin'); //admin message
 
 Route::get('admin/report','Office\AdminController@report')->name('admin.report')->middleware('admin'); //admin report page
@@ -262,7 +278,7 @@ Route::delete('/branch/delete','Office\AdminController@deletebranchpost')->name(
 
 Route::post('/createstaff','Office\AdminController@createstaff')->name('admin.createstaff')->middleware('admin'); //admin create new staff
 
-Route::get('/admin/report/{id}','Office\AdminController@reportview')->name('admin.report.view')->middleware('admin'); //admin report view
+// Route::get('/admin/report/{id}','Office\AdminController@reportview')->name('admin.report.view')->middleware('admin'); //admin report view
 
 
 //admin tasks routes ///
@@ -272,13 +288,38 @@ Route::get('/admin/task/{task}','Office\AdminController@viewtasktype')->name('ad
 
 //generate report admin
 
-Route::get('/admin/{id}','Office\AdminController@reportpdf')->name('admin.report.pdf')->middleware('admin');//admin
+// Route::get('/admin/{id}','Office\AdminController@reportpdf')->name('admin.report.pdf')->middleware('admin');//admin
 
 
 Route::delete('/admin/event/{id}','Office\AdminController@deleteevents')->name('admin.delete.event')->middleware('admin'); //admin delete events
+
+
+//publish task  report
+
+Route::post('/admin/publish/task','Office\AdminController@publictasks')->name('admin.publishtask')->middleware('admin');
+
+
+
+//Weekly reports
+
+
+
+
+
+//route create subsidary expenses
+
+Route::post('/admin/subisidary/expense','Office\AdminController@subsidaryexpense')->name('admin.subsidary.expense')->middleware('admin');
 //////////////////////////////ADMIN ROUTES//////////////////////////////////////////////////////
 
-;
+
+Route::get('/admin/toggle','Office\AdminController@toggle')->name('admintoggle')->middleware('admin');
+
+Route::get('/admin/tasksummary','Office\AdminController@tasksummary')->name('admintasksummary')->middleware('admin');
+
+Route::get('/admin/summary/{name}','Office\AdminController@summaryname')->name('adminsummaryname')->middleware('admin');
+
+
+
 ////////////////////////////////////////ACCOUNTANT ROUTES////////////////////////////////////////////////
 //account staffs home
 Route::get('account/home', 'Office\AccountController@home')->name('account.home')->middleware('account'); //account home
@@ -326,7 +367,7 @@ Route::get('account/acounts','Office\AccountController@accounts')->name('account
 
 //accountant add expenses post
 
-Route::post('account/expenses','Office\AccountController@addexpenses')->name('account.addexpense')->middleware('account'); //account add expenses
+Route::post('account/expenses','Office\AccountController@addexpenses')->name('account.addexpense')->middleware('auth'); //account add expenses
 
 Route::get('account/message','Office\AccountController@message')->name('account.message')->middleware('account'); //account message page
 
@@ -505,6 +546,7 @@ Route::put('/meeting/{id}/decline','pagesController@declinemeeting')->name('decl
 
 Route::delete('/meeting/{id}/delete','pagesController@deletemeeting')->name('delete.meeting')->middleware('auth'); //delete meeting
 
+Route::delete("/meeting/{ref}",'pagesController@deletemeetings')->name('delete.meetings')->middleware('auth');
 
 
 //adding it

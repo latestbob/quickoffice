@@ -372,12 +372,12 @@ a:link{
                     <div class="row">
 
                         <!-- Content Column -->
-                        <div class="col-lg-7 mb-4">
+                        <div class="col-lg-12 mb-4">
 
                             <!-- Project Card Example -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">All Clients</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Lauren Parker & Susidiaries Expenses</h6>
                                 </div>
                                 <div class="card-body">
 
@@ -386,46 +386,54 @@ a:link{
                                         <p>{{session('msgg')}}</p>
                                     </div>
                                 @endif
+
+                                @if(session('error'))
+                                    <div class="alert alert-danger text-center">
+                                        <p>{{session('error')}}</p>
+                                    </div>
+                                @endif
                                               <!-- DataTales Example -->
 
-                                              <div class="table-responsive">
-                                <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Contact</th>
-                                           
-                                            <th>Action</th>
-                                            
-                                        </tr>
-                                    </thead>
-                                    
-                                    <tbody>
-                                        @foreach($client as $clients)
-                                        <tr>
-                                            <td>{{$clients->name}}</td>
-                                            <td>{{$clients->email}}</td>
-                                            <td>{{$clients->phone}}</td>
-                                            
-                                            <td><a href="#" data-id="{{$clients->id}}" class="emailmodal btn-sm btn-success"data-toggle="modal" data-target="#emailModal">Email</a><a href="#"data-id="{{$clients->id}}"class="editmodal btn-sm btn-warning"data-toggle="modal" data-target="#editModal">Edit</a><a href="#"data-id="{{$clients->id}}"class="deletemodal btn-sm btn-danger"data-toggle="modal" data-target="#deleteModal">Delete</a></td>
-                                            
-                                        </tr>
 
-                                        @endforeach
-                                       
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                      
-                                            <th>Contact</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
+
+                                              <form action="{{route('admin.subsidary.expense')}}"method="POST">
+                                                @csrf
+
+                                                <div class="form-group">
+                                                    
+                                                    <label for="">Business</label>
+                                                        
+                                                        <select name="name" id=""class="form-control"required>
+
+                                                            <option value="">Select a Business</option>
+                                                            
+                                                            <option value="Lauren Parker Limited">Lauren Parker Limited</option>
+                                                            <option value="Famacare Centre Limited">Famacare Centre Limited</option>
+                                                            <option value="Vells Resourcery Limited">Vells Resourcery Limited</option>
+                                                            <option value="Asknello Enterprises">Asknello Enterprises</option>
+                                                            
+
+
+
+                                                        </select>
+
+
+
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="">Expenses</label>
+                                                    
+                                                    <input type="text"name="expenses"class="form-control"required>
+
+                                                </div>
+
+                                                <br>
+
+                                                <button type="submit" class="btn btn-success text-center">Create Expenses</button>
+                                              </form>
+
+                                              
                    
 
                                             
@@ -436,104 +444,7 @@ a:link{
                          </div>
                          <!-- Color System -->
 
-                        <div class="col-lg-5 mb-4">
-
-                            
-                            <!-- Illustrations -->
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Add New Client</h6>
-                                </div>
-                                <div class="card-body">
-                                    @if(session('msg'))
-                                        <div class="alert alert-success text-center">
-                                            <p>{{session('msg')}}</p>
-                                        </div>
-                                    @endif
-                                    
-
-                                    @if(session('error'))
-                                        <div class="alert alert-danger text-center">
-                                            <p>{{session('error')}}</p>
-                                        </div>
-                                    @endif
-                                
-
-                                    @if ($errors->any())
-                                    <div class="alert alert-danger text-center">
-                                    <ul>
-                                    @foreach ($errors->all() as $error)
-                                    <li style="list-style:none">{{ $error }}</li>
-                                    @endforeach
-                                    </ul>
-                                    </div>
-
-                                    @endif
-
-
-                                    <form action="{{route('admin.client.post')}}"method="POST">
-                                        @csrf 
-
-                                        <div class="form-group">
-                                            <label for="name">Client/Company Name</label>
-
-                                            <input type="text" name="name" id=""class="form-control"placeholder="Enter Client/Company Name"required>
-                                        </div>
-
-                                        <div class="form-group">
-                                        <label for="start">Official Email</label>
-                                            <input type="email"name="email"placeholder="Official Email"class="form-control"required>
-
-                                        </div>
-
-                                        <div class="form-group">
-                                        <label for="password">Password</label>
-                                            <input type="password"name="password"placeholder="Client Password"class="form-control"required>
-
-                                        </div>
-                                    
-
-                                        <div class="form-group">
-                                                <label for="password">Confirm Password </label>
-                                                <input type="password"name="password_confirmation"placeholder="Re- Enter Password "class="form-control"required>
-                                        </div>
-                                    
-
-                                    <div class="form-group">
-                                        <label for="phone">Phone</label>
-
-                                        <input type="tel"name="phone"placeholder="Official Contact"class="form-control">
-                                    </div>
-                                       
-
-
-                                        <div class="form-group">
-                                        <label for="description">Description</label>
-                                            <textarea name="description" id="" cols="20" rows="5"placeholder="Event Description"class="form-control"required></textarea>
-
-                                        </div>
-                                        
-                                        <input type="hidden"name="office"value="{{Auth::user()->office}}"required>
-
-
-                                        <div class="form-group">
-                                            <button class="btn btn-success text-center">Add Client</button>
-                                        </div>
-
-                                       
-                                        
-                                    </form>
-                                   
-                                
-                                   
-                                 
-                                </div>
-                            </div>
-
-                            <!-- Approach -->
-                           
-
-                        </div>
+                       
                     </div>
 
 

@@ -57,7 +57,7 @@ class ResetPasswordController extends Controller
 
                     $office=User::where('email',$request->email)->value('office');
 
-                    return Redirect::to('http://localhost:8000/'.$office.'/login')->with('success','Password was successfully reset');
+                    return Redirect::to('/')->with('success','Password was successfully reset');
 
                  
                 }

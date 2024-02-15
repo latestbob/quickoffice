@@ -20,6 +20,14 @@ use App\Events;
 use App\Jobs\Meetings;
 use App\Office;
 use Carbon\Carbon;
+use App\Activity;
+use App\Subsidary;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ExpenseUpdate;
+use App\Mail\Publish;
+use App\Mail\Partner;
+
 class AdminController extends Controller
 {
     public function __construct()
@@ -73,7 +81,7 @@ class AdminController extends Controller
         $this->validate($request,[
             'name'=>'required',
             'email'=>'required|email',
-            'password'=>'required',
+            // 'password'=>'required',
             'dob'=>'required',
             'phone'=>'required',
             'branch'=>'required',
@@ -91,7 +99,7 @@ class AdminController extends Controller
             'branch'=>$request->branch,
             'position'=>$request->role,
             'description'=>$request->description,
-            'password'=>Hash::make($request->password),
+            // 'password'=>Hash::make($request->password),
         ]);
 
         return back()->with('msgg','Staff Details Updated Successfully');
@@ -128,10 +136,7 @@ class AdminController extends Controller
         $meets = Meeting::where(function ($query) {
             $query->where('participant', Auth::user()->name)
                   ->orWhere('creator', Auth::user()->name);
-        })
-       
-        
-        ->distinct('ref')->get();
+        })->get();
 
 
         return view('admin.schedule',compact('meets','members'));
@@ -178,12 +183,18 @@ class AdminController extends Controller
 
     public function tasks(){
 
-        $task = Task::where(function ($query) {
-            $query->where('createdby', Auth::user()->name)
-                  ->orWhere('supervisor', Auth::user()->name);
-        })
-        ->where('office', Auth::user()->office)
-        ->get();
+        
+        // $currentWeek = date('W');
+
+        // $activity = Activity::where('week',$currentWeek)->get();
+
+        // dd($activity);
+
+
+
+
+        //$task=Activity::where('obligated',Auth::user()->name)->orderBy('business')->paginate(10);
+        $task=Activity::where('obligated',Auth::user()->name)->where('status','!=',"Completed")->orderBy('business')->paginate(10);
 
         $client=User::where('office',Auth::user()->office)->where('position','client')->get();
 
@@ -253,9 +264,39 @@ class AdminController extends Controller
 
     public function account(){
 
-        $expense=Expense::where('office',Auth::user()->office)->get();
+        // $expenses = Expense::truncate();
+        $expense=Expense::where('office',Auth::user()->office)->orderBy('id', 'desc')->get();
         $receivedpay=Receivedpay::where('office',Auth::user()->office)->get();
         return view('admin.account',compact('expense','receivedpay'));
+    }
+
+    //Account update expenses
+
+    public function expensestatus(Request $request){
+
+        $expense = Expense::where('id',$request->id)->update([
+            'status' =>$request->status,
+            'comments' =>$request->comments,
+            'approved_by' => Auth::user()->name,
+        ]);
+
+            $expenses = Expense::find($request->id);
+
+            $expense=[
+                    
+                'title'=>$expenses->title,
+                'category'=>$expenses->category,
+                'total'=>$expenses->amount,
+                'description'=>$expenses->description,
+                'status' => $expenses->status,
+                'currency' => $expenses->currency,
+            
+            ];
+            $emails = ['oluwakorede.babatunde@laurenparkerway.com', 'accounts@laurenparkerway.com'];
+
+            Mail::to($emails)->send(new ExpenseUpdate($expense));
+
+        return back()->with('msg','Expense status updated successfully');
     }
 
     //admin message
@@ -586,7 +627,7 @@ class AdminController extends Controller
 
     public function branchdepartment(){
 
-        $branch=Branch::where('office',Auth::user()->office)->get();
+        $branch=Branch::where('office',Auth::user()->office)->where('name','!=','headquarters')->get();
         return view('admin.branchdepartment',compact('branch'));
 
     }
@@ -784,20 +825,20 @@ class AdminController extends Controller
     //admin report view
 
 
-    public function reportview($id){
-        $report=Report::find($id);
+    // public function reportview($id){
+    //     $report=Report::find($id);
 
-        return view('report',compact('report'));
-    }
+    //     return view('report',compact('report'));
+    // }
 
     //admin generate pdf
 
-    public function reportpdf($id){
-        $report=Report::find($id);
+    // public function reportpdf($id){
+    //     $report=Report::find($id);
 
-        $pdf = PDF::loadView('report',compact('report'));
-        return $pdf->download('report.pdf');
-    }
+    //     $pdf = PDF::loadView('report',compact('report'));
+    //     return $pdf->download('report.pdf');
+    // }
 
 
     //admin profile page
@@ -848,42 +889,19 @@ class AdminController extends Controller
     public function viewtasktype($task){
         if($task=="pending"){
             //dd('the task is pending');
-
-            //$taskss =Task::where(['office' => Auth::user()->office])->where(['createdby' => Auth::user()->name])->where(['status' => 'pending'])->get();
-
-            $taskss = Task::where(function ($query) {
-                $query->where('createdby', Auth::user()->name)
-                      ->orWhere('supervisor', Auth::user()->name);
-            })
-            ->where('office', Auth::user()->office)
-            ->where('status','pending')
-            ->get();
-
+    
+            $taskss =Activity::where(['obligated' => Auth::user()->name])->where(['status' => 'pending'])->get();
+    
             return view('admin.viewtasktype',compact('taskss','task'));
         }
-
+    
         elseif($task=="completed"){
-           $taskss=Task::where(['office' => Auth::user()->office])->where(['createdby' => Auth::user()->name])->where(['status' => 'completed'])->get();
+           $taskss=Activity::where(['obligated' => Auth::user()->name])->where(['status' => 'completed'])->get();
            return view('admin.viewtasktype',compact('taskss','task'));
         }
-
-        elseif($task=="overdue"){
-            // $date = date("Y-m-d H:i:s", strtotime('+1 hours'));
-            // dd($date);
-
-            $currentDateTime = Carbon::now();
-
-            // Set the timezone to Lagos/Nigeria
-            $currentDateTime->setTimezone('Africa/Lagos');
-
-            // Format the date and time as per your requirement
-            $date = $currentDateTime->format('Y-m-d H:i:s');
-
-           
-
-
-          $taskss=Task::where(['office' => Auth::user()->office])->where(['createdby' => Auth::user()->name])->where(['status' => 'pending'])->where('end' ,'<', $date)
-          ->orwhere(['office' => Auth::user()->office])->where(['supervisor' => Auth::user()->name])->where(['status' => 'pending'])->where('end' ,'<', $date)->get();
+    
+        elseif($task=="overdue"){ $date = date("Y-m-d H:i:s", strtotime('+1 hours'));
+            $taskss=Activity::where(['obligated' => Auth::user()->name])->where(['status' => 'overdue'])->get();
           return view('admin.viewtasktype',compact('taskss','task'));
         }
 
@@ -903,4 +921,108 @@ class AdminController extends Controller
 
         return back()->with('msg','Event deleted Successfully');
     }
+
+
+    public function publictasks(Request $request){
+        
+        $currentWeek = date('W');
+
+        $tasks  = Activity::where('week',$currentWeek)->orderBy('business')->get();
+
+        
+
+       foreach($tasks as $task){
+        $endpoint = 'https://script.google.com/macros/s/AKfycbzrTlpQbGA3nOOSmSTHWV4UQckNBMR_jcti8CXdPYy_2wlrPGj-y_zWyoYx8v-Ee20d_g/exec';
+
+
+       
+
+        // Convert to Carbon instance
+        $carbonDate = Carbon::createFromFormat('Y-m-d', $task->due_date);
+        
+        // Format the date as "d - M"
+        $formattedDate = $carbonDate->format('d-M');
+        
+      
+        // Query parameters
+        $params = [
+            'sheet' => $currentWeek,
+            'Business' => $task->business,
+            'Arm' => $task->arm,
+            'Task' => $task->task,
+            'Output' => $task->output,
+            'Obligated' => $task->obligated,
+            'Due_Date' => $formattedDate,
+            'Comment' => $task->comment,
+            'Status' => $task->status
+        ];
+        
+        // Make the GET request with query parameters
+        $response = Http::get($endpoint, $params);
+        
+        // Get the response body as an array
+        $result = $response->json();
+       }
+
+       $emails = ['oluwakorede.babatunde@laurenparkerway.com', 'edidiong.bobson@asknello.com'];
+
+       Mail::to($emails)->send(new Publish());
+
+       return back()->with('msg','Task Report published successfully');
+    }
+
+
+    //create subsidary expenses
+
+
+
+    public function subsidaryexpense(Request $request){
+
+
+        $existed = Subsidary::where('name',$request->name)->where('expenses',$request->expenses)->exists();
+
+        if($existed){
+            $business = $request->name;
+            return back()->with('error','Expense already exists for '.$business);
+        }
+        $expense = new Subsidary;
+
+
+
+
+        $expense->name = $request->name;
+        $expense->expenses = $request->expenses;
+
+        $expense->save();
+        return back()->with('msgg','Expense Created successfully');
+    }
+
+
+    //admin weekly reports
+
+   
+    public function toggle(){
+        
+        dd('working');
+    }
+
+
+    public function tasksummary(){
+
+        $staffs = User::where('office',Auth::user()->office)->where('position',"!=","Admin")->get();
+
+
+        return view('admin.tasksummary',compact('staffs'));
+    }
+
+
+    //summary name
+
+    public function summaryname($name){
+         $currentWeek = date('W');
+        $tasks = Activity::where('obligated',$name)->where('week',$currentWeek)->get();
+
+       return view('admin.uniquesummary',compact('name','tasks'));
+    }
+   
 }

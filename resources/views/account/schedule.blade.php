@@ -34,152 +34,7 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-               
-                <div class="sidebar-brand-text mx-3 font-weight-bolder">{{Auth::user()->office}} 
-                    <br>
-                    <h6 class="text-center">Accountant</h6>
-                </div>
-            </a>
-
-        
-
-            
-    <!-- Divider -->
-    <hr class="sidebar-divider my-0">
-
-<!-- Nav Item - Dashboard -->
-<li class="nav-item ">
- <a class="nav-link" href="{{route('account.home')}}">
-     <i class="fas fa-fw fa-tachometer-alt"></i>
-     <span>Dashboard</span></a>
-</li>
-
-
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-<!-- Nav Item - Schedule -->
-
-<li class="nav-item active">
- <a class="nav-link" href="{{route('account.schedule')}}">
-     <i class="fas fa-fw  fa-clock"></i>
-     <span>Schedule</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-<!-- Nav Item - Task -->
-
-<li class="nav-item">
- <a class="nav-link" href="{{route('account.tasks')}}">
-     <i class="fas fa-fw  fa-tasks"></i>
-     <span>Tasks+</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-<!-- Nav Item - Account -->
-
-<li class="nav-item">
-<a class="nav-link" href="{{route('account.accounts')}}">
-<i class="fas fa-money-check"></i>
-<span>Account</span></a>
-</li>
-
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-<li class="nav-item">
- <a class="nav-link" href="{{route('account.jobs')}}">
-     <i class="fas fa-fw  fa-briefcase"></i>
-     <span>Jobs+</span></a>
-</li>
-
-
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-   <!-- Nav Item - Message -->
-
-<li class="nav-item ">
- <a class="nav-link" href="/chatify">
-     <i class="fas fa-fw  fa-envelope"></i>
-     <span>Message</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-   <!-- Nav Item - Report -->
-
-<li class="nav-item">
- <a class="nav-link" href="{{route('account.reports')}}">
-     <i class="fas fa-fw  fa-file "></i>
-     <span>Report</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-  <!-- Nav Item - Clients -->
-<li class="nav-item">
- <a class="nav-link" href="{{route('account.clients')}}">
- <i class="fas fa-handshake"></i>
-     <span>Client</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-  <!-- Nav Item - Calender -->
-  <li class="nav-item">
- <a class="nav-link" href="{{route('account.events')}}">
- <i class="fas fa-calendar"></i>
-     <span>Events</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
- <!-- Nav Item - Leave  -->
- <li class="nav-item">
-                <a id="step-eight"class="nav-link" href="{{route('leavepage')}}">
-                <i class="fas fa-calendar"></i>
-                    <span>Leave Management</span></a>
-            </li>
-
-
-
-
-            
-
-
-           
-
-            
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-
-
-        </ul>
+        @include('account.nav')
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -389,11 +244,11 @@
 
 
 <!-- Project Card Example -->
-<div class="card shadow mb-4">
-<div class="card-header py-3">
-<h6 class="m-0 font-weight-bold text-primary">Upcoming Virtual Meeting</h6>
-</div>
-<div class="card-body">
+        <div class="card shadow mb-4 w-100">
+        <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Upcoming Virtual Meeting</h6>
+        </div>
+        <div class="card-body">
 
 
 @if(session('msgg'))
@@ -416,101 +271,162 @@
 
 
 <div class="table-responsive">
-<table class="table table-hovered table-borderless table-sm" id="dataTable" width="100%" cellspacing="0">
-<thead class="bg-primary text-light">
-<tr>
-<th>Title</th>
-
-<th>Starting</th>
-<th>Participant</th>
-<th>Host</th>
-<th>Description</th>
-<th>Action</th>
-
-</tr>
-</thead>
-
-<tbody style="color:black;font-size:13px;z-index:100;">
-
-@foreach($meets as $meet)
-<tr>
-    <td>{{$meet->title}}</td>
-    <td>{{$meet->start}}</td>
-    <td>
-        @if($meet->participant == Auth::user()->name)
-
-            <p>Me</p>
-            @else
-
-            <p>{{$meet->participant}}</p>
+        <table class="table table-hovered table-borderless table-sm" id="dataTable" width="100%" cellspacing="0">
+            <thead class="bg-primary text-light">
+                <tr>
+                    <th>Title</th>
+                    
+                    <th>Starting</th>
+                   
+                    <th>Host</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                    
+                </tr>
+            </thead>
 
 
-        @endif
-    </td>
-    <td>
+            <tbody style="color:black;font-size:13px;z-index:100;">
+              
+              @foreach($meets->unique('ref') as $meet)
 
-    @if($meet->creator == Auth::user()->name)
+                <tr>
+                <td>{{$meet->title}}</td>
+                        <td>{{$meet->start}}</td>
+                       
+                        <td>
 
-            <p>Me</p>
-            @else
+                        @if($meet->creator == Auth::user()->name)
 
-            <p>{{$meet->creator}}</p>
+                                <p>Me</p>
+                                @else
 
-
-            @endif
-    </td>
-   
-    <td>{{$meet->description}}</td>
-    <td>
-
-        @php
-        date_default_timezone_set('Africa/Lagos');
-        $date = date('Y-m-d H:i:s');
-
-        
-        
-        @endphp
-
-        <form action="{{route('delete.meeting',$meet->id)}}"method="POST">
-
-        @if($date>$meet->start)
+                                <p>{{$meet->creator}}</p>
 
 
-            @if($meet->accept != 'declined')
-            <a href="{{$meet->link}}"target="_blank"class="btn btn-success btn-sm">Join</a>
+                                @endif
+                        </td>
+                       
+                        <td>{{$meet->description}}</td>
 
-            @else
-            <a href=""class="btn btn-sm btn-warning"style="color:black;">Meeting Declined</a>
+                        <td>
+                        @php
+                            date_default_timezone_set('Africa/Lagos');
+                            $date = date('Y-m-d H:i:s');
 
-            @endif 
-          
+                            
+                            
+                            @endphp
 
-        
+                            <form action="{{route('delete.meetings',$meet->ref)}}"method="POST">
+                                @csrf
+                                {{method_field('DELETE')}}
 
-        @else
-        <a href="#"class="btn btn-sm btn-primary"disabled>Not Started</a>
-        
-        @endif
-        
-        
-        
-            @csrf 
-            {{method_field('DELETE')}}
+                            <!-- check of today is greater than start  -->
 
-            @if(Auth::user()->name == $meet->creator)
+                     
+
+                           
+
+                                    @if($meet->creator == Auth::user()->name)
+                                            <a href="{{$meet->link}}"target="_blank"class="btn btn-success btn-sm">Start</a>
+                                                @else
+
+                                                @if($date > $meet->start)
+                                                     <a href="{{$meet->link}}"target="_blank"class="btn btn-success btn-sm">Join</a>
+
+                                                @else
+
+                                                <a href=""target="_blank"class="btn btn-warning text-dark btn-sm">Not started</a>
+
+                                                @endif
+                                                
+                                            @endif
+
+                                            @if($meet->creator == Auth::user()->name)
+                                            <a href=""class="btn btn-primary btn-sm"data-toggle="modal" data-target="#myModal{{$meet->id}}">Invitees</a>
+                                            @endif
+
+                                            <!-- invitess modal -->
+
+                                            <div class="modal fade" id="myModal{{$meet->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Meeting Details</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <!-- Display meeting details here -->
+                                                    <p>Title: {{$meet->title}}</p>
+                                                    <p>Start Time: {{$meet->start}}</p>
+                                                    <p>End Time: {{$meet->start}}</p>
+                                                    <!-- Add other meeting details as nee'ded -->
+
+                                                    <?php
+                                                        $person = \App\Meeting::where('ref',$meet->ref)->pluck('participant')
+                                                    
+                                                    ?>
+
+                                            <p class="font-weight-bold">Invitees</p>
+                                                                @foreach($person as $per)
+
+                                                            
+
+                                                                <p>{{$per}}</p>
+
+                                                                @endforeach
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                                        
+
+
+
+                                            <!-- end of inviteess modal -->
+
+                                            @if(Auth::user()->name == $meet->creator)
 
 <button class=""style="background:white;border:none;"><i class="fa fa-trash text-danger"></i></button>
 
 @endif
-        </form>
-    </td>
-</tr>
-@endforeach
+             
 
-</tbody>
+                            
 
-</table>
-</div>
+
+
+
+
+                            
+                            <!-- check of today is greater than start  -->
+
+                                
+
+                            </form>
+
+                           
+
+                            
+                        </td>
+                </tr>
+
+
+            
+              @endforeach
+
+            </tbody>
+
+        </table>
+
+    
+    </div>
 
 
 

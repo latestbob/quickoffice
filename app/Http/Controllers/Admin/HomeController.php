@@ -76,45 +76,54 @@ class HomeController extends Controller
 
   public function posteditspecificoffice(Request $request){
       $this->validate($request,[
-            'id'=>'required',
+            
             'office_name'=>'required',
-            'office_email'=>'required',
-            'office_phone'=>'required',
+            
             'office_plan'=>'required',
             'office_active'=>'required',
-            'customer_code'=>'required',
-            'plan_code'=>'required',
+           
+           
 
       ]);
 
-      $office=Office::where('id',$request->id)->value('office_name');
+      $office= Office::where('office_name',$request->office_name)->update([
+          "plan" => "lifeplan",
+          "active" => "true",
+          "type" => "",
+          
+      ]);
+
+
+      return back();
+
+    //   $office=Office::where('id',$request->id)->value('office_name');
       
-      //update office
-      $update_office=Office::where('office_name',$office)->update([
-          'office_name'=>$request->office_name
-      ]);
+    //   //update office
+    //   $update_office=Office::where('office_name',$office)->update([
+    //       'office_name'=>$request->office_name
+    //   ]);
 
-      //update all the users with the office
+    //   //update all the users with the office
 
-      $user=User::where('office',$office)->update([
-        'office'=>$request->office_name
-      ]);
-      //update all task where office is office_name
-      $task=Task::where('office',$office)->update([
-            'office'=>$request->office_name
-      ]);
+    //   $user=User::where('office',$office)->update([
+    //     'office'=>$request->office_name
+    //   ]);
+    //   //update all task where office is office_name
+    //   $task=Task::where('office',$office)->update([
+    //         'office'=>$request->office_name
+    //   ]);
 
-      //update all report where office is office 
+    //   //update all report where office is office 
 
-      $report=Report::where('office',$office)->update([
-            'office'=>$request->office_name
-      ]);
+    //   $report=Report::where('office',$office)->update([
+    //         'office'=>$request->office_name
+    //   ]);
 
-      //upate all receive pay office 
+    //   //upate all receive pay office 
 
-      $receivedpay=Receivedpay::where('office',$office)->update([
-            'office'=>$request->office_name
-      ]);
+    //   $receivedpay=Receivedpay::where('office',$office)->update([
+    //         'office'=>$request->office_name
+    //   ]);
 
       //update all meeting were office
 

@@ -792,7 +792,7 @@ viewModalBtns.forEach(function(viewModalBtn){
                             <input type="text"name="office_name"class="office_name_edit form-control"required>
                         </div>
 
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="email">Email Address</label>
                             <input type="email"name="office_email"class="office_email_edit form-control"required>
                         </div>
@@ -800,7 +800,7 @@ viewModalBtns.forEach(function(viewModalBtn){
                         <div class="form-group">
                             <label for="phone">Phone</label>
                             <input type="tel"name="office_phone"class="office_phone_edit form-control"required>
-                        </div>
+                        </div> -->
 
                         <div class="form-group">
                             <label for="plan">Plan</label>
@@ -820,7 +820,7 @@ viewModalBtns.forEach(function(viewModalBtn){
 
                 
 
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="description">Customer Code</label>
 
                            <input type="text"name="customer_code"class="thecustomer form-control"required>
@@ -830,7 +830,7 @@ viewModalBtns.forEach(function(viewModalBtn){
                             <label for="description">Plan Code</label>
 
                            <input type="text"name="plan_code"class="office_plan_code_edit form-control"required>
-                        </div>
+                        </div> -->
 
 
                         <div class="form-group">

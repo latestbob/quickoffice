@@ -21,6 +21,13 @@ use App\Receivedpay;
 use App\User;
 use App\Task;
 use App\Officejobs;
+use Carbon\Carbon;
+use App\Activity;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ApprovalMail;
+use App\Subsidary;
+
+
 class AccountController extends Controller
 {
     public function __construct()
@@ -59,7 +66,7 @@ class AccountController extends Controller
         ->get();
 
 
-        return view('admin.schedule',compact('meets','members'));
+        return view('account.schedule',compact('meets','members'));
     }
     // account task page
 
@@ -67,8 +74,11 @@ class AccountController extends Controller
         $client=User::where('office',Auth::user()->office)->where('position','client')->get();
 
         $supervisor=User::where('office',Auth::user()->office)->where('name','!=',Auth::user()->name)->get();
-        $task=Task::where('office',Auth::user()->office)->where('createdby',Auth::user()->name)->get();
+       // $task=Task::where('office',Auth::user()->office)->where('createdby',Auth::user()->name)->get();
         $staff=User::where('office',Auth::user()->office)->where('position','!=','admin')->where('position','!=','client')->where('name','!=',Auth::user()->name)->get();
+
+        //$task=Activity::where('obligated',Auth::user()->name)->orderBy('business')->paginate(10);
+        $task=Activity::where('obligated',Auth::user()->name)->where('status','!=',"Completed")->orderBy('business')->paginate(10);
         return view('account.tasks',compact('client','supervisor','task','staff'));
     }
 
@@ -175,7 +185,10 @@ class AccountController extends Controller
             
         ]);
 
-        $month=date('M-Y',strtotime($request->date));
+        //$month=date('M-Y',strtotime($request->date));
+        $currentMonth = Carbon::now()->format('F');
+
+        $currentYear = date('Y');
         
 
         $expense=new Expense;
@@ -186,8 +199,31 @@ class AccountController extends Controller
         $expense->office=Auth::user()->office;
         $expense->accountant=Auth::user()->name;
         $expense->category=$request->category;
-        $expense->month=$month;
+        $expense->month=$currentMonth;
+
+        //new fields
+
+        $expense->total = $request->amount;
+        $expense->items = $request->items;
+        $expense->status = "pending";
+        $expense->current_month = $currentMonth;
+        $expense->current_year = $currentYear;
+        $expense->currency = $request->currency;
         $expense->save();
+
+
+        $expense=[
+          
+            'title'=>$request->title,
+            'category'=>$request->category,
+            'total'=>$request->amount,
+            'description'=>$request->description,
+            'currency' => $request->currency,
+           
+       ];
+
+       Mail::to('uzor@laurenparkerway.com')->send(new ApprovalMail($expense));
+
 
         return back()->with('msg','Expenses was added successfully');
 
@@ -639,26 +675,23 @@ class AccountController extends Controller
 
         public function viewspeciftasktype($task){
               //////
-    if($task=="pending"){
-        //dd('the task is pending');
-
-        $taskss =Task::where(['office' => Auth::user()->office])->where(['createdby' => Auth::user()->name])->where(['status' => 'pending'])->get();
-
-        return view('account.viewtasktype',compact('taskss','task'));
-    }
-
-    elseif($task=="completed"){
-       $taskss=Task::where(['office' => Auth::user()->office])->where(['createdby' => Auth::user()->name])->where(['status' => 'completed'])->get();
-       return view('account.viewtasktype',compact('taskss','task'));
-    }
-
-    elseif($task=="overdue"){
-        $date = date("Y-m-d H:i:s", strtotime('+1 hours'));
-      $taskss=Task::where(['office' => Auth::user()->office])->where(['createdby' => Auth::user()->name])->where(['status' => 'pending'])->where('end' ,'<', $date)
-      ->orwhere(['office' => Auth::user()->office])->where(['supervisor' => Auth::user()->name])->where(['status' => 'pending'])->where('end' ,'<', $date)->get();
-      return view('account.viewtasktype',compact('taskss','task'));
-    }
-
+              if($task=="pending"){
+                //dd('the task is pending');
+        
+                $taskss =Activity::where(['obligated' => Auth::user()->name])->where(['status' => 'pending'])->get();
+        
+                return view('account.viewtasktype',compact('taskss','task'));
+            }
+        
+            elseif($task=="completed"){
+               $taskss=Activity::where(['obligated' => Auth::user()->name])->where(['status' => 'completed'])->get();
+               return view('account.viewtasktype',compact('taskss','task'));
+            }
+        
+            elseif($task=="overdue"){ $date = date("Y-m-d H:i:s", strtotime('+1 hours'));
+                $taskss=Activity::where(['obligated' => Auth::user()->name])->where(['status' => 'overdue'])->get();
+              return view('account.viewtasktype',compact('taskss','task'));
+            }
     elseif($task=="supervised"){
      $taskss=Task::where(['office' => Auth::user()->office])->where(['supervisor' => Auth::user()->name])->get();
 
@@ -855,7 +888,13 @@ class AccountController extends Controller
         // ACCOUNT EXPENSE PAGE
 
         public function accountexpenses(){
-            return view('account.expenses');
+
+           // $expense = Expense::where('office',Auth::user()->office)->orderBy('id', 'desc')->get();
+
+            $subsidary = Subsidary::distinct()->pluck('name');
+    // dd($subsidary);
+    $expense = Expense::where('office',Auth::user()->office)->orderBy('id', 'desc')->get();
+            return view('account.expenses',compact('expense','subsidary'));
         }
 }
 

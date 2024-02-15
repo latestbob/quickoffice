@@ -33,7 +33,7 @@ class Meetingmail extends Mailable
 
         return $this->subject('QuickOffice New Meeting Schedule')
         ->markdown('email.meeting')
-        ->from($this->meetingschedule['creatormail'], 'QuickOffice')
+        ->from('office@laurenparkerway.com', 'QuickOffice')
         ->with('meetingschedule',$this->meetingschedule);
      
     }

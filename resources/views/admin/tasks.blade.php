@@ -40,140 +40,7 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-               
-                <div class="sidebar-brand-text mx-3 font-weight-bolder">{{Auth::user()->office}} 
-                    <br>
-                    <h6 class="text-center">Admin</h6>
-                </div>
-            </a>
-
-                         <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-<!-- Nav Item - Dashboard -->
-<li class="nav-item ">
- <a class="nav-link" href="{{route('admin.home')}}">
-     <i class="fas fa-fw fa-tachometer-alt"></i>
-     <span>Dashboard</span></a>
-</li>
-
-
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-<!-- Nav Item - Schedule -->
-
-<li class="nav-item">
- <a class="nav-link" href="{{route('admin.schedule')}}">
-     <i class="fas fa-fw  fa-clock"></i>
-     <span>Schedule</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-<!-- Nav Item - Task -->
-
-<li class="nav-item active">
- <a class="nav-link" href="{{route('admin.tasks')}}">
-     <i class="fas fa-fw  fa-tasks"></i>
-     <span>Tasks+</span></a>
-</li>
-
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
- <!-- Nav Item - Account -->
-
- <li class="nav-item ">
- <a class="nav-link" href="{{route('admin.account')}}">
- <i class="fas fa-money-check"></i>
- <span>Account</span></a>
- </li>
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-<!-- Nav Item - staffs -->
-
-<li class="nav-item">
- <a class="nav-link" href="{{route('admin.staff')}}">
- <i class="fas fa-user-friends"></i>
- <span>Staffs</span></a>
- </li>
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-   <!-- Nav Item - Message -->
-
-<li class="nav-item ">
- <a class="nav-link" href="/chatify">
-     <i class="fas fa-fw  fa-envelope"></i>
-     <span>Message</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-   <!-- Nav Item - Report -->
-
-<li class="nav-item">
- <a class="nav-link" href="{{route('admin.report')}}">
-     <i class="fas fa-fw  fa-file "></i>
-     <span>Report</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-  <!-- Nav Item - Clients -->
-<li class="nav-item">
- <a class="nav-link" href="{{route('admin.client')}}">
- <i class="fas fa-handshake"></i>
-     <span>Client</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-  <!-- Nav Item - Calender -->
-  <li class="nav-item">
- <a class="nav-link" href="{{route('admin.calender')}}">
- <i class="fas fa-calendar"></i>
-     <span>Calender/Event</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
- <!-- Nav Item - Branch/Departments -->
- <li class="nav-item">
- <a class="nav-link" href="{{route('admin.branchdepartment')}}">
- <i class="fas fa-code-branch"></i>
-     <span>Branches|Departments</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-
-
-        </ul>
+        @include('admin.nav')
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -362,14 +229,21 @@
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">My Tasks</h1> 
                         <button class="btn btn-primary"data-toggle="modal" data-target="#taskModal">Create New Task</button>
-                        
+                        @if(Auth::user()->branch == 'headquarters')
+                            <!-- <form action="{{route('admin.publishtask')}}"method="POST">
+                                @csrf 
+
+                                <button type="submit" class="btn btn-primary">Publish Goal Report</button>
+
+                            </form> -->
+                        @endif
                     </div>
 
                      <!-- Content Row -->
                      <div class="row">
 
 <!-- Earnings (Monthly) Card Example ////////////////////////////////////////////////////////////////// -->
-<div class="col-xl-3  text-light col-md-6 mb-4">
+<div class="col-xl-4  text-light col-md-6 mb-4">
     <a href="{{route('admin.view.task.type','overdue')}}">
     <div class="card bg-danger  shadow h-100 py-2">
         <div class="card-body">
@@ -378,21 +252,14 @@
                     <div class="text-xs font-weight-bold text-light text-uppercase mb-1">
                       OVER DUE TASKS</div>
                     <div class="h5 mb-0 font-weight-bold text-ligh">
-                   @php
-                        $date= date("Y-m-d H:i:s", strtotime('+1 hours'));
-                       
-                       
-                        
-                   @endphp
+             
 
                
 
               
 
                    <div class="h5 mb-0 font-weight-bold "style="color:white;">
-                   {{ \App\Task::where(['office' => Auth::user()->office])->where(['createdby' => Auth::user()->name])->where(['status' => 'pending'])->where('end' ,'<', $date)->
-                    orwhere(['office' => Auth::user()->office])->where(['supervisor' => Auth::user()->name])->where(['status' => 'pending'])->where('end' ,'<', $date)
-                   ->count() }}
+                   {{ \App\Activity::where(['obligated' => Auth::user()->name])->where(['status' => 'overdue'])->count() }}
                     </div>
                     </div>
                 </div>
@@ -406,7 +273,7 @@
 </div>
 
 <!-- Earnings (Monthly) Card Example -->
-<div class="col-xl-3 col-md-6 mb-4">
+<div class="col-xl-4 col-md-6 mb-4">
    <a href="{{route('admin.view.task.type','pending')}}">
    <div class="card bg-warning shadow h-100 py-2">
         <div class="card-body">
@@ -415,13 +282,7 @@
                     <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
                         PENDING TASKS</div>
                     <div class="h5 mb-0 font-weight-bold text-dark">
-                    {{ \App\Task::where(['office' => Auth::user()->office])
-             ->where(function ($query) {
-                 $query->where(['createdby' => Auth::user()->name])
-                       ->orWhere(['supervisor' => Auth::user()->name]);
-             })
-             ->where(['status' => 'pending'])
-             ->count() }}
+                    {{ \App\Activity::where(['obligated' => Auth::user()->name])->where(['status' => 'pending'])->count() }}
                     </div>
                 </div>
                 <div class="col-auto">
@@ -434,7 +295,7 @@
 </div>
 
 <!-- Earnings (Monthly) Card Example -->
-<div class="col-xl-3 col-md-6 mb-4">
+<div class="col-xl-4 col-md-6 mb-4">
     <a href="{{route('admin.view.task.type','completed')}}">
     <div class="card bg-success shadow h-100 py-2">
         <div class="card-body">
@@ -445,7 +306,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col-auto">
                             <div class="h5 mb-0 mr-3 font-weight-bold text-light">
-                            {{ \App\Task::where(['office' => Auth::user()->office])->where(['createdby' => Auth::user()->name])->where(['status' => 'completed'])->count() }}
+                            {{ \App\Activity::where(['obligated' => Auth::user()->name])->where(['status' => 'completed'])->count() }}
                             </div>
                         </div>
                         
@@ -461,31 +322,7 @@
 </div>
 
 <!-- Earnings (Monthly) Card Example -->
-<div class="col-xl-3 col-md-6 mb-4">
-    <a href="{{route('admin.view.task.type','supervised')}}">
-    <div class="card bg-secondary shadow h-100 py-2">
-        <div class="card-body">
-            <div class="row no-gutters align-items-center">
-                <div class="col mr-2">
-                    <div class="text-xs font-weight-bold text-light text-uppercase mb-1">Supervised Tasks
-                    </div>
-                    <div class="row no-gutters align-items-center">
-                        <div class="col-auto">
-                            <div class="h5 mb-0 mr-3 font-weight-bold text-light">
-                            {{ \App\Task::where(['office' => Auth::user()->office])->where(['supervisor' => Auth::user()->name])->count() }}
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-                <div class="col-auto">
-                    <i class="fa fa-user fa-2x text-light" aria-hidden="true"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-    </a>
-</div>
+
 
 
 </div>
@@ -503,64 +340,56 @@
         </button>
       </div>
       <div class="modal-body">
-      <form action="{{route('tasks.submit')}}"method="POST"enctype="multipart/form-data">
+      <form action="{{route('addweeklytask')}}"method="POST"enctype="multipart/form-data">
                                         @csrf
 
-                                        <div class="form-group">
-                                            <label for="title">Task Title</label>
-                                            <input type="text"name="title"placeholder="Enter Task Title"class="form-control"required>
-                                        </div>
                                         <div class="form-group row">
-                                        <div class="col-md-6">
-                                            <label for="start">Task Start At</label>
-                                            <input type="datetime-local"name="start"placeholder="Task Start at"class="form-control"required>
+                                            <div class="col-md-6">
+                                                <label for="">Business</label>
+                                                <select name="business"class="form-control" id=""required>
+                                                        
+                                                    <option value="Lauren Parker">Lauren Parker</option>
+                                                    
+                                                        <option value="Asknello">Asknello</option>
+                                                        <option value="Famacare">Famacare</option>
+                                                        <option value="Skinns">Skinns</option>
+                                                        <option value="Vells">Vells</option>
+                                                        
+                                                        
+                                                        <option value="Quick Office">Quick Office</option>
+
+
+
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label for="">Business Arm</label>
+                                                <input name="arm" type="text"class="form-control"value="{{Auth::user()->branch}}"readonly>
+                                             
+                                            </div>
                                         </div>
 
-                                        <div class="col-md-6">
-                                            <label for="start">Task Should End At</label>
-                                            <input type="datetime-local"name="end"placeholder="Proposed Date of completion"class="form-control"required>
-                                        </div>
-                                            
-                                    </div>
-
+                                       
                                     <hr>
                                     <div class="card-header m-auto py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary mb-4">Task Classification</h6>
+              
 
 
                                     <div class="form-group row ">
                                         <div class="col-md-6">
-                                            <label for="category">Task Category</label>
-                                                <select onchange="getType();" name="category"class="form-control taskcategory" id=""required>
-                                                    <option value="">Select Task Category (For Personal /Assigned to Staff)</option>
-                                                    <!-- <option value="client">For Client</option> -->
-                                                    <option value="personal">Personal</option>
-                                                    <option value="staff">Staff</option>
-                                                </select>
+                                            <label for="category">Activity/Task</label>
+                                               
+                                            <textarea name="task" id="" cols="30"class="form-control" rows="3"required></textarea>
+
                                         </div>
 
-                                        <div class="col-md-6 clientdiv notshow">
-                                            <label for="category">Clients (Leave Blank If Not for Client)</label>
-                                                <select name="client"class="form-control" id="">
-                                                    <option value="">Select Client</option>
-                                                   @foreach($client as $clients)
-
-                                                        <option value="{{$clients->name}}">{{$clients->name}}</option>
-                                                   @endforeach
-                                                </select>
+                                        <div class="col-md-6 ">
+                                            <label for="category">Output</label>
+                                            <textarea name="output" id="" cols="30"class="form-control" rows="3"required></textarea>
                                         </div>
 
-                                        <div class="col-md-6 notshow staffdiv">
-                                            <label for="staffs">Staffs(Leave Blank Tasks not for staff)</label>
-                                                <select name="staff"class="form-control" id="">
-                                                    <option value="">Select Staffs</option>
-                                                    @foreach($staff as $staffs)
-
-                                                    <option value="{{$staffs->name}}">{{$staffs->name}}</option>
-                                                    @endforeach
-                                                   
-                                                </select>
-                                        </div>
+                                        
                                             
                                     </div>
 
@@ -568,41 +397,34 @@
 
                                     <hr>
                                     <div class="card-header m-auto py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary mb-4">Supervision</h6>
+                                    
 
                                     <div class="form-group row">
                                       
-                                            <label for="supervisor">Supervised By</label>
-                                            <select name="supervisor" id=""class="form-control"required>
-                                                <option value="">Select Name of Supervisor</option>
-                                                <option value="{{Auth::user()->name}}">{{Auth::user()->name}} - Myself</option>
+                                            <label for="supervisor">Due Date</label>
                                             
-                                                @foreach($supervisor as $super)
-                                                    
-                                                    <option value="{{$super->name}}">{{$super->name}}</option>
-                                                @endforeach
-
-
-                                            </select>
+                                            <input id="dateInput" type="date"class="form-control"name="due_date"required>
                                       
                                     </div>
 
-
-                                    <hr>
-                                    <div class="form-group">
-                                        <label for="description">Task Description</label>
-
-                                        <textarea name="description" id=""placeholder="Task Description"class="form-control" cols="10" rows="5"required></textarea>
-                                    </div>
+                                    <!-- <input type="week"class="form-control"name="week"required> -->
 
 
                                     <hr>
+                                    <!-- <div class="form-group">
+                                        <label for="description">Comments(optional)</label>
 
-                                    <div class="form-group">
+                                        <textarea name="comment" id=""class="form-control" cols="10" rows="5"required></textarea>
+                                    </div> -->
+
+
+                               
+
+                                    <!-- <div class="form-group">
                                         <label for="file">Attachements (Optional)</label> <br>
                             
                                         <input type="file"name="fileattachment"placeholder="Enter Attachments">
-                                    </div>
+                                    </div> -->
 
                                 </div>
 
@@ -676,85 +498,293 @@
                 <div class="row m-auto table-responsive">
 
                 <table class="table table-sm table-borderless table-hover">
-                    <thead class="bg-primary text-light">
-    <tr>
-        <th>Title</th>
-        <th>Start</th>
-        <th>End</th>
-        
-        <th>Supervisor</th>
-        <th>Assigned </th>
-        <th>Attachment</th>
-        <th>Status</th>
-        <th>Actions</th>
-   
-      
-    </tr>
-  </thead>
+                <thead class="bg-primary text-light">
+<tr>
+<th>Business</th>
 
-  <tbody style="color:black;font-size:13px;z-index:100;">
+<th>Activity/Task</th>
 
-            @foreach($task as $work)
-            <tr>
-                <td>{{$work->title}}</td>
-                <td>{{$work->start}}</td>
-                <td>{{$work->end}}</td>
-                <td>{{Auth::user()->name == $work->supervisor ? "Me" : $work-supervisor}}</td>
-                
-                <td> 
-                @if($work->category == "personal" && $work->createdby == Auth::user()->name)
-    <p class="badge badge-primary text-light badge-sm"> Personal </p>
+<th>Output</th>
+<th>Due Date</th>
+
+<th>Status</th>
+<th>Actions</th>
+
+
+</tr>
+</thead>
+
+
+<tbody style="color:black;font-size:13px;z-index:100;">
+
+@foreach($task as $work)
+<tr>
+<td>{{$work->business}}</td>
+
+<td>{{$work->task}}</td>
+<td>{{$work->output}}</td>
+<td>{{\Carbon\Carbon::parse($work->due_date)->format('d/m/Y')}}</td>
+
+<td>
+    @if($work->status  == "pending")
+        <p class="badge badge-warning text-dark badge-sm">{{$work->status}} </p>
+    
+        @elseif($work->status  == "completed")
+        <p class="badge badge-success text-light badge-sm">{{$work->status}} </p>
+  
 
     @else
-    <p> {{$work->createdby}}</p>
-    @endif        
-            </td>
+    <p class="badge badge-danger text-light badge-sm">{{$work->status}} </p>
 
-                <td>
-                    @if($work->attachment == NULL)
-                        None
-                    @else
+    @endif
+</td>
 
-                        <a href="{{$work->attachment}}"target="_blank"><i class="fa fa-download"> </i></a>
-                    
+@if($work->supervisor == Auth::user()->name)
+<td>
+    <i data-id="{{$work->id}}"data-toggle="modal" data-target="#viewModal"class="fa fa-eye mr-2 text-primary viewmodal"></i>|<i data-id="{{$work->id}}"data-toggle="modal" data-target="#editModal"class="fa fa-edit mr-2 text-warning editmodal"></i>|<i data-id="{{$work->id}}"data-toggle="modal" data-target="#deleteModal"class="fa fa-trash mr-2 text-danger deletemodal"></i>
+</td>
+    
+@else
 
-                    @endif
-                </td>
-                <td>
-                    @if($work->status  == "pending")
-                        <p class="badge badge-warning text-dark badge-sm">{{$work->status}} </p>
-                    
-                        @elseif($work->status  == "completed")
-                        <p class="badge badge-success text-light badge-sm">{{$work->status}} </p>
+<td>
+<i data-toggle="modal" data-target="#viewModal{{$work->id}}"class="fa fa-eye mr-2 text-primary viewmodal"></i>|<i data-toggle="modal" data-target="#editModal{{$work->id}}"class="fa fa-edit mr-2 text-warning editmodal"></i>
+</td>
+
+@endif
+
+
+
+</tr>
+
+<div class="modal fade" id="viewModal{{$work->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                      My Task
+                    </h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body"style="color:black;font-size:13px;">
+
+                   <div class="form-group">
+                       <p>Business - {{$work->business}}</p>
+                   </div>
+
+                   <div class="form-group">
+                       <p>Arm - {{$work->arm}}</p>
+                   </div>
+
+
+                   <div class="form-group">
+                       <p>Activity/Task - {{$work->task}}</p>
+                   </div>
+
+                   <div class="form-group">
+                       <p> Output - {{$work->output}}</p>
+                   </div>
+
+
+                   <div class="form-group">
+                       <p>Due Date - {{$work->due_date}}</p>
+                   </div>
+
+
+                   <div class="form-group">
+                       <p>Status - {{$work->status}}</p>
+                   </div>
+
+
+                   <div class="form-group">
+                       <p>Comment - {{$work->comment}}</p>
+                   </div>
+
+
+                   
+                      
+                            
+                        
+                            
+                                   
+                                    
+
+                                    
+                              
+                        
+                    </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                   
+                   
+                </div>
+            </div>
+        </div>
+    </div>
 
-                    @else
-                    <p class="badge badge-danger text-light badge-sm">{{$work->status}} </p>
 
-                    @endif
-                </td>
 
-                @if($work->supervisor == Auth::user()->name)
-                <td>
-                    <i data-id="{{$work->id}}"data-toggle="modal" data-target="#viewModal"class="fa fa-eye mr-2 text-primary viewmodal"></i>|<i data-id="{{$work->id}}"data-toggle="modal" data-target="#editModal"class="fa fa-edit mr-2 text-warning editmodal"></i>|<i data-id="{{$work->id}}"data-toggle="modal" data-target="#deleteModal"class="fa fa-trash mr-2 text-danger deletemodal"></i>
-                </td>
-                    
-                @else
 
-                <td>
-                    <i data-id="{{$work->id}}"data-toggle="modal" data-target="#viewModal"class="fa fa-eye mr-2 text-primary viewmodal"></i>|<i data-id="{{$work->id}}"data-toggle="modal" data-target="#editModal"class="fa fa-edit mr-2 text-warning editmodal"></i>
-                </td>
+<div class="modal fade" id="editModal{{$work->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title task_title_edit" id="exampleModalLabel">
+                      Update {{$work->task}}
+                    </h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
 
-                @endif
+                   
+                <form action="{{route('updateactivity')}}"method="POST">
+                    {{method_field('PUT')}}
+                                        @csrf
+
+
+                                        
+
+                                                <input type="hidden"value="{{$work->id}}"name="id">
+
+
+                                        <div class="form-group row">
+                                            <div class="col-md-6">
+                                                <label for="">Business</label>
+                                                <select name="business"class="form-control" id=""required>
+                                                        
+                                                    <option value="Lauren Parker"{{ $work->business == 'Lauren Parker' ? 'selected' : '' }}>Lauren Parker</option>
+                                                    
+                                                        <option value="Asknello"{{ $work->business == 'Asknello' ? 'selected' : '' }}>Asknello</option>
+                                                        <option value="Famacare"{{ $work->business == 'Famacare' ? 'selected' : '' }}>Famacare</option>
+                                                        <option value="Skinns"{{ $work->business == 'Skinns' ? 'selected' : '' }}>Skinns</option>
+                                                        <option value="Vells"{{ $work->business == 'Vells' ? 'selected' : '' }}>Vells</option>
+                                                        
+                                                        
+                                                        <option value="Quick Office"{{ $work->business == 'Quick Office' ? 'selected' : '' }}>Quick Office</option>
+
+
+
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label for="">Business Arm</label>
+                                                <input name="arm" type="text"class="form-control"value="{{Auth::user()->branch}}"readonly>
+                                             
+                                            </div>
+                                        </div>
+
+                                       
+                                    <hr>
+                                    <div class="card-header m-auto py-3">
+              
+
+
+                                    <div class="form-group row ">
+                                        <div class="col-md-6">
+                                            <label for="category">Activity/Task</label>
+                                               
+                                            <textarea name="task" id="" cols="30"class="form-control" rows="3"required>{{$work->task}}</textarea>
+
+                                        </div>
+
+                                        <div class="col-md-6 ">
+                                            <label for="category">Output</label>
+                                            <textarea name="output" id="" cols="30"class="form-control"value="{{$work->output}}"  rows="3"required>{{$work->output}}</textarea>
+                                        </div>
+
+                                        
+                                            
+                                    </div>
+
+                                   
+
+                                    <hr>
+                                    <div class="card-header m-auto py-3">
+                                    
+
+                                    <div class="form-group row">
+                                      
+                                           <div class="col-md-6">
+                                           <label for="supervisor">Due Date</label>
+                                            
+                                            <input id="dateInput" type="date"class="form-control"value="{{$work->due_date}}" name="due_date"required>
+                                           </div>
+
+                                           <div class="col-md-6">
+                                           <label for="description">Status</label>
+
+<select name="status"class="form-control" id=""required>
                 
+                <option value="pending"{{ $work->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                
+                <option value="completed"{{ $work->status == 'completed' ? 'selected' : '' }}>Completed</option>
+
+                <option value="overdue"{{ $work->status == 'overdue' ? 'selected' : '' }}>Overdue</option>
 
 
-            </tr>
+
+            </select>
+                                           </div>
+                                      
+                                    </div>
+
+                                    <!-- <input type="week"class="form-control"name="week"required> -->
 
 
-            @endforeach
+                                    <hr>
+                                    <div class="form-group">
+                                        <label for="description">Comments(optional)</label>
+
+                                        <textarea name="comment" id=""class="form-control" cols="10" rows="3">{{$work->comment}}</textarea>
+                                    </div>
+
+                                    
+                                    <hr>
+
+                                    
+
+
+
+
+
+                               
+
+                                    <!-- <div class="form-group">
+                                        <label for="file">Attachements (Optional)</label> <br>
+                            
+                                        <input type="file"name="fileattachment"placeholder="Enter Attachments">
+                                    </div> -->
+
+                                </div>
+
+                                    <div class="form-group">
+                                        <button class="text-center btn btn-success">Update Task</button>
+                                    </div>
+                              
+                                    </form>
+                    </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                  
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+@endforeach
 
 </tbody>
+
+
   
 </table>
                
@@ -765,14 +795,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; <a href="https://quickoffice.online">QuickOffice</a> 2020</span>
-                        <span>Developed by <a href="https://wallsandgates.com.ng">WallsandGates Limited</a></span>
-                    </div>
-                </div>
-            </footer>
+            
             <!-- End of Footer -->
 
         </div>

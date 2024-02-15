@@ -35,149 +35,8 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-               
-                <div class="sidebar-brand-text mx-3 font-weight-bolder">{{Auth::user()->office}} 
-                    <br>
-                    <h6 class="text-center">Admin</h6>
-                </div>
-            </a>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-               <!-- Nav Item - Dashboard -->
-               <li class="nav-item active">
-                <a id="step-one"class="nav-link" href="{{route('admin.home')}}">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
-            </li>
-
-            
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-
-            <!-- Nav Item - Schedule -->
-           
-            <li class="nav-item">
-                <a id="step-two"class="nav-link" href="{{route('admin.schedule')}}">
-                    <i class="fas fa-fw  fa-clock"></i>
-                    <span>Schedule</span></a>
-            </li>
-            
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-
-               <!-- Nav Item - Task -->
-           
-            <li class="nav-item">
-                <a id="step-three"class="nav-link" href="{{route('admin.tasks')}}">
-                    <i class="fas fa-fw  fa-tasks"></i>
-                    <span>Tasks+</span></a>
-            </li>
-            
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-                <!-- Nav Item - Account -->
-
-                <li class="nav-item ">
-                <a id="step-four"class="nav-link" href="{{route('admin.account')}}">
-                <i class="fas fa-money-check"></i>
-                <span>Account</span></a>
-                </li>
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-              <!-- Nav Item - staffs -->
-
-              <li class="nav-item ">
-                <a id="step-five"class="nav-link" href="{{route('admin.staff')}}">
-                <i class="fas fa-user-friends"></i>
-                <span>Staffs</span></a>
-                </li>
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-                  <!-- Nav Item - Message -->
-           
-            <li class="nav-item ">
-                <a id="step-six"class="nav-link" href="/chatify">
-                    <i class="fas fa-fw  fa-envelope"></i>
-                    <span>Message</span></a>
-            </li>
-            
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-
-                  <!-- Nav Item - Report -->
-           
-            <li class="nav-item">
-                <a id="step-seven"class="nav-link" href="{{route('admin.report')}}">
-                    <i class="fas fa-fw  fa-file "></i>
-                    <span>Report</span></a>
-            </li>
-            
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-
-                 <!-- Nav Item - Clients -->
-              <li class="nav-item">
-                <a class="nav-link" href="{{route('admin.client')}}">
-                <i class="fas fa-handshake"></i>
-                    <span>Client</span></a>
-            </li>
-            
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-
-                 <!-- Nav Item - Calender -->
-                 <li class="nav-item">
-                <a class="nav-link" href="{{route('admin.calender')}}">
-                <i class="fas fa-calendar"></i>
-                    <span>Calender/Event</span></a>
-            </li>
-            
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-                <!-- Nav Item - Branch/Departments -->
-                <li class="nav-item">
-                <a class="nav-link" href="{{route('admin.branchdepartment')}}">
-                <i class="fas fa-code-branch"></i>
-                    <span>Branches|Departments</span></a>
-            </li>
-            
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-
-
-            
-
-
-           
-
-            
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-
-           
-
-        </ul>
+        @include('admin.nav')
+        
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -330,10 +189,7 @@
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Settings
                                 </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Activity Log
-                                </a>
+                               
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item bg-danger text-light" href="{{route('logout')}}" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-light"></i>
@@ -367,7 +223,7 @@
                 <div class="row">
 
 <!-- Earnings (Monthly) Card Example ////////////////////////////////////////////////////////////////// -->
-<div class="col-xl-3  text-light col-md-6 mb-4">
+<div class="col-xl-4  text-light col-md-6 mb-4">
     <a href="{{route('admin.view.task.type','overdue')}}">
     <div class="card bg-danger  shadow h-100 py-2">
         <div class="card-body">
@@ -376,21 +232,14 @@
                     <div class="text-xs font-weight-bold text-light text-uppercase mb-1">
                       OVER DUE TASKS</div>
                     <div class="h5 mb-0 font-weight-bold text-ligh">
-                   @php
-                        $date= date("Y-m-d H:i:s", strtotime('+1 hours'));
-                       
-                       
-                        
-                   @endphp
+             
 
                
 
               
 
                    <div class="h5 mb-0 font-weight-bold "style="color:white;">
-                   {{ \App\Task::where(['office' => Auth::user()->office])->where(['createdby' => Auth::user()->name])->where(['status' => 'pending'])->where('end' ,'<', $date)->
-                    orwhere(['office' => Auth::user()->office])->where(['supervisor' => Auth::user()->name])->where(['status' => 'pending'])->where('end' ,'<', $date)
-                   ->count() }}
+                   {{ \App\Activity::where(['obligated' => Auth::user()->name])->where(['status' => 'overdue'])->count() }}
                     </div>
                     </div>
                 </div>
@@ -404,7 +253,7 @@
 </div>
 
 <!-- Earnings (Monthly) Card Example -->
-<div class="col-xl-3 col-md-6 mb-4">
+<div class="col-xl-4 col-md-6 mb-4">
    <a href="{{route('admin.view.task.type','pending')}}">
    <div class="card bg-warning shadow h-100 py-2">
         <div class="card-body">
@@ -413,13 +262,7 @@
                     <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
                         PENDING TASKS</div>
                     <div class="h5 mb-0 font-weight-bold text-dark">
-                    {{ \App\Task::where(['office' => Auth::user()->office])
-             ->where(function ($query) {
-                 $query->where(['createdby' => Auth::user()->name])
-                       ->orWhere(['supervisor' => Auth::user()->name]);
-             })
-             ->where(['status' => 'pending'])
-             ->count() }}
+                    {{ \App\Activity::where(['obligated' => Auth::user()->name])->where(['status' => 'pending'])->count() }}
                     </div>
                 </div>
                 <div class="col-auto">
@@ -432,7 +275,7 @@
 </div>
 
 <!-- Earnings (Monthly) Card Example -->
-<div class="col-xl-3 col-md-6 mb-4">
+<div class="col-xl-4 col-md-6 mb-4">
     <a href="{{route('admin.view.task.type','completed')}}">
     <div class="card bg-success shadow h-100 py-2">
         <div class="card-body">
@@ -443,7 +286,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col-auto">
                             <div class="h5 mb-0 mr-3 font-weight-bold text-light">
-                            {{ \App\Task::where(['office' => Auth::user()->office])->where(['createdby' => Auth::user()->name])->where(['status' => 'completed'])->count() }}
+                            {{ \App\Activity::where(['obligated' => Auth::user()->name])->where(['status' => 'completed'])->count() }}
                             </div>
                         </div>
                         
@@ -459,31 +302,7 @@
 </div>
 
 <!-- Earnings (Monthly) Card Example -->
-<div class="col-xl-3 col-md-6 mb-4">
-    <a href="{{route('admin.view.task.type','supervised')}}">
-    <div class="card bg-secondary shadow h-100 py-2">
-        <div class="card-body">
-            <div class="row no-gutters align-items-center">
-                <div class="col mr-2">
-                    <div class="text-xs font-weight-bold text-light text-uppercase mb-1">Supervised Tasks
-                    </div>
-                    <div class="row no-gutters align-items-center">
-                        <div class="col-auto">
-                            <div class="h5 mb-0 mr-3 font-weight-bold text-light">
-                            {{ \App\Task::where(['office' => Auth::user()->office])->where(['supervisor' => Auth::user()->name])->count() }}
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-                <div class="col-auto">
-                    <i class="fa fa-user fa-2x text-light" aria-hidden="true"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-    </a>
-</div>
+
 
 
 </div>
@@ -559,7 +378,7 @@
     <script src="{{asset('js/demo/chart-pie-demo.js')}}"></script>
     <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
 
-    <script>
+    <!-- <script>
         const intro=introJs();
         intro.setOptions({
             steps:[
@@ -638,7 +457,7 @@
 
 
       
-    </script>
+    </script> -->
 
 
 </body>

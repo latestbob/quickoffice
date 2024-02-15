@@ -14,6 +14,10 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //
+
+        Commands\Overdue::class,
+        Commands\PublishTask::class,
+        Commands\Partners::class,
     ];
 
     /**
@@ -25,7 +29,18 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+
+        $schedule->command('overdue:task')->dailyAt('8:00');
+        // $schedule->command('publish:task')->weekly()->fridays()->at('17:00');
+       // $schedule->command('partner:summary')->weekly()->fridays()->at('17:45');
+       //$schedule->command('mda:weekly')->everyMinute();
+       
     }
+
+    protected function scheduleTimezone()
+{
+    return 'Africa/Lagos';
+}
 
     /**
      * Register the commands for the application.

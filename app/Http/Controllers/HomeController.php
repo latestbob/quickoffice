@@ -14,6 +14,13 @@ use Hash;
 use App\Task;
 use App\Meeting;
 use App\Notifications\SupervisedDeleted;
+use App\Activity;
+use Carbon\Carbon;
+use App\Expense;
+
+use App\Subsidary;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ApprovalReminder;
 
 class HomeController extends Controller
 {
@@ -33,7 +40,13 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
+    
     {
+
+       
+      
+
+      
         $event=Events::where('office',Auth::user()->office)->orderby('id','desc')->take(5)->get();
         $task=Task::where('office',Auth::user()->office)->where('createdby',Auth::user()->name)->orderby('id','desc')->take(10)->get();
 
@@ -63,11 +76,17 @@ class HomeController extends Controller
     //tasks page for staff
 
     public function tasks(){
+
+
+     
+
+
         $client=User::where('office',Auth::user()->office)->where('position','client')->get();
 
         $supervisor=User::where('office',Auth::user()->office)->where('name','!=',Auth::user()->name)->get();
-        $task=Task::where('office',Auth::user()->office)->where('createdby',Auth::user()->name)->get();
+        $task=Activity::where('obligated',Auth::user()->name)->where('status','!=',"Completed")->orderBy('business')->paginate(10);
         $staff=User::where('office',Auth::user()->office)->where('position','!=','admin')->where('position','!=','client')->where('name','!=',Auth::user()->name)->get();
+        
         return view('staff.tasks',compact('client','supervisor','task','staff'));
     }
 
@@ -75,7 +94,7 @@ class HomeController extends Controller
     // staff view task
 
     public function tasksview($id){
-        $task=Task::where('id',$id)->where('office',Auth::user()->office)->firstOrFail();
+        $task=Activity::where('id',$id)->firstOrFail();
 
         return response()->json($task);
     }
@@ -242,24 +261,24 @@ public function staffsettingupdate(Request $request){
         'id'=>'required',
         'name'=>'required',
         'email'=>'required|email',
-        'password'=>'required|min:6',
+        
         'phone'=>'required',
         'dob'=>'required',
-        'branch'=>'required'
+       
 
     ]);
 
     $user=User::where('office',Auth::user()->office)->where('id',$request->id)->update([
         'name'=>$request->name,
         'email'=>$request->email,
-        'password'=>Hash::make($request->password),
+        
 
         'phone'=>$request->phone,
         'dob'=>$request->dob,
-        'branch'=>$request->branch
+        
     ]);
 
-    return back()->with('msgg','Account details updated successfully, Kindly Logout, and Re-login.');
+    return back()->with('msgg','Account details updated successfully.');
 }
 
 //staff view specific task type
@@ -270,20 +289,18 @@ public function viewspecifictaskstaff($task){
     if($task=="pending"){
         //dd('the task is pending');
 
-        $taskss =Task::where(['office' => Auth::user()->office])->where(['createdby' => Auth::user()->name])->where(['status' => 'pending'])->get();
+        $taskss =Activity::where(['obligated' => Auth::user()->name])->where(['status' => 'pending'])->get();
 
         return view('staff.viewtasktype',compact('taskss','task'));
     }
 
     elseif($task=="completed"){
-       $taskss=Task::where(['office' => Auth::user()->office])->where(['createdby' => Auth::user()->name])->where(['status' => 'completed'])->get();
+       $taskss=Activity::where(['obligated' => Auth::user()->name])->where(['status' => 'completed'])->get();
        return view('staff.viewtasktype',compact('taskss','task'));
     }
 
-    elseif($task=="overdue"){
-        $date = date("Y-m-d H:i:s", strtotime('+1 hours'));
-      $taskss=Task::where(['office' => Auth::user()->office])->where(['createdby' => Auth::user()->name])->where(['status' => 'pending'])->where('end' ,'<', $date)
-      ->orwhere(['office' => Auth::user()->office])->where(['supervisor' => Auth::user()->name])->where(['status' => 'pending'])->where('end' ,'<', $date)->get();
+    elseif($task=="overdue"){ $date = date("Y-m-d H:i:s", strtotime('+1 hours'));
+        $taskss=Activity::where(['obligated' => Auth::user()->name])->where(['status' => 'overdue'])->get();
       return view('staff.viewtasktype',compact('taskss','task'));
     }
 
@@ -305,5 +322,49 @@ public function staffhinthide(){
 
     return back();
 }
+
+
+
+public function staffexpenses(){
+
+    $subsidary = Subsidary::distinct()->pluck('name');
+    // dd($subsidary);
+    $expense = Expense::where('office',Auth::user()->office)->orderBy('id', 'desc')->get();
+    return view('staff.expenses',compact('expense','subsidary'));
+}
+
+
+//get unique business expenses
+
+public function staffexpenseunique(Request $request){
+    $expense = Subsidary::where('name',$request->name)->get();
+
+    return response()->json($expense);
+}
+
+
+
+///expense reminder
+
+public function expensereminder(Request $request){
+$expenses = Expense::find($request->id);
+
+$expense=[
+          
+    'title'=>$expenses->title,
+    'category'=>$expenses->category,
+    'total'=>$expenses->amount,
+    'description'=>$expenses->description,
+   
+];
+
+Mail::to('uzor@laurenparkerway.com')->send(new ApprovalReminder($expense));
+
+
+return back()->with('msg','Expense approval reminder sent successfully');
+}
+
+
+
 
 }

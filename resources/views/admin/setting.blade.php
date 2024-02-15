@@ -37,148 +37,7 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-               
-                <div class="sidebar-brand-text mx-3 font-weight-bolder">{{Auth::user()->office}} 
-                    <br>
-                    <h6 class="text-center">Admin</h6>
-                </div>
-            </a>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-               <!-- Nav Item - Dashboard -->
-               <li class="nav-item ">
-                <a class="nav-link" href="{{route('admin.home')}}">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
-            </li>
-
-            
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-
-            <!-- Nav Item - Schedule -->
-           
-            <li class="nav-item">
-                <a class="nav-link" href="{{route('admin.schedule')}}">
-                    <i class="fas fa-fw  fa-clock"></i>
-                    <span>Schedule</span></a>
-            </li>
-            
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-
-               <!-- Nav Item - Task -->
-           
-            <li class="nav-item">
-                <a class="nav-link" href="{{route('admin.tasks')}}">
-                    <i class="fas fa-fw  fa-tasks"></i>
-                    <span>Tasks+</span></a>
-            </li>
-            
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-                <!-- Nav Item - Account -->
-
-                <li class="nav-item ">
-                <a class="nav-link" href="{{route('admin.account')}}">
-                <i class="fas fa-money-check"></i>
-                <span>Account</span></a>
-                </li>
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-              <!-- Nav Item - staffs -->
-
-              <li class="nav-item ">
-                <a class="nav-link" href="{{route('admin.staff')}}">
-                <i class="fas fa-user-friends"></i>
-                <span>Staffs</span></a>
-                </li>
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-                  <!-- Nav Item - Message -->
-           
-            <li class="nav-item ">
-                <a class="nav-link" href="/chatify">
-                    <i class="fas fa-fw  fa-envelope"></i>
-                    <span>Message</span></a>
-            </li>
-            
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-
-                  <!-- Nav Item - Report -->
-           
-            <li class="nav-item">
-                <a class="nav-link" href="{{route('admin.report')}}">
-                    <i class="fas fa-fw  fa-file "></i>
-                    <span>Report</span></a>
-            </li>
-            
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-
-                 <!-- Nav Item - Clients -->
-              <li class="nav-item">
-                <a class="nav-link" href="{{route('admin.client')}}">
-                <i class="fas fa-handshake"></i>
-                    <span>Client</span></a>
-            </li>
-            
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-
-                 <!-- Nav Item - Calender -->
-                 <li class="nav-item">
-                <a class="nav-link" href="{{route('admin.calender')}}">
-                <i class="fas fa-calendar"></i>
-                    <span>Calender/Event</span></a>
-            </li>
-            
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-                <!-- Nav Item - Branch/Departments -->
-                <li class="nav-item">
-                <a class="nav-link" href="{{route('admin.branchdepartment')}}">
-                <i class="fas fa-code-branch"></i>
-                    <span>Branches|Departments</span></a>
-            </li>
-            
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-
-
-            
-
-
-           
-
-            
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-
-
-        </ul>
+        @include('admin.nav')
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -342,10 +201,7 @@
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Settings
                                 </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Activity Log
-                                </a>
+                                
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item bg-danger text-light" href="{{route('logout')}}" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-light"></i>
@@ -413,13 +269,10 @@
 
                         <div class="form-group">
                             <label for="email">Email Address</label>
-                            <input type="email"name="email"value="{{Auth::user()->email}}"class=" form-control"required>
+                            <input type="email"name="email"value="{{Auth::user()->email}}"class=" form-control"readonly>
                         </div>
 
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password"name="password"placeholder="Enter a new secured password"class=" form-control"required>
-                        </div>
+                       
 
                         <div class="form-group">
                             <label for="dob">Date Of Birth</label>
@@ -431,16 +284,7 @@
                             <input type="tel"name="phone"value="{{Auth::user()->phone}}"class="form-control"required>
                         </div>
 
-                        <div class="form-group">
-                            <label for="branch">Branch</label>
-                            <select name="branch" id=""class="form-control"required>
-                                <option value="">Select Branch </option>
-
-                                @foreach($branch as $branchess)
-                                    <option value="{{$branchess->name}}">{{$branchess->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                       
 
                         
 
@@ -473,14 +317,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; <a href="https://quickoffice.online">QuickOffice</a> 2020</span>
-                        <span>Developed by <a href="https://wallsandgates.com.ng">WallsandGates Limited</a></span>
-                    </div>
-                </div>
-            </footer>
+            
             <!-- End of Footer -->
 
         </div>

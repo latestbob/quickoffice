@@ -26,6 +26,21 @@
 a:link{
     text-decoration:none;
 }
+
+ul{
+    list-style-type:none;
+}
+
+.expensepara{
+    color:black;
+    font-size:14px;
+}
+
+.itemsss{
+    color:black;
+    font-size:14px;
+    font-style:italic;
+}
 </style>
 </head>
 
@@ -35,160 +50,7 @@ a:link{
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-               
-                <div class="sidebar-brand-text mx-3 font-weight-bolder">{{Auth::user()->office}} 
-                    <br>
-                    <h6 class="text-center">Accountant</h6>
-                </div>
-            </a>
-
-                <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-<!-- Nav Item - Dashboard -->
-<li class="nav-item ">
- <a class="nav-link" href="{{route('account.home')}}">
-     <i class="fas fa-fw fa-tachometer-alt"></i>
-     <span>Dashboard</span></a>
-</li>
-
-
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-<!-- Nav Item - Schedule -->
-
-<li class="nav-item">
- <a class="nav-link" href="{{route('account.schedule')}}">
-     <i class="fas fa-fw  fa-clock"></i>
-     <span>Schedule</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-<!-- Nav Item - Task -->
-
-<li class="nav-item">
- <a class="nav-link" href="{{route('account.tasks')}}">
-     <i class="fas fa-fw  fa-tasks"></i>
-     <span>Tasks+</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-<!-- Nav Item - Account -->
-
-<li class="nav-item active">
-<a class="nav-link" href="{{route('account.accounts')}}">
-<i class="fas fa-money-check"></i>
-<span>Account</span></a>
-</li>
-
-
-<li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-                    aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-fw fa-wrench"></i>
-                    <span>Accounting Features</span>
-                </a>
-                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        
-                        <a class="collapse-item" href="{{route('account.invoice')}}">Invoices</a>
-                        <a class="collapse-item" href="{{route('account.expenses')}}">Expense Approval</a>
-                        <!-- <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                        <a class="collapse-item" href="utilities-other.html">Other</a> -->
-                    </div>
-                </div>
-            </li>
-
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-<li class="nav-item">
- <a class="nav-link" href="{{route('account.jobs')}}">
-     <i class="fas fa-fw  fa-briefcase"></i>
-     <span>Jobs+</span></a>
-</li>
-
-
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-   <!-- Nav Item - Message -->
-
-<li class="nav-item ">
- <a class="nav-link" href="/chatify">
-     <i class="fas fa-fw  fa-envelope"></i>
-     <span>Message</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-   <!-- Nav Item - Report -->
-
-<li class="nav-item">
- <a class="nav-link" href="{{route('account.reports')}}">
-     <i class="fas fa-fw  fa-file "></i>
-     <span>Report</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-  <!-- Nav Item - Clients -->
-<li class="nav-item">
- <a class="nav-link" href="{{route('account.clients')}}">
- <i class="fas fa-handshake"></i>
-     <span>Client</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-  <!-- Nav Item - Calender -->
-  <li class="nav-item">
- <a class="nav-link" href="{{route('account.events')}}">
- <i class="fas fa-calendar"></i>
-     <span>Events</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
- <!-- Nav Item - Leave  -->
- <li class="nav-item">
-                <a id="step-eight"class="nav-link" href="{{route('leavepage')}}">
-                <i class="fas fa-calendar"></i>
-                    <span>Leave Management</span></a>
-            </li>
-
-
-            
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-
-
-        </ul>
+        @include('account.nav')
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -359,10 +221,7 @@ a:link{
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Settings
                                 </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Activity Log
-                                </a>
+                               
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item bg-danger text-light" href="{{route('logout')}}" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-light"></i>
@@ -392,6 +251,169 @@ a:link{
                                     <p>{{session('msg')}}</p>
                                 </div>
                             @endif
+
+                    
+                            <div class="card py-3">
+                            <h6 class="card-header card-m-0 font-weight-bold text-primary">All Expenses Approvals</h6>
+                            </div>
+                            <div class="card-body">
+
+
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-sm">
+                                        <thead style="color:white;font-size:13px;z-index:100;" class="bg-primary text-light">
+
+                                            <tr>
+                                                <th>Expense Type</th>
+                                                <th>Business</th>
+                                                <th>Date</th>
+                                                <th>Currency</th>
+                                                <th>Amount</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+
+                                        </thead>
+
+                                        <tbody style="color:black;font-size:13px;z-index:100;">
+
+                                        @foreach($expense as $ex)
+
+                                            <tr>
+                                                <td>{{$ex->title}}</td>
+                                                <td>{{$ex->category}}</td>
+                                                <td>{{ \Carbon\Carbon::parse($ex->date)->format('d/m/Y') }}</td>
+                                                <td>{{$ex->currency}}</td>
+                                                <td>{{$ex->total}}</td>
+                                                <td>
+                                                    @if($ex->status =='pending')
+
+                                                        <p class="badge badge-warning badge-sm text-dark">pending</p>
+
+                                                        @elseif($ex->status =='approved')
+
+                                                        <p class="badge badge-success badge-sm text-light">approved</p>
+
+                                                        @else
+                                                        <p class="badge badge-danger badge-sm text-light">rejected</p>
+                                                    @endif
+                                                </td>
+                                                <td>
+
+                                                <form action="{{route('expensereminder')}}"method="POST">
+                                                    @csrf
+
+                                                    <input type="hidden"name="id"value="{{$ex->id}}">
+                                                    <a href=""class="btn btn-info btn-sm"data-toggle="modal" data-target="#exampleModal{{$ex->id}}">View</a> |   <button type="submit"class="btn btn-success btn-sm">Send Reminder</button> 
+
+                                                </form>
+                                                  
+                                                </td>
+                                            </tr>
+
+
+                                            <div class="modal fade" id="exampleModal{{$ex->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">{{$ex->title}}</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+
+                                                        <p class="expensepara">Title : {{$ex->title}}</p>
+                                                        <p class="expensepara">Category : {{$ex->category}}</p>
+                                                        <p  class="expensepara">Date : {{$ex->date}}</p>
+
+                                                        <p  class="expensepara">Total Amount : {{$ex->total}}</p>
+                                                        <p  class="expensepara">Description  <br> {{$ex->description}}</p>
+
+                                                        <hr>
+                                                        <p  class="expensepara">Items </p> 
+
+                                                        
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <p class="font-weight-bold itemsss">Items name/title</p>
+                                                            </div>
+
+                                                            <div class="col">
+                                                            <p class="font-weight-bold itemsss">Quantity</p>
+                                                            </div>
+
+                                                            <div class="col">
+                                                                 <p class="font-weight-bold itemsss">Unit Price</p>
+                                                            </div>
+
+                                                            <div class="col">
+                                                            <p class="font-weight-bold itemsss">Total</p>
+                                                            </div>
+                                                        </div>
+
+                                                        @foreach(json_decode($ex->items) as $items)
+                                                        <div class="row">
+                                                            <div class="col-md-3 itemsss">
+                                                                {{$items->inputed_item_name}}
+                                                            </div>
+
+                                                            <div class="col itemsss">
+                                                            {{$items->inputed_unit_price}}
+                                                            </div>
+
+                                                            <div class="col itemsss">
+                                                            {{$items->inputed_item_quantity}}
+                                                            </div>
+
+
+                                                            <div class="col itemsss">
+                                                            {{$items->inputed_total_price}}
+                                                            </div>
+                                                            </div>
+
+                                                        @endforeach
+
+
+
+                                                        <hr>
+
+                                                        <p class="expensepara">Status : {{$ex->status}}</p>
+
+
+                                                        <p class="expensepara">Action By : {{$ex->approved_by}}</p>
+
+
+                                                        <p class="expensepara bg-warning">Comments <br>
+
+                                                        {{$ex->comments == null ? 'none' : $ex->comments}}
+                                                    </p>
+
+
+
+                                                     
+
+
+                                                        
+                                                           
+                                                    </div>
+                                                    
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        @endforeach
+
+                                        </tbody>
+
+
+
+
+                                    </table>
+                                </div>
+
+                            </div>
         
                 
                 
@@ -429,72 +451,68 @@ a:link{
       <div class="modal-body">
 
 
-            <form action=""method="POST">
+     
+
+      <form action="{{route('account.addexpense')}}"method="POST">
                 @csrf
 
-
-                <div class="form-group">
-                    <label for="">Expense Title</label>
-
-                    <input type="text"name="title"class="form-control"placeholder="Expense Title">
-                </div>
-
-
                 <div class="form-group row">
-                                        <div class="col-md-6">
+                    <div class="col-md-4">
+                        <label for="">Business</label>
+                        <select id="subsidary" name="category"class="form-control"required>
+                            <option value="">Choose a Business</option>
+
+                            @foreach($subsidary as $sub)
+
+                                <option value="{{$sub}}">{{$sub}}</option>
+
+
+                            @endforeach
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
                                         <label for="start">Category</label>
-                                            <select name="category" id=""class="form-control addexpensecategories">4
+                                            <select  name="title" id="expenses"class="form-control addexpensecategories"required>
                                             <option value="">Select Category</option>
-                                                <option value="Administrative Expenses">Administrative Expenses</option>
+                                                
 
                                          
                                             </select>
                                         </div>
 
-                                        <div class="col-md-6">
-                                              <label for="start">Add Category(If it doesn't exist) <a class="text-info font-weight-bold addcategory"data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Add </a> </label><br>
-                                        
 
-                                        <div class="collapse" id="collapseExample">
+
+                                        <div class="col-md-4">
+                                        <label for="start">Currency</label>
+                                            <select  name="currency" id="currency"onchange="updateCurrency()"class="form-control"required>
+                                            <option value="">Choose Currency</option>
+                                            <option value="Naira">Naira</option>
+                                            
+                                            <option value="Dollar">Dollar</option>
+                                            <option value="Pound">Pound</option>
                                           
-                                               
-                                                   <form class="myform">
-                                                    <div class="row">
-                                                        <div class="col-8">
-                                                             <input id="myinputcategory" type="text"class="form-control"name="title"placeholder="Enter Category Title"required>
-                                                        </div>
 
-                                                        <div class="col-4">
-                                                            <button id="mysubmit" class="btn btn-primary btn-sm">Add</button>
-                                                        </div>
-                                                    </div>
+                                                
 
-                                                    </form>
-                                                    
-                                               
-                                           
-                                            </div>
+                                         
+                                            </select>
                                         </div>
 
                                         
-                                            
-                                    </div>
+                </div>
+
+                <!-- <div class="form-group">
+                    <label for="">Expense Title</label>
+
+                    <input type="text"name="title"class="form-control"placeholder="Expense Title"required>
+                </div> -->
 
 
-                                    <div class="form-group row">
-                                        <div class="col-md-6">
-                                            <label for="start">Date made</label>
-                                            <input type="date"name="date"placeholder="Enter date made"class="form-control"required>
-                                        </div>
+                
 
-                                        <div class="col-md-6">
-                                            <label for="start">₦ Amount Paid</label>
-                                                <input type="number"name="amount"placeholder="Enter Amount in Naira"class="form-control"required>
-                                        </div>
-
-                                        
-                                            
-                                    </div>
+                     
 
                                     <p class="font-weight bold">Add Items</p>
 
@@ -526,8 +544,30 @@ a:link{
                                     </div>
 
                                     <div class="form-group">
-                                         <ul id="itemList"></ul>
+                                         <ul id="itemsList"></ul>
                                     </div>
+
+
+                                    <div class="form-group row">
+                                        <div class="col-md-6">
+                                            <label for="start">Date made</label>
+                                            <input type="date"name="date"placeholder="Enter date made"value="{{ date('Y-m-d') }}"class="form-control"readonly>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label for="start"><span id="symbol"></span> Amount Paid</label>
+                                                <input id="totalamount" type="number"name="amount"placeholder="Enter Amount in Naira"class="form-control"readonly>
+                                        </div>
+
+                                        
+                                            
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input id="iteminput" type="hidden"name="items"class="form-control">
+                                    </div>
+
+                                
 
                                     <div class="form-group">
                                         <label for="description">Description</label>
@@ -538,16 +578,13 @@ a:link{
                           
 
                                     <div class="form-group">
-                                        <button class="text-center btn btn-success">Add Expenses</button>
+                                        <button type="submit" class="text-center btn btn-success">Add Expenses</button>
                                     </div>
 
             </form>
        
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+      
     </div>
   </div>
 </div>
@@ -556,14 +593,7 @@ a:link{
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; <a href="https://quickoffice.online">QuickOffice</a> 2020</span>
-                        <span>Developed by <a href="https://wallsandgates.com.ng">WallsandGates Limited</a></span>
-                    </div>
-                </div>
-            </footer>
+            
             <!-- End of Footer -->
 
         </div>
@@ -634,6 +664,8 @@ a:link{
 <!-- Add items -->
 
 <script>
+
+    let items = [];
     var item_name  = document.getElementById('item_name');
     var item_quantity = document.getElementById('item_quantity');
     var unit_price = document.getElementById('unit_price');
@@ -675,7 +707,96 @@ a:link{
 
     else{
         
+        var newItems = {
+         inputed_item_name : item_name.value,
+        inputed_item_quantity : item_quantity.value,
+        inputed_unit_price : unit_price.value,
+        inputed_total_price : parseFloat(total_price.value) || 0,
+        }
+
+        items.push(newItems);
+
+       document.getElementById('item_name').value='';
+        document.getElementById('item_quantity').value='';
+        document.getElementById('unit_price').value='';
+    document.getElementById('total_price').value='';
+
+    console.log(items);
+
+    updateTotalAmount();
+
+        renderItems();
     }
+
+
+    function renderItems() {
+            // Get the itemsList element
+            var itemsList = document.getElementById('itemsList');
+
+            // Clear existing items
+            itemsList.innerHTML = '';
+
+            // Loop through items and create list items
+            items.forEach(function(item, index) {
+                var listItem = document.createElement('li');
+
+                // Display item properties
+                listItem.textContent = `${index + 1}: Title :${item.inputed_item_name}, Quantity: ${item.inputed_item_quantity}, Price :${item.inputed_unit_price}, Total: ${item.inputed_total_price}`;
+                
+                     // Add styles to the list item
+                listItem.style.marginBottom = '10px';
+                listItem.style.padding = '10px';
+             
+                listItem.style.backgroundColor = '#f9f9f9';
+                listItem.style.display = 'flex';
+                listItem.style.justifyContent = 'space-between';
+                listItem.style.alignItems = 'center';
+
+                // Add a delete button
+                var deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Remove';
+                deleteButton.style.backgroundColor = "red";
+                deleteButton.style.color="white";
+                deleteButton.style.padding="5px";
+                deleteButton.style.borderRadius = "15px";
+                deleteButton.style.fontSize = "12px";
+                deleteButton.style.border = "none";
+                deleteButton.addEventListener('click', function() {
+                    deleteItem(index);
+                });
+
+                // Append the delete button to the list item
+                listItem.appendChild(deleteButton);
+
+                // Append the list item to the itemsList
+                itemsList.appendChild(listItem);
+            });
+
+            var jsonString = JSON.stringify(items);
+
+            document.getElementById('iteminput').value=jsonString;
+        }
+
+
+        function deleteItem(index) {
+            // Remove the item at the specified index
+            items.splice(index, 1);
+
+            // Re-render the items
+            updateTotalAmount();
+            renderItems();
+        }
+
+        function updateTotalAmount() {
+            // Calculate the sum of 'Field D' values
+            var totalAmount = items.reduce(function (sum, item) {
+                return sum + item.inputed_total_price;
+            }, 0);
+
+            // Update the value of the 'Total Amount' input
+            document.getElementById('totalamount').value = totalAmount.toFixed(2);
+            document.getElementById('iteminput').value = items;
+        }
 
 
     });
@@ -821,7 +942,7 @@ headers: {
   
   
               try {
-                  fetch('http://localhost:8000/account/office/expense/category')
+                  fetch('/account/office/expense/category')
                   .then(res=> res.json())
                   .then(function(data){
                      // console.log(data)
@@ -864,6 +985,61 @@ headers: {
 
 
 
+<script>
+    //get expenses base on selected business
+    function fetchExpenses(subsidaryId) {
+        $.ajax({
+            url: '{{ route('staff.expenses.unique') }}',
+            type: 'GET',
+            data: { name: subsidaryId },
+            success: function (data) {
+                // Clear existing options
+                $('#expenses').empty();
+
+                // Add new options based on fetched data
+                $.each(data, function (key, value) {
+                    $('#expenses').append('<option value="' + value.expenses + '">' + value.expenses + '</option>');
+                });
+            }
+        });
+    }
+
+    // Listen for changes in the subsidiary dropdown
+    $('#subsidary').change(function () {
+        var subsidaryId = $(this).val();
+
+        // Fetch expenses for the selected subsidiary
+        fetchExpenses(subsidaryId);
+    });
+    
+</script>
+
+
+
+<script>
+        function updateCurrency() {
+            // Get the selected currency value
+            var selectedCurrency = document.getElementById("currency").value;
+
+            // Update the currency symbol in the paragraph based on the selected currency
+            var symbol = document.getElementById("symbol");
+            switch (selectedCurrency) {
+                case "Naira":
+                    symbol.innerHTML = "₦";
+                    break;
+                case "Dollar":
+                    symbol.innerHTML = "$";
+                    break;
+                case "Pound":
+                    symbol.innerHTML = "£";
+                    break;
+                default:
+                symbol.innerHTML = "₦";
+            }
+        }
+
+        
+    </script>
 
 </body>
 

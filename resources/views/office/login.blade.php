@@ -123,7 +123,7 @@
                         <img class="loginlogo" src="https://res.cloudinary.com/edifice-solutions/image/upload/v1699544268/logo_q7gn78.png" >
                      </div>
 
-                     <h4 class="py-3 text-center introhead">Login to Laurne Parker Workspace</h4>
+                     <h4 class="py-3 text-center introhead">Login to your workspace</h4>
 
 
                      <form action="{{route('show.office.login.post')}}"method="POST"class="px-3">

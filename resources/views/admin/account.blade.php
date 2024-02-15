@@ -22,10 +22,25 @@
     <link href="{{asset('css/sb-admin-2.css')}}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.css" />
   
-<style>
-    a:link{
-        text-decoration:none;
-    }
+
+    
+    <style>
+a:link{
+    text-decoration:none;
+}
+
+
+
+.expensepara{
+    color:black;
+    font-size:14px;
+}
+
+.itemsss{
+    color:black;
+    font-size:14px;
+    font-style:italic;
+}
 </style>
 </head>
 
@@ -35,140 +50,7 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-               
-                <div class="sidebar-brand-text mx-3 font-weight-bolder">{{Auth::user()->office}} 
-                    <br>
-                    <h6 class="text-center">Admin</h6>
-                </div>
-            </a>
-
-                   <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-<!-- Nav Item - Dashboard -->
-<li class="nav-item ">
- <a class="nav-link" href="{{route('admin.home')}}">
-     <i class="fas fa-fw fa-tachometer-alt"></i>
-     <span>Dashboard</span></a>
-</li>
-
-
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-<!-- Nav Item - Schedule -->
-
-<li class="nav-item">
- <a class="nav-link" href="{{route('admin.schedule')}}">
-     <i class="fas fa-fw  fa-clock"></i>
-     <span>Schedule</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-<!-- Nav Item - Task -->
-
-<li class="nav-item">
- <a class="nav-link" href="{{route('admin.tasks')}}">
-     <i class="fas fa-fw  fa-tasks"></i>
-     <span>Tasks+</span></a>
-</li>
-
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
- <!-- Nav Item - Account -->
-
- <li class="nav-item active">
- <a class="nav-link" href="{{route('admin.account')}}">
- <i class="fas fa-money-check"></i>
- <span>Account</span></a>
- </li>
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-<!-- Nav Item - staffs -->
-
-<li class="nav-item">
- <a class="nav-link" href="{{route('admin.staff')}}">
- <i class="fas fa-user-friends"></i>
- <span>Staffs</span></a>
- </li>
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-   <!-- Nav Item - Message -->
-
-<li class="nav-item ">
- <a class="nav-link" href="/chatify">
-     <i class="fas fa-fw  fa-envelope"></i>
-     <span>Message</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-   <!-- Nav Item - Report -->
-
-<li class="nav-item">
- <a class="nav-link" href="{{route('admin.report')}}">
-     <i class="fas fa-fw  fa-file "></i>
-     <span>Report</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-  <!-- Nav Item - Clients -->
-<li class="nav-item">
- <a class="nav-link" href="{{route('admin.client')}}">
- <i class="fas fa-handshake"></i>
-     <span>Client</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-
-  <!-- Nav Item - Calender -->
-  <li class="nav-item">
- <a class="nav-link" href="{{route('admin.calender')}}">
- <i class="fas fa-calendar"></i>
-     <span>Calender/Event</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
- <!-- Nav Item - Branch/Departments -->
- <li class="nav-item">
- <a class="nav-link" href="{{route('admin.branchdepartment')}}">
- <i class="fas fa-code-branch"></i>
-     <span>Branches|Departments</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-    
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-
-
-        </ul>
+        @include('admin.nav')
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -356,7 +238,7 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Account</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Accounts & Expenses</h1>
                         
                     </div>
 
@@ -373,7 +255,7 @@
                      <div class="row">
 
 <!-- Earnings (Monthly) Card Example -->
-<div class="col-xl-6  text-light col-md-6 mb-4">
+<!-- <div class="col-xl-6  text-light col-md-6 mb-4">
     <div class="card bg-danger  shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
@@ -394,11 +276,11 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 
 <!-- Earnings (Monthly) Card Example -->
-<div class="col-xl-6 col-md-6 mb-4">
+<!-- <div class="col-xl-6 col-md-6 mb-4">
     <div class="card bg-success shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
@@ -422,7 +304,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 
 </div>
@@ -439,117 +321,218 @@
                         </div>
                        
                         <div class="card-body">
-                            <div><a href="#received"class="btn-sm btn-secondary text-light font-weight-bold">Go to Received Payments</a></div>
+                            <!-- <div><a href="#received"class="btn-sm btn-secondary text-light font-weight-bold">Go to Received Payments</a></div>
                             <div class="text-right">
                                 <button class="btn-sm btn-primary">Export to Excel</button>
-                            </div>
+                            </div> -->
                             <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Date</th>
-                                            <th>Amount in Naira (₦)</th>
-                                            <th>Description</th>
-                                            <th>Accounted by</th>
-                                            
-                                            
-                                        </tr>
+                                <table class="table table-borderless table-hover table-sm" id="dataTable" width="100%" cellspacing="0">
+                                <thead style="color:white;font-size:14px;z-index:100;" class="bg-primary text-light">
+
+                                    <tr>
+                                        <th>Expense Type</th>
+                                        <th>Business</th>
+                                        <th>Date</th>
+                                        <th>Currency</th>
+                                        <th>Amount</th>
+                                        <!-- <th>Description</th> -->
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+
                                     </thead>
+
                                     
-                                    <tbody>
+                                    <tbody style="color:black;font-size:13px;z-index:100;">
                                         @foreach($expense as $expenses)
                                                 <tr>
                                                     <td>{{$expenses->title}}</td>
-                                                    <td>{{$expenses->date}}</td>
-                                                    <td>{{$expenses->amount}}</td>
-                                                    <td>{{$expenses->description}}</td>
-                                                    <td>{{$expenses->accountant}}</td>
+                                                    <td>{{$expenses->category}}</td>
+                                                    <td>{{ \Carbon\Carbon::parse($expenses->date)->format('d/m/Y') }}</td>
+                                                    <td>{{$expenses->currency}}</td>
+                                                    <td>{{$expenses->total}}</td>
+                                                    <!-- <td>{{$expenses->description}}</td> -->
+                                                    <td>
+                                                    @if($expenses->status =='pending')
+
+                                                            <p class="badge badge-warning badge-sm text-dark">pending</p>
+
+                                                            @elseif($expenses->status =='approved')
+
+                                                            <p class="badge badge-success badge-sm text-light">approved</p>
+
+                                                            @else
+                                                            <p class="badge badge-danger badge-sm text-light">rejected</p>
+                                                            @endif
+                                                    </td>
+
+                                                    <td>
+                                                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#exampleModal{{$expenses->id}}">
+  View
+</button>| <a type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModaltwo{{$expenses->id}}">Action</a>
+                                                    </td>
 
                                                 </tr>
+
+                                                <!-- status modal -->
+
+                                                <div class="modal fade" id="exampleModaltwo{{$expenses->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 style="font-size:17px; font-weight:600;color:black;" class="modal-title" id="exampleModalLabel">Update status  of {{$expenses->title}}</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            
+                                                            <form action="{{route('admin.account.expenses')}}"method="POST">
+                                                                @csrf
+
+                                                                {{method_field('PUT')}}
+
+
+                                                                <div class="form-group">
+                                                                    <label for="">Status Type</label>
+
+                                                                    <select name="status"class="form-control" id=""required>
+                                                                        <option value="approved">Approve</option>
+                                                                        <option value="disapproved">Reject</option>
+                                                                    </select>
+                                                                </div>
+
+
+                                                                <div class="form-group">
+                                                                    <label for="">Comments (optional)</label>
+
+                                                                    <textarea name="comments" id=""class="form-control" cols="30" rows="5">
+
+                                                                    </textarea>
+                                                                </div>
+
+                                                                <input type="hidden"name="id"value="{{$expenses->id}}">
+
+
+                                                                <button type="submit"class="btn btn-success text-light">Update Status</button>
+                                                            </form>
+
+                                                        </div>
+                                                        
+                                                        </div>
+                                                    </div>
+                                                    </div>
+
+
+                                                <!-- end of status modal -->
+
+
+                                                <div class="modal fade" id="exampleModal{{$expenses->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 style="font-size:17px; font-weight:600;color:black;" class="modal-title" id="exampleModalLabel">{{$expenses->title}}</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+
+                                                        <p class="expensepara">Title : {{$expenses->title}}</p>
+                                                        <p class="expensepara">Category : {{$expenses->category}}</p>
+                                                        <p  class="expensepara">Date : {{$expenses->date}}</p>
+
+                                                        <p  class="expensepara">Total Amount : {{$expenses->total}}</p>
+                                                        <p  class="expensepara">Description  <br> {{$expenses->description}}</p>
+
+                                                        <hr>
+                                                        <p  class="expensepara">Items </p> 
+
+                                                        
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <p class="font-weight-bold itemsss">Items name/title</p>
+                                                            </div>
+
+                                                            <div class="col">
+                                                            <p class="font-weight-bold itemsss">Quantity</p>
+                                                            </div>
+
+                                                            <div class="col">
+                                                                 <p class="font-weight-bold itemsss">Unit Price</p>
+                                                            </div>
+
+                                                            <div class="col">
+                                                            <p class="font-weight-bold itemsss">Total</p>
+                                                            </div>
+                                                        </div>
+
+                                                        @foreach(json_decode($expenses->items) as $items)
+                                                        <div class="row">
+                                                            <div class="col-md-3 itemsss">
+                                                                {{$items->inputed_item_name}}
+                                                            </div>
+
+                                                            <div class="col itemsss">
+                                                            {{$items->inputed_unit_price}}
+                                                            </div>
+
+                                                            <div class="col itemsss">
+                                                            {{$items->inputed_item_quantity}}
+                                                            </div>
+
+
+                                                            <div class="col itemsss">
+                                                            {{$items->inputed_total_price}}
+                                                            </div>
+                                                            </div>
+
+                                                        @endforeach
+
+
+
+                                                        <hr>
+
+                                                        <p class="expensepara">Status : {{$expenses->status}}</p>
+
+
+                                                        <p class="expensepara">Action By : {{$expenses->approved_by}}</p>
+
+
+                                                        <p class="expensepara">Comments <br>
+
+                                                        {{$expenses->comments == null ? 'none' : $expenses->comments}}
+                                                    </p>
+
+
+
+                                                     
+
+
+                                                        
+                                                           
+                                                    </div>
+                                                    
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                                
                                         @endforeach
                                        
                                     </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Date</th>
-                                            <th>Amount in Naira (₦)</th>
-                                            <th>Description</th>
-                                            <th>Accounted by</th>
-                                            
-                                        </tr>
-                                    </tfoot>
+                                  
                                 </table>
                             </div>
                         </div>
                     </div>
 
                 
-                    <div class="card shadow mb-4"id="received">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">All Received Payments</h6>
-                        </div>
-                       
-                        <div class="card-body">
-                        <div><a href="#expenses"class="btn-sm btn-secondary text-light font-weight-bold">Go to Expenses</a></div>
-                            <div class="text-right">
-                                <button class="btn-sm btn-primary">Export to Excel</button>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Date</th>
-                                            <th>Amount in Naira (₦)</th>
-                                            <th>Client</th>
-                                            <th>Description</th>
-                                            <th>Accounted by</th>
-                                       
-                                            
-                                        </tr>
-                                    </thead>
-                                    
-                                    <tbody>
-
-                                        @foreach($receivedpay as $pay)
-
-                                            <tr>
-                                                <td>{{$pay->title}}</td>
-                                                <td>{{$pay->date}}</td>
-                                                <td>{{$pay->amount}}</td>
-                                                <td>{{$pay->client}}</td>
-                                                <td>{{$pay->description}}</td>
-                                                <td>{{$pay->accountant}}</td>
-                                            </tr>
-                                        @endforeach
-
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Date</th>
-                                            <th>Amount in Naira (₦)</th>
-                                            <th>Client</th>
-                                            <th>Description</th>
-                                            <th>Accounted by</th>
-                                          
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
+                  
                 
 
 
-                    <section class="paymentreceived"id="paymentreceived">
                     
-
-                    </section>
-
 
 
 
@@ -562,14 +545,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; <a href="https://quickoffice.online">QuickOffice</a> 2020</span>
-                        <span>Developed by <a href="https://wallsandgates.com.ng">WallsandGates Limited</a></span>
-                    </div>
-                </div>
-            </footer>
+           
             <!-- End of Footer -->
 
         </div>
@@ -623,7 +599,27 @@
 
 
 
- 
+  <!-- Bootstrap core JavaScript-->
+  <script src="{{asset('vendor/jquery/jquery.min.js')}}"></script>
+    <script src="{{asset('vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{{asset('vendor/jquery-easing/jquery.easing.min.js')}}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{{asset('js/sb-admin-2.min.js')}}"></script>
+
+    <!-- Page level plugins -->
+    <script src="{{asset('vendor/chart.js/Chart.min.js')}}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{{asset('js/demo/chart-area-demo.js')}}"></script>
+    <script src="{{asset('js/demo/chart-pie-demo.js')}}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.js"></script>
+
 
 
 

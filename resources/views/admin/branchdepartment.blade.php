@@ -34,148 +34,7 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-               
-                <div class="sidebar-brand-text mx-3 font-weight-bolder">{{Auth::user()->office}} 
-                    <br>
-                    <h6 class="text-center">Admin</h6>
-                </div>
-            </a>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-               <!-- Nav Item - Dashboard -->
-               <li class="nav-item ">
-                <a class="nav-link" href="{{route('admin.home')}}">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
-            </li>
-
-            
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-
-            <!-- Nav Item - Schedule -->
-           
-            <li class="nav-item">
-                <a class="nav-link" href="{{route('admin.schedule')}}">
-                    <i class="fas fa-fw  fa-clock"></i>
-                    <span>Schedule</span></a>
-            </li>
-            
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-
-               <!-- Nav Item - Task -->
-           
-            <li class="nav-item">
-                <a class="nav-link" href="{{route('admin.tasks')}}">
-                    <i class="fas fa-fw  fa-tasks"></i>
-                    <span>Tasks+</span></a>
-            </li>
-            
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-                <!-- Nav Item - Account -->
-
-                <li class="nav-item ">
-                <a class="nav-link" href="{{route('admin.account')}}">
-                <i class="fas fa-money-check"></i>
-                <span>Account</span></a>
-                </li>
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-              <!-- Nav Item - staffs -->
-
-              <li class="nav-item">
-                <a class="nav-link" href="{{route('admin.staff')}}">
-                <i class="fas fa-user-friends"></i>
-                <span>Staffs</span></a>
-                </li>
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-                  <!-- Nav Item - Message -->
-           
-            <li class="nav-item ">
-                <a class="nav-link" href="/chatify">
-                    <i class="fas fa-fw  fa-envelope"></i>
-                    <span>Message</span></a>
-            </li>
-            
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-
-                  <!-- Nav Item - Report -->
-           
-            <li class="nav-item">
-                <a class="nav-link" href="{{route('admin.report')}}">
-                    <i class="fas fa-fw  fa-file "></i>
-                    <span>Report</span></a>
-            </li>
-            
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-
-                 <!-- Nav Item - Clients -->
-              <li class="nav-item">
-                <a class="nav-link" href="{{route('admin.client')}}">
-                <i class="fas fa-handshake"></i>
-                    <span>Client</span></a>
-            </li>
-            
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-
-                 <!-- Nav Item - Calender -->
-                 <li class="nav-item">
-                <a class="nav-link" href="{{route('admin.calender')}}">
-                <i class="fas fa-calendar"></i>
-                    <span>Calender/Event</span></a>
-            </li>
-            
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-                <!-- Nav Item - Branch/Departments -->
-                <li class="nav-item active">
-                <a class="nav-link" href="{{route('admin.branchdepartment')}}">
-                <i class="fas fa-code-branch"></i>
-                    <span>Branches|Departments</span></a>
-            </li>
-            
-              <!-- Divider -->
-              <hr class="sidebar-divider">
-
-
-
-            
-
-
-           
-
-            
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-
-
-        </ul>
+        @include('admin.nav')
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -341,10 +200,7 @@
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Settings
                                 </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Activity Log
-                                </a>
+                               
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item bg-danger text-light" href="{{route('logout')}}" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-light"></i>
@@ -363,7 +219,7 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Branches & Departments</h1>
+                        <h1 class="h3 mb-0 text-gray-800"> Departments</h1>
                         
                     </div>
 
@@ -377,7 +233,7 @@
                             <!-- Project Card Example -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Office Branch</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Create Department</h6>
                                 </div>
                                 <div class="card-body">
                                               <!-- DataTales Example -->
@@ -394,45 +250,45 @@
                                       @csrf
 
                                             <div class="form-group">
-                                                <label for="name">Branch Name<span class="text-danger">*</span></label>
+                                                <label for="name">Department Name<span class="text-danger">*</span></label>
                                                 <input type="text"name="name"placeholder="Department Name"class="form-control"required>
                                         </div>
 
                                         <div class="form-group">
-                                                <label for="location">Branch Location <span class="text-danger">*</span></label>
-                                            <textarea name="location" id="" cols="10" rows="5"placeholder="Enter the location of Office Branch"class="form-control"required></textarea>
+                                                <label for="location">Location <span class="text-danger">*</span></label>
+                                            <textarea name="location" id="" cols="10" rows="5"placeholder="Enter the location"class="form-control"required></textarea>
                                         </div>
 
                                         <input type="hidden"name="office"value="{{Auth::user()->office}}"required>
 
                                         <div class="form-group">
-                                            <button class="btn btn-info text-center">Add Branch</button>
+                                            <button class="btn btn-info text-center">Add Department</button>
                                         </div>
 
                                   </form>
 
                                   <div class="card-header mt-5 py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">All Company Branch</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">All Department</h6>
                                 </div>
                             <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <table class="table table-borderless table-hover table-sm" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Branch Name</th>
-                                            <th>Branch Location</th>
-                                            <th>Number of Staffs</th>
+                                            <th>Department Name</th>
+                                            <th>Location</th>
+                                            <th>Number of Staff</th>
                                             
                                             <th>Action</th>
                                             
                                         </tr>
                                     </thead>
                                     
-                                    <tbody>
+                                    <tbody style="color:black;font-size:13px;z-index:100;">
                                         @foreach($branch as $branches)
                                         <tr>
                                             <td>{{$branches->name}}</td>
                                             <td>{{$branches->location}}</td>
-                                            <td>Example 100</td>
+                                            <td>{{\App\User::where('branch',$branches->name)->count()}}</td>
                                             
                                             <td><a href="#" data-id="{{$branches->id}}" class="viewmodal btn-sm btn-info"data-toggle="modal" data-target="#viewModal">View</a><a href="#"data-id="{{$branches->id}}"class="editmodal btn-sm btn-warning"data-toggle="modal" data-target="#editModal">Edit</a><a href="#"data-id="{{$branches->id}}"class="deletemodal btn-sm btn-danger"data-toggle="modal" data-target="#deleteModal">Delete</a></td>
                                             
@@ -440,14 +296,7 @@
 
                                         @endforeach
                                     </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Branch Name</th>
-                                            <th>Branch Location</th>
-                                            <th>Number of Staffs</th>
-                                            
-                                            <th>Action</th>
-                                        </tr>
+                                   
                                     </tfoot>
                                 </table>
                             </div>
@@ -471,14 +320,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; <a href="https://quickoffice.online">QuickOffice</a> 2020</span>
-                        <span>Developed by <a href="https://wallsandgates.com.ng">WallsandGates Limited</a></span>
-                    </div>
-                </div>
-            </footer>
+           
             <!-- End of Footer -->
 
         </div>
