@@ -30,6 +30,6 @@ class Mondays extends Mailable
     {
         return $this->subject('Monday Motivation and Weekly Task Reminder')
         ->view('email.monday')
-        ->from('office@laurenparkerway.com', 'QuickOffice');
+        ->from('office@mdamonitor.com', 'Quick Office');
     }
 }

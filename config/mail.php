@@ -36,7 +36,7 @@ return [
     'mailers' => [
         'smtp' => [
             'transport' => 'smtp',
-            'host' => env('MAIL_HOST', 'smtp-mail.outlook.com'),
+            'host' => env('MAIL_HOST', 'smtp.office365.com'),
             'port' => env('MAIL_PORT', 587),
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
             'username' => env('MAIL_USERNAME'),
@@ -76,8 +76,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'office@laurenparkerway.com'),
-        'name' => env('MAIL_FROM_NAME', 'QuickOffice'),
+        'address' => env('MAIL_FROM_ADDRESS', 'office@mdamonitor.com'),
+        'name' => env('MAIL_FROM_NAME', 'Quick Office'),
     ],
 
     /*

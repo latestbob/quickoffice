@@ -222,7 +222,9 @@ class AccountController extends Controller
            
        ];
 
-       Mail::to('uzor@laurenparkerway.com')->send(new ApprovalMail($expense));
+       $emails = ['uzor@laurenparkerway.com','zainab@laurenparkerway.com'];
+
+       Mail::to($emails)->send(new ApprovalMail($expense));
 
 
         return back()->with('msg','Expenses was added successfully');

@@ -6,9 +6,13 @@ use Illuminate\Http\Request;
 use App\Mdainitiative;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\LateMail;
+use App\Mail\Sendmda;
 use App\Change;
 use App\Mail\MdaApproval;
+use App\Mail\PrimaryNotify;
 use Carbon\Carbon;
+
+use App\Mail\MdaSummary;
 
 class EdoStateController extends Controller
 {
@@ -72,6 +76,29 @@ public function getunique(Request $request){
 }
 
 
+//mda initiatives by objectives
+
+public function mdaobjectives(Request $request){
+   
+    $mda = Mdainitiative::where('mda',$request->mda)->distinct()->pluck('objectives');
+    
+    $finalbox = [];
+    foreach($mda as $objective){
+
+        $init = Mdainitiative::where('objectives',$objective)->orderBy('date')->get()->toArray();
+
+        $finalbox [] = [
+            'objective' => $objective,
+            'init' => $init,
+        ];
+
+    }
+
+    return $finalbox;
+
+}
+
+
 //update initiative
 
 
@@ -83,6 +110,7 @@ public function updateinitiative(Request $request){
         'support' => $request->support,
         'stage' => $request->stage,
         'status' => $request->status,
+        'percentage' => $request->percentage,
     ]);
 
     return response()->json([
@@ -222,8 +250,11 @@ public function lateemail(Request $request){
         'initiative' => $request->initiative
     ];
 
+    $email  = Mdainitiative::where('initiative',$request->initiative)->first();
 
-    Mail::to('edidiongbobson@gmail.com')->send(new LateMail($late));
+
+
+    Mail::to($email->email)->send(new LateMail($late));
 
     return response()->json([
         'status' => "success",
@@ -246,6 +277,7 @@ public function primarychange(Request $request){
     $budget = $request->budget;
     $stage = $request->stage;
     $status = $request->status;
+    // $percentage = $request->percentage;
 
     $change = new Change;
 
@@ -270,6 +302,13 @@ public function primarychange(Request $request){
     if($mda->status != $request->status){
         $change->status = $request->status;
     }
+
+    if($request->percentage){
+        if($mda->percentage != $request->percentage){
+            $change->percentage = $request->percentage;
+        }
+    }
+    
 
     $change->save();
 
@@ -306,7 +345,7 @@ public function primarychange(Request $request){
 
    //uncomment the above later
 
-     Mail::to('edidiongbobson@gmail.com')->send(new MdaApproval($mdacontent));
+     Mail::to($mda->email)->send(new MdaApproval($mdacontent));
 
 
     return response()->json($change);
@@ -322,7 +361,8 @@ public function primarychange(Request $request){
 
 public function getchanges(Request $request){
     $change = Change::where('initiative_id',$request->id)->orderBy('id', 'desc')->first();
-
+    //$mda = Mdainitiative::where('mda','Edo State Primary Health Care Development Agency')->where('id','!=',35)->get();
+   
     return response()->json($change);
 }
 
@@ -358,15 +398,35 @@ public function approvechange(Request $request){
         ]);
     }
 
+    if($change->percentage !=null){
+        $stage = Mdainitiative::where('id',$request->id)->update([
+            'percentage' => $change->percentage,
+        ]);
+    }
+
+
     $clear = Mdainitiative::where('id',$request->id)->update([
         'flagged' => '',
     ]);
 
     $updatechange = Change::where('id',$change->id)->update([
         'isApproved' => true,
+        'comment' => $request->comment,
     ]);
 
     //send approve mail to mda head
+
+
+    $mdaprimary = [
+        'name' => $change->changer_name,
+        'initiative' => $mda->initiative,
+        'status' => 'approved',
+        'comment' => $request->comment,
+
+    ];
+
+    // Mail::to($change->changer_email)->send(new PrimaryNotify($mdaprimary));
+    Mail::to($change->changer_email)->send(new PrimaryNotify($mdaprimary));
 
     
     
@@ -381,6 +441,8 @@ public function approvechange(Request $request){
 public function rejectchanges(Request $request){
 
     $change = Change::where('initiative_id',$request->id)->orderBy('id', 'desc')->first();
+
+    $mda = Mdainitiative::where('id',$request->id)->first();
     $clear = Mdainitiative::where('id',$request->id)->update([
         'flagged' => '',
     ]);
@@ -388,9 +450,24 @@ public function rejectchanges(Request $request){
 
     $updatechange = Change::where('id',$change->id)->update([
         'isApproved' => false,
+        'comment' =>$request->comment,
     ]);
 
     // send reject mail to mda primary user
+
+
+
+
+    $mdaprimary = [
+        'name' => $change->changer_name,
+        'initiative' => $mda->initiative,
+        'status' => 'rejected',
+        'comment' => $request->comment,
+
+    ];
+
+    // Mail::to($change->changer_email)->send(new PrimaryNotify($mdaprimary));
+    Mail::to($change->changer_email)->send(new PrimaryNotify($mdaprimary));
 
     return response()->json('Changes rejected');
 
@@ -409,6 +486,74 @@ public function checknotify(){
 
 
     return response()->json($mda);
+}
+
+
+
+public function sendmdamail(Request $request){
+
+    $mdanotify = [
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => $request->password,
+        'type' => $request->type,
+    ];
+
+
+    Mail::to($request->email)->send(new Sendmda($mdanotify));
+
+    return response()->json([
+        'status' => "success",
+        'message' => 'Message sent successfully'
+    ]);
+
+
+
+}
+
+//view excutive change
+
+public function executivechange(Request $request){
+    $change = Change::all();
+
+    return response()->json($change);
+
+}
+
+
+//change unique
+
+public function changeunique(Request $request){
+    $change = Change::where('initiative_id',$request->id)->orderBy('id','desc')->get();
+
+    return response()->json($change);
+}
+
+
+// delete phc
+
+
+public function deletephc(Request $request){
+$initiative = Mdainitiative::where('id', $request->id)->update([
+    'initiative' => 'Achieve usage of EdoHIP for decision making',
+]);
+
+
+return response()->json('deleted');
+}
+
+
+
+
+public function sendmdasummary(Request $request){
+
+    $emails = ['uzor@laurenparkerway.com','zainab@laurenparkerway.com'];
+    
+
+
+    Mail::to($emails)->send(new MdaSummary());
+
+    return response()->json('sent successfully');
 }
 
 

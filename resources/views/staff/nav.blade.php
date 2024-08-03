@@ -120,6 +120,19 @@
 
 
 
+    <!-- Nav Item - Leave  -->
+    <li class="nav-item">
+    <a id="step-eight"class="nav-link" href="{{route('staffpayslip')}}">
+    <i class="fas fa-check"></i>
+        <span>Pay Slip</span></a>
+</li>
+
+
+
+
+ <!-- Divider -->
+ <hr class="sidebar-divider">
+
 
 
 

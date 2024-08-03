@@ -18,6 +18,9 @@ class Kernel extends ConsoleKernel
         Commands\Overdue::class,
         Commands\PublishTask::class,
         Commands\Partners::class,
+        Commands\Mdaweekly::class,
+        Commands\Mdatwoday::class,
+        Commands\Mdalate::class,
     ];
 
     /**
@@ -33,7 +36,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('overdue:task')->dailyAt('8:00');
         // $schedule->command('publish:task')->weekly()->fridays()->at('17:00');
        // $schedule->command('partner:summary')->weekly()->fridays()->at('17:45');
-       //$schedule->command('mda:weekly')->everyMinute();
+       $schedule->command('mda:weekly')->dailyAt('8:00');
+       $schedule->command('mda:twoday')->dailyAt('9:00');
+       $schedule->command('mda:late')->dailyAt('7:00');
        
     }
 

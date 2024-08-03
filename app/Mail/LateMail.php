@@ -32,7 +32,7 @@ class LateMail extends Mailable
     {
         return $this->subject('Urgent: Initiative Delay – Action Required')
         ->view('email.late')
-        ->from('office@laurenparkerway.com', 'QuickOffice')
+        ->from('office@mdamonitor.com', 'Quick Office')
         ->with('late',$this->late);
     }
 }

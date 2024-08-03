@@ -129,7 +129,9 @@ Route::get('/staff/expense/unique','HomeController@staffexpenseunique')->name('s
 
 Route::post('/expense/reminder','HomeController@expensereminder')->name('expensereminder')->middleware('auth');
 
+Route::get('/staff/payslip','HomeController@staffpayslip')->name('staffpayslip')->middleware('auth');
 
+Route::post('/staff/payslip/add','HomeController@staffpayslipadd')->name('staffpayslipadd')->middleware('auth');
 
 //////////////////////////////ADMIN ROUTES//////////////////////////////////////////////////////
 //admin staff home
@@ -316,10 +318,20 @@ Route::get('/admin/toggle','Office\AdminController@toggle')->name('admintoggle')
 
 Route::get('/admin/tasksummary','Office\AdminController@tasksummary')->name('admintasksummary')->middleware('admin');
 
-Route::get('/admin/summary/{name}','Office\AdminController@summaryname')->name('adminsummaryname')->middleware('admin');
+Route::get('/admin/summary/{name}/{week}','Office\AdminController@summaryname')->name('adminsummaryname')->middleware('admin');
+
+Route::put('/admin/unique/update','Office\AdminController@unqiuesummaryupdate')->name('admin.uniquesummary.update')->middleware('admin');
+
+Route::get('/admin/projects','ProjectController@adminproject')->name('admin.projects')->middleware('admin');
 
 
+Route::get('/admin/teams','ProjectController@adminteams')->name('admin.teams')->middleware('admin');
 
+Route::get('/admin/monthly','Office\AdminController@summarymonthly')->name('adminsummarymonthly')->middleware('auth');
+
+
+Route::delete('/admin/remove/expense','Office\AdminController@removeexpenses')->name('admin.remove.expenses')->middleware('admin');
+// Route::put('/updateweeked/{id}','Office\AdminController@updateddweekid')->name('adminupdateddweek')->middleware('admin');
 ////////////////////////////////////////ACCOUNTANT ROUTES////////////////////////////////////////////////
 //account staffs home
 Route::get('account/home', 'Office\AccountController@home')->name('account.home')->middleware('account'); //account home
@@ -741,3 +753,48 @@ Route::get("/leave","pagesController@leave")->name("leavepage");
 //post leave managemane
 
 Route::post("/leave","pagesController@applyleave")->name("applyleave");
+
+
+//PROJECT ROUTES////
+
+Route::post('/create/team','ProjectController@createteam')->name('createteam');
+
+Route::get('/get/teams','ProjectController@getteams')->name('getteams');
+
+Route::post('/create/project','ProjectController@createproject')->name('createproject')->middleware('auth');
+
+Route::put('/update/project','ProjectController@updateProject')->name('updateproject')->middleware('auth');
+
+Route::post('/add/members','ProjectController@addteamembers')->name('addteamembers')->middleware('auth');
+
+Route::get('/get/members','ProjectController@getMembers')->name('getmembers')->middleware('auth');
+
+Route::delete('/delete/member/{id}','ProjectController@deletemember')->name('deletemember')->middleware('auth');
+
+//project unique
+
+Route::get('/admin/project/{id}','ProjectController@uniqueproject')->name('uniqueproject')->middleware('admin');
+
+//Create MileStone
+
+Route::post('/project/milestone','ProjectController@milestone')->name('createmilestone')->middleware('auth');
+
+Route::get('/get/milestone/{name}','ProjectController@getmilestone')->name('getmilestone')->middleware('auth');
+
+Route::post('/project/task','ProjectController@addprojecttask')->name('addprojectask')->middleware('auth');
+
+
+//update project task unique
+
+Route::put('/project/task/update','ProjectController@updateprojecttask')->name('updateprojecttask')->middleware('auth');
+
+Route::delete('/project/task/delete','ProjectController@deleteprojecttask')->name('deleteprojecttask')->middleware('auth');
+
+
+//task status update
+
+Route::put('/project/task/status','ProjectController@updateTaskStatus')->name('updatetaskstatus')->middleware('auth');
+
+Route::get('/project/task/reverse/{id}','ProjectController@updateTaskReverse')->name('updatetaskreverse')->middleware('auth');
+
+Route::get('/projects/{urlstring}','ProjectController@publicproject')->name('publicproject');

@@ -17,7 +17,7 @@ use App\Notifications\SupervisedDeleted;
 use App\Activity;
 use Carbon\Carbon;
 use App\Expense;
-
+use App\Payslip;
 use App\Subsidary;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ApprovalReminder;
@@ -329,7 +329,13 @@ public function staffexpenses(){
 
     $subsidary = Subsidary::distinct()->pluck('name');
     // dd($subsidary);
-    $expense = Expense::where('office',Auth::user()->office)->orderBy('id', 'desc')->get();
+
+    if(Auth::user()->name == 'Oluwakorede Babatunde'){
+        $expense = Expense::where('office',Auth::user()->office)->orderBy('id', 'desc')->get();
+    }
+    else{
+        $expense = Expense::where('office',Auth::user()->office)->where('accountant',Auth::user()->name)->orderBy('id', 'desc')->get();
+    }
     return view('staff.expenses',compact('expense','subsidary'));
 }
 
@@ -358,12 +364,60 @@ $expense=[
    
 ];
 
-Mail::to('uzor@laurenparkerway.com')->send(new ApprovalReminder($expense));
+$emails = ['uzor@laurenparkerway.com','zainab@laurenparkerway.com'];
+Mail::to($emails)->send(new ApprovalReminder($expense));
 
 
 return back()->with('msg','Expense approval reminder sent successfully');
 }
 
+
+
+
+
+
+// staff payslip page
+
+
+public function staffpayslip(){
+
+    $users = User::where('office',Auth::user()->office)->where('position','!=','admin')->get();
+
+    return view('staff.payslip',compact('users'));
+}
+
+// employee payslip add 
+
+
+public function staffpayslipadd(Request $request){
+
+    $payslip = new Payslip;
+
+  
+    $payslip->name = $request->name;
+    $payslip->position = $request->position;
+    $payslip->pay_period = $request->pay_period;
+    $payslip->days_work  = $request->days_work;
+    $payslip->annual_gross = $request->annual_gross;
+    $payslip->monthly_gross = $request->monthly_gross;
+    $payslip->basic = $request->basic;
+    $payslip->housing = $request->housing;
+    $payslip->transport = $request->transport;
+    $payslip->others = $request->others;
+    $payslip->paye = $request->paye;
+    $payslip->pension = $request->pension;
+    $payslip->nhf  = $request->nhf;
+    $payslip->loan = $request->loan;
+
+    $payslip->save();
+
+
+    return back()->with('msg','Employee Payslip added successfully');
+
+    
+    
+    
+}
 
 
 

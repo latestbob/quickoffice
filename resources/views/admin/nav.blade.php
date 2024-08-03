@@ -66,6 +66,19 @@
           
             <hr class="sidebar-divider">
             
+            <li class="nav-item">
+                <a class="nav-link" href="{{route('admin.projects')}}">
+                <i class="fas fa-calendar"></i>
+                    <span>Projects</span></a>
+            </li>
+
+            <hr class="sidebar-divider">
+            
+            <li class="nav-item">
+                <a class="nav-link" href="{{route('admin.teams')}}">
+                <i class="fas fa-users"></i>
+                    <span>Teams</span></a>
+            </li>
             
 
             <!-- Divider -->
@@ -73,11 +86,7 @@
 
                 <!-- Nav Item - Account -->
 
-                <li class="nav-item ">
-                <a id="step-four"class="nav-link" href="{{route('admin.account')}}">
-                <i class="fas fa-money-check"></i>
-                <span>Account</span></a>
-                </li>
+               
               <!-- Divider -->
               <hr class="sidebar-divider">
 
@@ -93,14 +102,14 @@
 
                   <!-- Nav Item - Message -->
            
-            <!-- <li class="nav-item ">
-                <a id="step-six"class="nav-link" href="/chatify">
+           <li class="nav-item ">
+                <a id="step-six"class="nav-link" href="{{route('adminsummarymonthly')}}">
                     <i class="fas fa-fw  fa-envelope"></i>
-                    <span>Message</span></a>
+                    <span>Monthly Summary</span></a>
             </li>
             
            
-              <hr class="sidebar-divider"> -->
+              <hr class="sidebar-divider"> 
 
 
                   <!-- Nav Item - Report -->
@@ -122,17 +131,17 @@
                     <span>Business</span></a>
             </li> -->
             
-              <!-- <hr class="sidebar-divider">  -->
+             
 
 
                  <!-- Nav Item - Calender -->
-                 <!-- <li class="nav-item">
-                <a class="nav-link" href="{{route('admin.calender')}}">
-                <i class="fas fa-calendar"></i>
-                    <span>Events</span></a>
-            </li> -->
-            
-              <!-- Divider -->
+                 <li class="nav-item ">
+                <a id="step-four"class="nav-link" href="{{route('admin.account')}}">
+                <i class="fas fa-money-check"></i>
+                <span>Account</span></a>
+                </li>
+                <hr class="sidebar-divider">
+        
               <!-- <hr class="sidebar-divider"> -->
 
                 <!-- Nav Item - Branch/Departments -->

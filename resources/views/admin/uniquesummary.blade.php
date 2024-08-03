@@ -213,7 +213,7 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">{{$name}} tasks summary for week {{ date('W')}}</h1>
+                        <h1 class="h3 mb-0 text-gray-800">{{$name}} tasks summary for week {{ $week }}</h1>
                         
                     </div>
 
@@ -231,6 +231,17 @@
 
                     <!-- Content Row -->
 
+                    @if(session('msg'))
+
+                        <div class="alert alert-success text-center"> 
+                            <p> {{session('msg')}} </p>
+                        </div>
+
+
+
+
+                    @endif
+
 
                     <div class="col-md-12 m-auto card px-0">
                         <div class="table-responsive">
@@ -240,7 +251,7 @@
                                 <thead class="bg-primary w-100 card-head"style="color:white;">
                                     
                                     <tr>
-                                            <th>Business</th>
+                                            <th>{{ $name == 'IJATUYI, Ayoleyi Folorunso' ? 'Projects' : 'Business'}}</th>
 
                                             <th>Activity/Task</th>
 
@@ -248,6 +259,9 @@
                                             <th>Due Date</th>
 
                                             <th>Status</th>
+                                            <!-- <th>Created At </th> -->
+                                            <th>Review</th>
+                                    
                                             
 
 
@@ -260,7 +274,7 @@
                                 @foreach($tasks as $task)
                                     <tr>
 
-                                    <td> {{$task->business}} </td>
+                                    <td> {{$name == 'IJATUYI, Ayoleyi Folorunso' ? $task->project : $task->business}} </td>
                                     <td> {{$task->task}} </td>
                                     <td> {{$task->output}} </td>
                                     <td>{{\Carbon\Carbon::parse($task->due_date)->format('d/m/Y')}}</td>
@@ -278,6 +292,78 @@
     @endif
 </td>
 
+        <!-- <td> {{$task->week}}</td>
+
+        <td>
+
+         
+
+            <form action=""method="POST">
+                @csrf 
+                {{method_field('PUT')}}
+
+                
+            <button type="submit" class="btn btn-success">Update Week </button>
+    </form>
+            
+    </td> -->
+
+    <td> 
+
+    <a class="btn btn-primary text-center btn-sm"type="button" data-toggle="modal" data-target="#exampleModal{{$task->id}}">Review  </a>
+
+
+    <div class="modal fade" id="exampleModal{{$task->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel{{$task->id}}" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-dark" id="exampleModalLabel{{$task->id}}">{{$task->task}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+        <form action="{{route('admin.uniquesummary.update')}}"method="POST">
+            @csrf
+            {{method_field('PUT')}}
+
+            <div class="form-group">
+                
+              <label> Update Status </label>
+              
+              <select class="form-control"name="status"required>
+                  <option value="">Choose Status</option>
+                  <option value="pending">Pending</option>
+                  <option value="overdue">Overdue</option>
+                  
+                  <option value="completed">Completed</option>
+
+                  <input type="hidden"name="id"value="{{$task->id}}">
+
+
+
+
+    </select>
+
+    <hr>
+    <label> Comments</label>
+
+    <textarea name="comment"class="form-control" id="" cols="5" rows="5">{{$task->comment}}</textarea>
+
+            </div>
+
+            <div class="text-center">
+            <button type="submit" class="btn btn-primary">Review Task</button>
+            </div>
+        </form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+        
+</td>
 
                                     
     </tr>

@@ -32,7 +32,7 @@ class ExpenseUpdate extends Mailable
     {
         return $this->subject('Update on Expense Approval')
         ->view('email.approvalupdate')
-        ->from('office@laurenparkerway.com', 'QuickOffice')
+        ->from('office@mdamonitor.com', 'QuickOffice')
         ->with('expense',$this->expense);
     }
 }

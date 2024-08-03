@@ -32,7 +32,7 @@ class Partner extends Mailable
     {
         return $this->subject('Weekly Task Summary - Week '.date('W'))
         ->view('email.partners')
-        ->from('office@laurenparkerway.com', 'QuickOffice')
+        ->from('office@mdamonitor.com', 'Quick Office')
         ->with('staffs',$this->staffs);
     }
 }

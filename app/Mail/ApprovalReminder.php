@@ -33,7 +33,7 @@ class ApprovalReminder extends Mailable
     {
         return $this->subject('Re:Expense Approval Request')
         ->view('email.approvalreminder')
-        ->from('office@laurenparkerway.com', 'QuickOffice')
+        ->from('office@mdamonitor.com', 'Quick Office')
         ->with('expense',$this->expense);
     }
 }

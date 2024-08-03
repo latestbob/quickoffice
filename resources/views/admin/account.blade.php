@@ -335,6 +335,8 @@ a:link{
                                         <th>Date</th>
                                         <th>Currency</th>
                                         <th>Amount</th>
+                                        <th>Request By</th>
+
                                         <!-- <th>Description</th> -->
                                         <th>Status</th>
                                         <th>Actions</th>
@@ -351,6 +353,7 @@ a:link{
                                                     <td>{{ \Carbon\Carbon::parse($expenses->date)->format('d/m/Y') }}</td>
                                                     <td>{{$expenses->currency}}</td>
                                                     <td>{{$expenses->total}}</td>
+                                                    <td>{{$expenses->accountant}}</td>
                                                     <!-- <td>{{$expenses->description}}</td> -->
                                                     <td>
                                                     @if($expenses->status =='pending')
@@ -367,10 +370,20 @@ a:link{
                                                     </td>
 
                                                     <td>
-                                                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#exampleModal{{$expenses->id}}">
+
+                                                    <form action="{{route('admin.remove.expenses')}}"method="POST">
+                                                        @csrf
+                                                        {{method_field('DELETE')}}
+
+                                                        <input type="hidden"name="id"value="{{$expenses->id}}">
+                                                    <a type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#exampleModal{{$expenses->id}}">
   View
-</button>| <a type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModaltwo{{$expenses->id}}">Action</a>
-                                                    </td>
+</a>| <a type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModaltwo{{$expenses->id}}">Action</a>
+                                                <!-- <button type="submit" class="btn btn-sm btn-danger">Delete</button>        -->
+
+</td>
+
+                                                    </form>
 
                                                 </tr>
 

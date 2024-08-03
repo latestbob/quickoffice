@@ -37,7 +37,7 @@ Route::get('/mda/summary','EdoStateController@mdasummary');
 
 Route::get('/completionrate','EdoStateController@completionrate');
 
-Route::post('/late/email','EdoStateController@lateemail');
+Route::get('/late/email','EdoStateController@lateemail');
 
 
 //test mail
@@ -46,7 +46,7 @@ Route::post('/testmailer','pagesController@testmailer');
 
 ///initiatives changes
 
-Route::put('/change','EdoStateController@primarychange');
+Route::get('/change','EdoStateController@primarychange');
 
 Route::get('/changes','EdoStateController@getchanges');
 
@@ -60,3 +60,22 @@ Route::put('/approve/change','EdoStateController@approvechange');
 Route::put('/reject/change','EdoStateController@rejectchanges');
 
 Route::get('/checknotify','EdoStateController@checknotify');
+
+Route::post('/sendmda','EdoStateController@sendmdamail');
+
+//admin change
+
+
+Route::get('/excutive/change','EdoStateController@executivechange'); //all changes
+
+Route::get('/change/unique','EdoStateController@changeunique');
+
+
+//Delete PHC
+
+Route::delete('/delete/work','EdoStateController@deletephc');
+
+Route::post('/sendmdasummary','EdoStateController@sendmdasummary');
+
+//get unique mda initiative and order by objectives
+Route::get('/mdaobjectives','EdoStateController@mdaobjectives');

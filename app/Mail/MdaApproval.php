@@ -32,7 +32,7 @@ class MdaApproval extends Mailable
     {
         return $this->subject(' Request for Your Attention: Initiative Update')
         ->view('email.mdaapproval')
-        ->from('office@laurenparkerway.com', 'QuickOffice')
+        ->from('office@mdamonitor.com', 'Quick Office')
         ->with('mdacontent',$this->mdacontent);
     }
 }

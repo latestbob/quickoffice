@@ -31,6 +31,8 @@ use App\Activity;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Mondays;
 use App\Mail\Partner;
+use App\Mail\Followme;
+use Illuminate\Support\Facades\Log;
 
 class pagesController extends Controller
 {
@@ -2042,14 +2044,31 @@ public function updateactivity(Request $request){
 
 public function testmailer(Request $request){
 
-    $emails = ['edidiongbobson@gmail.com','uzor@laurenparkerway.com','zainab@laurenparkerway.com'];
+    $emails = ['zainab@laurenparkerway.com','edidiongbobson@gmail.com','uzor@laurenparkerway.com'];
 
     $staffs = User::where('office','LaurenParker')->where('position','!=','Admin')->get();
 
-      Mail::to($emails)->send(new Partner($staffs));
+    
+      
+
+      try {
+        // ... your email sending logic ...
+        Mail::to($emails)->send(new Partner($staffs));
+        return response()->json('Email sent');
+       
+    } catch (\Exception $e) {
+     
+        // Handle the exception as needed
+        Log::error('Error sending email: ' . $e->getMessage());
+
+           // Return an error response
+    return response()->json('Error sending email', 500);
+    }
 
 
-      return response()->json('Email sent');
+      
+
+   
 
 }
 

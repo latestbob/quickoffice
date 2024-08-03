@@ -273,6 +273,7 @@ ul{
                                                 <th>Currency</th>
                                                 <th>Amount</th>
                                                 <th>Status</th>
+                                                <th>Created By</th>
                                                 <th>Actions</th>
                                             </tr>
 
@@ -301,6 +302,7 @@ ul{
                                                         <p class="badge badge-danger badge-sm text-light">rejected</p>
                                                     @endif
                                                 </td>
+                                                <td>{{$ex->accountant}}</td>
                                                 <td>
                                                    <!-- <a href=""class="btn btn-info btn-sm"data-toggle="modal" data-target="#exampleModal{{$ex->id}}">View More</a>  -->
 

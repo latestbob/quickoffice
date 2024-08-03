@@ -213,7 +213,32 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Task Summary for Week {{ date('W')}}</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Task Summary for Week {{ $currentWeek}}</h1>
+
+                        @php
+
+                        $currentWeeks = date('W');
+
+                        // Get previous weeks
+                        $previousWeeks = [];
+                        for ($i = 1; $i <= 10; $i++) {
+                            $previousWeek = date('W', strtotime("-$i week"));
+                            $previousWeeks[] = str_pad($previousWeek, 2, '0', STR_PAD_LEFT);
+                        }
+
+
+                        @endphp
+
+                    <select name="week"class="form-control col-md-4" id="week">
+                        <option value="">Choose Previous Week</option>
+                        <option value="{{date('W')}}">Current Week - {{date('W')}}</option>
+                        @foreach($previousWeeks as $pre)
+                        
+                        
+                        <option value="{{$pre}}">{{$pre}}</option>
+                        @endforeach
+
+                    </select>
                         
                     </div>
 
@@ -229,7 +254,7 @@
 
 <!-- Earnings (Monthly) Card Example ////////////////////////////////////////////////////////////////// -->
 <div class="col-xl-4  text-light col-md-6 mb-4">
-    <a href="{{route('admin.view.task.type','overdue')}}">
+    <a href="">
     <div class="card bg-danger  shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
@@ -238,7 +263,7 @@
                       OVER DUE TASKS</div>
                     <div class="h5 mb-0 font-weight-bold text-light">
              
-                        {{ \App\Activity::where('status',"Overdue")->where('week',date('W'))->count() }}
+                        {{ \App\Activity::where('status',"Overdue")->where('week',$currentWeek)->count() }}
                
 
               
@@ -257,7 +282,7 @@
 
 <!-- Earnings (Monthly) Card Example -->
 <div class="col-xl-4 col-md-6 mb-4">
-   <a href="{{route('admin.view.task.type','pending')}}">
+   <a href="">
    <div class="card bg-warning shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
@@ -265,7 +290,7 @@
                     <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
                         PENDING TASKS</div>
                     <div class="h5 mb-0 font-weight-bold text-dark">
-                        {{ \App\Activity::where('status',"Pending")->where('week',date('W'))->count() }}
+                        {{ \App\Activity::where('status',"Pending")->where('week',$currentWeek)->count() }}
                     </div>
                 </div>
                 <div class="col-auto">
@@ -279,7 +304,7 @@
 
 <!-- Earnings (Monthly) Card Example -->
 <div class="col-xl-4 col-md-6 mb-4">
-    <a href="{{route('admin.view.task.type','completed')}}">
+    <a href="">
     <div class="card bg-success shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
@@ -289,7 +314,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col-auto">
                             <div class="h5 mb-0 mr-3 font-weight-bold text-light">
-                                {{ \App\Activity::where('status',"Completed")->where('week',date('W'))->count() }}
+                                {{ \App\Activity::where('status',"Completed")->where('week',$currentWeek)->count() }}
                             </div>
                         </div>
                         
@@ -336,13 +361,13 @@
                                         <tr>
                                             <td>{{$staff->name}}</td>
                                             <td>
-                                                {{ \App\Activity::where('obligated',$staff->name)->where('week',date('W'))->count() }}
+                                                {{ \App\Activity::where('obligated',$staff->name)->where('week',$currentWeek)->count() }}
                                             </td>
 
                                             <td class="">
                                                 @php
-                                                $totalTasks = \App\Activity::where('obligated', $staff->name)->where('week', date('W'))->count();
-                                                $totalCompleted = \App\Activity::where('obligated', $staff->name)->where('week', date('W'))->where('status', 'Completed')->count();
+                                                $totalTasks = \App\Activity::where('obligated', $staff->name)->where('week', $currentWeek)->count();
+                                                $totalCompleted = \App\Activity::where('obligated', $staff->name)->where('week', $currentWeek)->where('status', 'Completed')->count();
 
 
                                                 $completion_rate = 0;
@@ -378,7 +403,7 @@
 
                                             </td>
                                             <td>
-                                                <a href="{{route('adminsummaryname',$staff->name)}}" class="btn btn-sm btn-primary">View</a>
+                                                <a href="{{ route('adminsummaryname', ['name' => $staff->name, 'week' => $currentWeek]) }}" class="btn btn-sm btn-primary">View</a>
                                             </td>
                                             
                                         </tr>
@@ -459,6 +484,33 @@
     <script src="{{asset('js/demo/chart-pie-demo.js')}}"></script>
     <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
 
+
+    <script>
+        $(document).ready(function() {
+            // Handle select change event
+            $('#week').on('change', function() {
+                var selectedOption = $(this).val();
+                updateUrlAndReload(selectedOption);
+            });
+
+            // Function to update URL with the selected option as a parameter and reload the page
+            function updateUrlAndReload(selectedOption) {
+                // Get the current URL
+                var currentUrl = window.location.href;
+
+                // Check if the URL already contains a query string
+                var separator = currentUrl.indexOf('?') !== -1 ? '&' : '?';
+
+                // Construct the new URL with the selected option as a parameter
+                var newUrl = currentUrl + separator + 'week=' + selectedOption;
+
+                // Reload the page with the new URL
+               window.location.href = newUrl;
+
+               
+            }
+        });
+    </script>
   
 
 </body>

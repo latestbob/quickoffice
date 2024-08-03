@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\ExpenseUpdate;
 use App\Mail\Publish;
 use App\Mail\Partner;
+use App\Mail\TaskReview;
 
 class AdminController extends Controller
 {
@@ -1007,22 +1008,97 @@ class AdminController extends Controller
     }
 
 
-    public function tasksummary(){
+    public function tasksummary(Request $request){
+
+        $currentWeek = '';
+
+        if($request->week){
+            $currentWeek = $request->week;
+        }
+
+        else{
+            $currentWeek = date('W');
+        }
 
         $staffs = User::where('office',Auth::user()->office)->where('position',"!=","Admin")->get();
 
 
-        return view('admin.tasksummary',compact('staffs'));
+        return view('admin.tasksummary',compact('staffs','currentWeek'));
+    }
+
+
+    public function summarymonthly(){
+
+
+        // $currentWeek = '';
+
+        // if($request->week){
+        //     $currentWeek = $request->week;
+        // }
+
+        // else{
+        //     $currentWeek = date('W');
+        // }
+
+        $staffs = User::where('office',Auth::user()->office)->where('position',"!=","Admin")->get();
+
+
+        return view('monthlysummary',compact('staffs'));
+
+        
     }
 
 
     //summary name
 
-    public function summaryname($name){
-         $currentWeek = date('W');
-        $tasks = Activity::where('obligated',$name)->where('week',$currentWeek)->get();
+    public function summaryname(Request $request,$name,$week){
+        
+        $tasks = Activity::where('obligated',$name)->where('week',$week)->get();
 
-       return view('admin.uniquesummary',compact('name','tasks'));
+       return view('admin.uniquesummary',compact('name','tasks','week'));
+    }
+
+
+
+    //unique summary update
+
+    public function unqiuesummaryupdate(Request $request){
+        
+        $activity = Activity::where('id',$request->id)->update([
+            'status' => $request->status,
+            'comment' => $request->comment,
+        ]);
+
+
+
+        $task = Activity::where('id',$request->id)->first();
+
+        $email = User::where('name',$task->obligated)->where('office',Auth::user()->office)->value('email');
+
+
+        $receiver = [
+            'status' => $task->status,
+            'comment' => $task->comment,
+            'task' => $task->task,
+            'admin' => Auth::user()->name,
+            'name' => $task->obligated,
+        ];
+
+
+         Mail::to($email)->send(new TaskReview($receiver));
+
+        return back()->with('msg','Task Review submitted successfully');
+
+        
+    }
+
+
+    //remove/delete expenses
+
+    public function removeexpenses(Request $request){
+        $expense = Expense::where('id',$request->id)->delete();
+
+        return back()->with('msg','Expense Deleted');
     }
    
 }
