@@ -230,7 +230,7 @@
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Report</h1>
                         <a data-toggle="modal" data-target="#exampleModal" href="" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+                                class="fas fa-download fa-sm text-white-50"></i> Upload Account Report</a>
 
                                 
                     </div>
@@ -252,7 +252,7 @@
                             <!-- Illustrations -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Weekly Job Reports</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Development still in progress,,,</h6>
                                 </div>
                                 <div class="card-body">
                                     @if(session('msg'))
@@ -268,41 +268,9 @@
                                     
                                     
                                     <div class="card-header mt-4 py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">All Registered Reports</h6>
+                                    <!-- <h6 class="m-0 font-weight-bold text-primary">All Registered Reports</h6> -->
 
-                                    <div class="table-responsive">
-                                <table class="table table-hover table-borderless table-sm" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Title</th>
-                                            
-                                            <th>Date</th>
-                                            <th>Office</th>
-                                            <th>Reporter</th>
-                                            <th>Action</th>
-                                            
-                                        </tr>
-                                    </thead>
                                     
-                                    <tbody style="color:black;font-size:13px;">
-                                     
-                                    @foreach($reports as $report)
-
-                                            <tr>
-                                                <td>{{$report->title}}</td>
-                                            
-                                                <td>{{$report->date}}</td>
-                                                <td>{{$report->office}}</td>
-                                                <td>{{$report->reporter}}</td>
-                                                <td><a href="{{route('account.report.pdf',$report->id)}}"class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i>Generate Report</a><a href="#"class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i>Delete</a></td>
-                                                
-                                            </tr>
-                                            @endforeach
-                                       
-                                       
-                                    </tbody>
-                                    
-                                </table>
                             </div>
                                 </div>
 
@@ -322,45 +290,7 @@
             <!-- End of Main Content -->
 
 
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Create A New Report</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-
-
-                     <form action="{{route('reports.submit')}}"method="POST">
-                                        @csrf
-
-                                        <div class="form-group">
-                                            <label for="title">Report Title</label>
-                                            <input type="text"name="title"placeholder="Enter Title of Report"class="form-control"required>
-                                        </div>
-
-                                      
-
-                                       <div class="form-group">
-                                            <label for="content">Report Contents</label>
-                                            <textarea class="form-control" id="summary-ckeditor2" name="content"placeholder="Enter Answer here"required></textarea>
-
-                                        </div>
-
-                                        <input type="hidden"name="date"value="<?php echo date('Y/m/d'); ?>">
-                                        <input type="hidden"name="office"value="{{Auth::user()->office}}">
-                                        <input type="hidden"name="reporter"value="{{Auth::user()->name}}">
-
-                                        <button class="btn btn-info text-center">Submit</button>
-
-                                    </form> 
-                                    
-                </div>
-     
-            </div>
+          
 
             <!-- Footer -->
             

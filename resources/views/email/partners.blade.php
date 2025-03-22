@@ -236,17 +236,18 @@ table, td { color: #000000; } #u_body a { color: #0000ee; text-decoration: under
 
 
     <tr style="">
-      <td colspan="2"style="border: 1px solid black; padding: 10px;">{{ $staff->name == 'Accounts' ? 'Olawale Samuel Victor' : $staff->name }}
+      <td colspan="2"style="border: 1px solid black; padding: 10px;">{{ $staff->name }}
     
     </td>
+   
       <td style="border: 1px solid black;
-      padding: 10px;">{{ \App\Activity::where('obligated',$staff->name)->where('week',date('W'))->count() }}</td>
+      padding: 10px;">{{ \App\Activity::where('obligated',$staff->name)->where('year', date("Y"))->where('week',date('W'))->count() }}</td>
       <td style="border: 1px solid black;
       padding: 10px;"> 
 
 @php
-                                                $totalTasks = \App\Activity::where('obligated', $staff->name)->where('week', date('W'))->count();
-                                                $totalCompleted = \App\Activity::where('obligated', $staff->name)->where('week', date('W'))->where('status', 'Completed')->count();
+                                                $totalTasks = \App\Activity::where('obligated', $staff->name)->where('year', date("Y"))->where('week', date('W'))->count();
+                                                $totalCompleted = \App\Activity::where('obligated', $staff->name)->where('year', date("Y"))->where('week', date('W'))->where('status', 'Completed')->count();
 
 
                                                 $completion_rate = 0;

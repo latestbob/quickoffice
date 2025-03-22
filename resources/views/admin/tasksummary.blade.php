@@ -221,13 +221,16 @@
 
                         // Get previous weeks
                         $previousWeeks = [];
-                        for ($i = 1; $i <= 10; $i++) {
+                        for ($i = 1; $i <= 3; $i++) {
                             $previousWeek = date('W', strtotime("-$i week"));
                             $previousWeeks[] = str_pad($previousWeek, 2, '0', STR_PAD_LEFT);
                         }
 
 
                         @endphp
+
+
+                        
 
                     <select name="week"class="form-control col-md-4" id="week">
                         <option value="">Choose Previous Week</option>
@@ -361,13 +364,15 @@
                                         <tr>
                                             <td>{{$staff->name}}</td>
                                             <td>
-                                                {{ \App\Activity::where('obligated',$staff->name)->where('week',$currentWeek)->count() }}
+                                                {{ \App\Activity::where('obligated',$staff->name)->where('year', date("Y"))->where('week',$currentWeek)->count() }}
                                             </td>
 
                                             <td class="">
                                                 @php
-                                                $totalTasks = \App\Activity::where('obligated', $staff->name)->where('week', $currentWeek)->count();
-                                                $totalCompleted = \App\Activity::where('obligated', $staff->name)->where('week', $currentWeek)->where('status', 'Completed')->count();
+
+                                                $year = date("Y");
+                                                $totalTasks = \App\Activity::where('obligated', $staff->name)->where('year', date("Y"))->where('week', $currentWeek)->count();
+                                                $totalCompleted = \App\Activity::where('obligated', $staff->name)->where('year', date("Y"))->where('week', $currentWeek)->where('status', 'Completed')->count();
 
 
                                                 $completion_rate = 0;
@@ -485,7 +490,7 @@
     <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
 
 
-    <script>
+    <!-- <script>
         $(document).ready(function() {
             // Handle select change event
             $('#week').on('change', function() {
@@ -511,7 +516,33 @@
             }
         });
     </script>
-  
+   -->
+
+   <script>
+    $(document).ready(function() {
+        // Handle select change event
+        $('#week').on('change', function() {
+            var selectedOption = $(this).val();
+            updateUrlAndReload(selectedOption);
+        });
+
+        // Function to update URL with the selected option as a parameter and reload the page
+        function updateUrlAndReload(selectedOption) {
+            // Get the current URL
+            var currentUrl = window.location.href;
+            
+            // Create a URL object to easily manipulate query parameters
+            var url = new URL(currentUrl);
+            
+            // Update or add the 'week' parameter
+            url.searchParams.set('week', selectedOption);
+
+            // Reload the page with the new URL
+            window.location.href = url.toString();
+        }
+    });
+</script>
+
 
 </body>
 

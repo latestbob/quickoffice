@@ -330,6 +330,7 @@ a:link{
                                 <thead style="color:white;font-size:14px;z-index:100;" class="bg-primary text-light">
 
                                     <tr>
+                                   
                                         <th>Expense Type</th>
                                         <th>Business</th>
                                         <th>Date</th>
@@ -348,6 +349,7 @@ a:link{
                                     <tbody style="color:black;font-size:13px;z-index:100;">
                                         @foreach($expense as $expenses)
                                                 <tr>
+                                                   
                                                     <td>{{$expenses->title}}</td>
                                                     <td>{{$expenses->category}}</td>
                                                     <td>{{ \Carbon\Carbon::parse($expenses->date)->format('d/m/Y') }}</td>

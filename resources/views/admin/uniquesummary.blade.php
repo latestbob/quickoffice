@@ -258,6 +258,7 @@
                                             <th>Output</th>
                                             <th>Due Date</th>
 
+                                           
                                             <th>Status</th>
                                             <!-- <th>Created At </th> -->
                                             <th>Review</th>
@@ -278,6 +279,8 @@
                                     <td> {{$task->task}} </td>
                                     <td> {{$task->output}} </td>
                                     <td>{{\Carbon\Carbon::parse($task->due_date)->format('d/m/Y')}}</td>
+
+                                    
                                     <td>
     @if($task->status  == "pending")
         <p class="badge badge-warning text-dark badge-sm">{{$task->status}} </p>

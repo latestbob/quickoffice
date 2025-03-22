@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('overdue:task')->dailyAt('8:00');
         // $schedule->command('publish:task')->weekly()->fridays()->at('17:00');
-       // $schedule->command('partner:summary')->weekly()->fridays()->at('17:45');
+       $schedule->command('partner:summary')->weekly()->saturdays()->at('10:30');
        $schedule->command('mda:weekly')->dailyAt('8:00');
        $schedule->command('mda:twoday')->dailyAt('9:00');
        $schedule->command('mda:late')->dailyAt('7:00');

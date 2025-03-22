@@ -66,8 +66,10 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         
-                        <a class="collapse-item" href="{{route('account.invoice')}}">Invoices</a>
+                        <!-- <a class="collapse-item" href="{{route('account.invoice')}}">Invoices</a> -->
                         <a class="collapse-item" href="{{route('account.expenses')}}">Expense Approval</a>
+
+                          <a class="collapse-item" href="{{route('account.reports')}}">Accounting Reports</a>
                         <!-- <a class="collapse-item" href="utilities-animation.html">Animations</a>
                         <a class="collapse-item" href="utilities-other.html">Other</a> -->
                     </div>
@@ -76,7 +78,7 @@
 
 
 <!-- Divider -->
-<hr class="sidebar-divider">
+<!-- <hr class="sidebar-divider"> -->
 
 <!-- <li class="nav-item">
  <a id="step-six"class="nav-link" href="{{route('account.jobs')}}">
@@ -103,14 +105,9 @@
 
    <!-- Nav Item - Report -->
 
-<!-- <li class="nav-item">
- <a id="step-eight"class="nav-link" href="{{route('account.reports')}}">
-     <i class="fas fa-fw  fa-file "></i>
-     <span>Report</span></a>
-</li>
 
 
-<hr class="sidebar-divider"> -->
+<!-- <hr class="sidebar-divider"> --> 
 
 
   <!-- Nav Item - Clients -->
@@ -125,21 +122,21 @@
 
 
   <!-- Nav Item - Calender -->
-  <li class="nav-item">
+  <!-- <li class="nav-item">
  <a id="step-ten"class="nav-link" href="{{route('account.events')}}">
  <i class="fas fa-calendar"></i>
      <span>Events</span></a>
-</li>
+</li> -->
 
 <!-- Divider -->
 <hr class="sidebar-divider">
 
  <!-- Nav Item - Leave  -->
- <li class="nav-item">
+ <!-- <li class="nav-item">
                 <a id="step-eight"class="nav-link" href="{{route('leavepage')}}">
                 <i class="fas fa-calendar"></i>
                     <span>Leave Management</span></a>
-            </li>
+            </li> -->
 
             
 

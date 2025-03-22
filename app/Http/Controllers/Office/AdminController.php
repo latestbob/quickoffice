@@ -265,7 +265,7 @@ class AdminController extends Controller
 
     public function account(){
 
-        // $expenses = Expense::truncate();
+        //  $expenses = Expense::where('id',9)->delete();
         $expense=Expense::where('office',Auth::user()->office)->orderBy('id', 'desc')->get();
         $receivedpay=Receivedpay::where('office',Auth::user()->office)->get();
         return view('admin.account',compact('expense','receivedpay'));
@@ -1027,7 +1027,7 @@ class AdminController extends Controller
     }
 
 
-    public function summarymonthly(){
+    public function summarymonthly(Request $request){
 
 
         // $currentWeek = '';
@@ -1040,10 +1040,18 @@ class AdminController extends Controller
         //     $currentWeek = date('W');
         // }
 
+
+        $currentYear = date('Y');
+
+        if($request->year){
+            $currentYear= $request->year;
+        }
+
+
         $staffs = User::where('office',Auth::user()->office)->where('position',"!=","Admin")->get();
 
 
-        return view('monthlysummary',compact('staffs'));
+        return view('monthlysummary',compact('staffs','currentYear'));
 
         
     }
@@ -1052,8 +1060,10 @@ class AdminController extends Controller
     //summary name
 
     public function summaryname(Request $request,$name,$week){
+
+        $year = '2025';
         
-        $tasks = Activity::where('obligated',$name)->where('week',$week)->get();
+        $tasks = Activity::where('obligated',$name)->where('year',$year)->where('week',$week)->get();
 
        return view('admin.uniquesummary',compact('name','tasks','week'));
     }

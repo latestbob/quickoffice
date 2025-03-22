@@ -241,7 +241,7 @@ ul{
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Expense Approvals</h1> 
-                        <button class="btn btn-primary"data-toggle="modal" data-target="#exampleModal">Create New Expense</button>
+                        <!-- <button class="btn btn-primary"data-toggle="modal" data-target="#exampleModal">Create New Expense</button> -->
                         
                     </div>
 
@@ -269,6 +269,8 @@ ul{
                                                 <th>Date</th>
                                                 <th>Currency</th>
                                                 <th>Amount</th>
+                                                <th>Raised by</th>
+
                                                 <th>Status</th>
                                                 <th>Actions</th>
                                             </tr>
@@ -285,6 +287,7 @@ ul{
                                                 <td>{{ \Carbon\Carbon::parse($ex->date)->format('d/m/Y') }}</td>
                                                 <td>{{$ex->currency}}</td>
                                                 <td>{{$ex->total}}</td>
+                                                <td>{{$ex->accountant}}</td>
                                                 <td>
                                                     @if($ex->status =='pending')
 

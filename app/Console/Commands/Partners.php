@@ -40,7 +40,9 @@ class Partners extends Command
      */
     public function handle()
     {
-        $emails = ['edidiongbobson@gmail.com'];
+        $emails = ['uzor@laurenparkerway.com','zainab@laurenparkerway.com'];
+
+        // $emails = ['edidiongbobson@gmail.com'];
 
         $staffs = User::where('office','LaurenParker')->where('position','!=','Admin')->get();
     

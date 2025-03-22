@@ -213,7 +213,7 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Task Summary the month of May</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Task Summary the year {{$currentYear}}</h1>
 
                        
 
@@ -250,6 +250,21 @@
 
                     <!-- Content Row -->
 
+                       <!-- Page Heading -->
+                       <div class="d-sm-flex align-items-center justify-content-end mb-4">
+                   
+
+
+                   <select name="status" class="form-control col-md-3" id="year" onchange="filterStatus(this)">
+<option value="">Filter Year</option>
+<option value="2024">2024</option>
+<option value="2025">2025</option>
+
+</select>
+    </div>
+
+            
+
 
                     <div class="col-md-12 m-auto card px-0">
                         <div class="table-responsive">
@@ -272,13 +287,13 @@
                                         <tr>
                                             <td>{{$staff->name}}</td>
                                             <td>
-                                                {{ \App\Activity::where('obligated',$staff->name)->where('month','May')->count() }}
+                                                {{ \App\Activity::where('obligated',$staff->name)->where('year',$currentYear)->count() }}
                                             </td>
 
                                             <td class="">
                                                 @php
-                                                $totalTasks = \App\Activity::where('obligated', $staff->name)->where('month', 'May')->count();
-                                                $totalCompleted = \App\Activity::where('obligated', $staff->name)->where('month', 'May')->where('status', 'Completed')->count();
+                                                $totalTasks = \App\Activity::where('obligated', $staff->name)->where('year', $currentYear)->count();
+                                                $totalCompleted = \App\Activity::where('obligated', $staff->name)->where('year', $currentYear)->where('status', 'Completed')->count();
 
 
                                                 $completion_rate = 0;
@@ -422,6 +437,22 @@
         //     }
         // });
     </script>
+
+
+<script>
+    function filterStatus(selectElement) {
+        const selectedValue = selectElement.value;
+        const url = new URL(window.location.href);
+
+        if (selectedValue) {
+            url.searchParams.set('year', selectedValue);
+        } else {
+            url.searchParams.delete('year');
+        }
+
+        window.location.href = url.toString();
+    }
+</script>
   
 
 </body>
